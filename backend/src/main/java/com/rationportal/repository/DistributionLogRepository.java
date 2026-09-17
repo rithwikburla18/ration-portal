@@ -1,0 +1,1 @@
+package com.rationportal.repository; import com.rationportal.model.DistributionLog; import org.springframework.data.jpa.repository.JpaRepository; import java.util.List; public interface DistributionLogRepository extends JpaRepository<DistributionLog, Long> { List<DistributionLog> findByRationCardId(Long rationCardId); }

@@ -1,0 +1,2 @@
+-- Development data is inserted by the Spring Boot seeder.
+-- Production must never use demonstration personal data.

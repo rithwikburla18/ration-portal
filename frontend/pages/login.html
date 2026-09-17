@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citizen Login - Ration Portal</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="top-bar"><div>Public Distribution System</div></header>
+<nav class="navbar"><div class="brand"><span class="brand-logo">IN</span><span>RATION PORTAL</span></div><div class="nav-links"><a href="../index.html">Home</a><a href="e-ration-card.html">Ration Card</a><a href="fair-price-shop.html">Fair Price Shop</a><a href="grievance.html">Grievance</a></div></nav>
+<main class="container">
+<section class="form-section">
+<h1>Citizen Login</h1>
+<p>Sign in to access protected citizen services.</p>
+<form id="loginForm">
+<label for="email">Email Address</label>
+<input id="email" type="email" required autocomplete="email">
+<label for="password">Password</label>
+<input id="password" type="password" required minlength="8" autocomplete="current-password">
+<button type="submit" class="primary-btn">Login</button>
+</form>
+<div id="loginResult"></div>
+</section>
+</main>
+<footer><p>Educational Project — Not an official Government of India website.</p></footer>
+<script>
+const API="http://localhost:8080/api";
+document.getElementById("loginForm").addEventListener("submit",async function(e){e.preventDefault();const result=document.getElementById("loginResult");result.textContent="Signing in...";try{const response=await fetch(API+"/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:document.getElementById("email").value.trim(),password:document.getElementById("password").value})});const data=await response.json();if(!response.ok)throw new Error(data.message||"Login failed");sessionStorage.setItem("rationPortalToken",data.token);sessionStorage.setItem("rationPortalUser",JSON.stringify({fullName:data.fullName,role:data.role}));result.textContent="Login successful. Redirecting...";setTimeout(()=>window.location.href="../index.html",700)}catch(error){result.textContent=error.message}});
+</script>
+</body>
+</html>

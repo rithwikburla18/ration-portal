@@ -1,0 +1,30 @@
+# Java / Gradle
+.gradle/
+build/
+out/
+*.class
+
+# Secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test files
+admin-test*.csv
+invalid-test.csv
+
+# Backups
+*.bak
