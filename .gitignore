@@ -28,3 +28,7 @@ invalid-test.csv
 
 # Backups
 *.bak
+
+# Generated backend output
+backend/bin/
+backend/build/
