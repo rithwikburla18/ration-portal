@@ -28,7 +28,7 @@
 </main>
 <footer><p>Educational Project ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Not an official Government of India website.</p></footer>
 <script>
-const API="http://localhost:8080/api";
+const API=window.RATION_API_BASE;
 document.getElementById("registerForm").addEventListener("submit",async function(e){e.preventDefault();const result=document.getElementById("registerResult");result.textContent="Creating account...";try{const response=await fetch(API+"/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fullName:document.getElementById("fullName").value.trim(),email:document.getElementById("email").value.trim(),password:document.getElementById("password").value})});const data=await response.json();if(!response.ok)throw new Error(data.message||"Registration failed");result.textContent="Registration successful. Redirecting to login...";setTimeout(()=>window.location.href="login.html",900)}catch(error){result.textContent=error.message}});
 </script>
 </body>
