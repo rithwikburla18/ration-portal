@@ -1,2 +1,1189 @@
-﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Locate Fair Price Shop</title><link rel="stylesheet" href="../css/style.css"><script src="../config.js"></script><script src="../js/auth-guard.js"></script></head><body><main class="container"><h1>Locate Fair Price Shop</h1><p>Enter your district to find a Fair Price Shop.</p><input id="district" placeholder="Enter district"><button onclick="searchShops()">Search Shops</button><div id="result"></div></main><script>const shops=[{id:"FPS001",name:"Main Road Fair Price Shop",district:"Karimnagar",address:"Main Road, Karimnagar",status:"OPEN"},{id:"FPS002",name:"Market Area Fair Price Shop",district:"Karimnagar",address:"Market Road, Karimnagar",status:"OPEN"},{id:"FPS003",name:"Bus Stand Fair Price Shop",district:"Warangal",address:"Bus Stand Road, Warangal",status:"OPEN"}];function searchShops(){const d=document.getElementById("district").value.trim().toLowerCase();const r=document.getElementById("result");if(!d){r.textContent="Please enter a district.";return;}const found=shops.filter(s=>s.district.toLowerCase().includes(d));if(!found.length){r.textContent="No Fair Price Shops found for this district.";return;}r.innerHTML=found.map(s=>"<div class=\"result-card\"><h3>"+s.name+"</h3><p><strong>FPS ID:</strong> "+s.id+"</p><p><strong>District:</strong> "+s.district+"</p><p><strong>Address:</strong> "+s.address+"</p><p><strong>Status:</strong> "+s.status+"</p></div>").join("")}</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Locate Fair Price Shops through the Ration Portal."
+    >
+
+    <title>Fair Price Shops | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script src="../config.js"></script>
+    <script src="../js/auth-guard.js"></script>
+
+</head>
+
+<body>
+
+    <!-- =====================================================
+         TRICOLOUR LINE
+         ===================================================== -->
+
+    <div
+        class="tricolour-line"
+        aria-hidden="true"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+
+    <!-- =====================================================
+         GOVERNMENT BAR
+         ===================================================== -->
+
+    <div class="gov-bar">
+
+        <div class="container gov-bar-inner">
+
+            <div class="gov-bar-left">
+                <span>
+                    Government Service Portal
+                </span>
+            </div>
+
+            <div class="gov-bar-right">
+
+                <span>
+                    भारत सरकार
+                </span>
+
+                <span aria-hidden="true">
+                    |
+                </span>
+
+                <span>
+                    Government of India
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BRAND HEADER
+         ===================================================== -->
+
+    <header class="brand-header">
+
+        <div class="container brand-header-inner">
+
+            <a
+                href="../index.html"
+                class="brand"
+            >
+
+                <div
+                    class="brand-emblem"
+                    aria-hidden="true"
+                >
+                    <div class="chakra">
+                        ☸
+                    </div>
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-title">
+                        RATION PORTAL
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Public Distribution System
+                    </span>
+
+                </div>
+
+            </a>
+
+            <div
+                id="authArea"
+                class="header-auth-area"
+            ></div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         NAVIGATION
+         ===================================================== -->
+
+    <nav
+        class="main-nav"
+        id="mainNavigation"
+        aria-label="Main navigation"
+    >
+
+        <div class="container main-nav-inner">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="apply-ration-card.html">
+                Apply Ration Card
+            </a>
+
+            <a href="applications.html">
+                My Applications
+            </a>
+
+            <a href="e-ration-card.html">
+                e-Ration Card
+            </a>
+
+            <a
+                href="fair-price-shop.html"
+                class="active"
+            >
+                Fair Price Shops
+            </a>
+
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+            <a href="transparency.html">
+                Transparency
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         PAGE HERO
+         ===================================================== -->
+
+    <section class="page-hero">
+
+        <div class="container page-hero-inner">
+
+            <div>
+
+                <span class="section-kicker">
+                    CITIZEN SERVICE
+                </span>
+
+                <h1>
+                    Fair Price Shops
+                </h1>
+
+                <p>
+                    Find information about Fair Price Shops
+                    serving ration card beneficiaries.
+                </p>
+
+            </div>
+
+            <div
+                class="page-hero-mark"
+                aria-hidden="true"
+            >
+                FPS
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="page-main">
+
+        <div class="container">
+
+
+            <!-- =================================================
+                 SEARCH
+                 ================================================= -->
+
+            <section class="form-card">
+
+                <div class="form-card-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            SHOP LOCATOR
+                        </span>
+
+                        <h2>
+                            Find a Fair Price Shop
+                        </h2>
+
+                        <p>
+                            Search by district, locality or FPS ID.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    id="shopSearchForm"
+                    class="search-form"
+                >
+
+                    <div class="form-group">
+
+                        <label for="district">
+                            District
+                        </label>
+
+                        <input
+                            type="text"
+                            id="district"
+                            name="district"
+                            placeholder="Enter district"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="locality">
+                            Locality / Village
+                        </label>
+
+                        <input
+                            type="text"
+                            id="locality"
+                            name="locality"
+                            placeholder="Enter locality or village"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="fpsId">
+                            FPS ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="fpsId"
+                            name="fpsId"
+                            placeholder="Enter FPS ID"
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="searchButton"
+                    >
+                        Search Shops
+                    </button>
+
+                </form>
+
+
+                <div
+                    id="shopMessage"
+                    class="form-message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+            </section>
+
+
+            <!-- =================================================
+                 RESULTS
+                 ================================================= -->
+
+            <section
+                id="shopResults"
+                class="results-section"
+                hidden
+            >
+
+                <div class="results-heading">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            SEARCH RESULTS
+                        </span>
+
+                        <h2>
+                            Fair Price Shops
+                        </h2>
+
+                    </div>
+
+                    <span
+                        id="resultCount"
+                        class="result-count"
+                    >
+                        0 shops
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="shopList"
+                    class="shop-grid"
+                ></div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DEFAULT INFORMATION
+                 ================================================= -->
+
+            <section
+                id="shopInformation"
+                class="support-grid"
+            >
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        01
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Search by District
+                        </h3>
+
+                        <p>
+                            Enter your district to identify
+                            available Fair Price Shops.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        02
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Search by Locality
+                        </h3>
+
+                        <p>
+                            Narrow the results using your
+                            locality or village name.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        03
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Verify FPS Details
+                        </h3>
+
+                        <p>
+                            Check the displayed shop name,
+                            address and status before visiting.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 MAP INFORMATION
+                 ================================================= -->
+
+            <section class="notice-card">
+
+                <div class="notice-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Location information
+                    </strong>
+
+                    <p>
+                        Shop availability and operating details
+                        may depend on the latest departmental records.
+                        Please verify the information before making
+                        a visit.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DISCLAIMER
+                 ================================================= -->
+
+            <div class="auth-disclaimer">
+
+                <strong>
+                    Educational Project
+                </strong>
+
+                <span>
+                    This portal is a student-developed educational
+                    project inspired by Indian government service
+                    portal design. It is not an official Government
+                    of India website.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                Ration Portal.
+                Educational project.
+            </p>
+
+            <p>
+                Public Distribution System citizen services.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="../js/app.js"></script>
+    <script src="../js/script.js"></script>
+
+
+    <script>
+
+        "use strict";
+
+
+        const API =
+            window.RATION_API_BASE ||
+            "https://ration-portal-backend.onrender.com/api";
+
+
+        const form =
+            document.getElementById(
+                "shopSearchForm"
+            );
+
+
+        const message =
+            document.getElementById(
+                "shopMessage"
+            );
+
+
+        const results =
+            document.getElementById(
+                "shopResults"
+            );
+
+
+        const shopList =
+            document.getElementById(
+                "shopList"
+            );
+
+
+        const resultCount =
+            document.getElementById(
+                "resultCount"
+            );
+
+
+        const searchButton =
+            document.getElementById(
+                "searchButton"
+            );
+
+
+        /* =====================================================
+           MESSAGE
+           ===================================================== */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.hidden =
+                false;
+
+            message.className =
+                "form-message form-message-" +
+                type;
+
+            message.textContent =
+                text;
+
+        }
+
+
+        function hideMessage() {
+
+            message.hidden =
+                true;
+
+            message.textContent =
+                "";
+
+        }
+
+
+        /* =====================================================
+           ESCAPE HTML
+           ===================================================== */
+
+        function escapeHtml(
+            value
+        ) {
+
+            return String(
+                value ?? ""
+            )
+                .replaceAll(
+                    "&",
+                    "&amp;"
+                )
+                .replaceAll(
+                    "<",
+                    "&lt;"
+                )
+                .replaceAll(
+                    ">",
+                    "&gt;"
+                )
+                .replaceAll(
+                    '"',
+                    "&quot;"
+                )
+                .replaceAll(
+                    "'",
+                    "&#039;"
+                );
+
+        }
+
+
+        /* =====================================================
+           NORMALIZE RESULTS
+           ===================================================== */
+
+        function normalizeResults(
+            data
+        ) {
+
+            if (
+                Array.isArray(data)
+            ) {
+
+                return data;
+
+            }
+
+
+            if (
+                Array.isArray(
+                    data?.data
+                )
+            ) {
+
+                return data.data;
+
+            }
+
+
+            if (
+                Array.isArray(
+                    data?.shops
+                )
+            ) {
+
+                return data.shops;
+
+            }
+
+
+            if (
+                Array.isArray(
+                    data?.content
+                )
+            ) {
+
+                return data.content;
+
+            }
+
+
+            return [];
+
+        }
+
+
+        /* =====================================================
+           SHOP CARD
+           ===================================================== */
+
+        function createShopCard(
+            shop
+        ) {
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "shop-card";
+
+
+            const name =
+                shop.name ||
+                shop.shopName ||
+                shop.fpsName ||
+                "Fair Price Shop";
+
+
+            const id =
+                shop.fpsId ||
+                shop.shopId ||
+                shop.id ||
+                "—";
+
+
+            const address =
+                shop.address ||
+                shop.location ||
+                "Address not available";
+
+
+            const district =
+                shop.district ||
+                "—";
+
+
+            const locality =
+                shop.locality ||
+                shop.village ||
+                shop.mandal ||
+                "—";
+
+
+            const status =
+                String(
+                    shop.status ||
+                    "ACTIVE"
+                )
+                    .toUpperCase();
+
+
+            const owner =
+                shop.ownerName ||
+                shop.dealerName ||
+                "";
+
+
+            card.innerHTML =
+                `
+                <div class="shop-card-top">
+
+                    <div class="shop-card-icon">
+                        FPS
+                    </div>
+
+                    <span
+                        class="status-badge ${
+                            status === "ACTIVE"
+                                ? "status-success"
+                                : "status-pending"
+                        }"
+                    >
+                        ${escapeHtml(
+                            status.replaceAll(
+                                "_",
+                                " "
+                            )
+                        )}
+                    </span>
+
+                </div>
+
+
+                <h3>
+                    ${escapeHtml(name)}
+                </h3>
+
+
+                <div class="shop-details">
+
+                    <div>
+
+                        <span>
+                            FPS ID
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(id)}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            District
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(district)}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Locality
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(locality)}
+                        </strong>
+
+                    </div>
+
+
+                    ${
+                        owner
+                            ? `
+                            <div>
+
+                                <span>
+                                    Dealer
+                                </span>
+
+                                <strong>
+                                    ${escapeHtml(owner)}
+                                </strong>
+
+                            </div>
+                            `
+                            : ""
+                    }
+
+                </div>
+
+
+                <div class="shop-address">
+
+                    <span>
+                        Address
+                    </span>
+
+                    <p>
+                        ${escapeHtml(address)}
+                    </p>
+
+                </div>
+                `;
+
+
+            return card;
+
+        }
+
+
+        /* =====================================================
+           RENDER RESULTS
+           ===================================================== */
+
+        function renderResults(
+            shops
+        ) {
+
+            shopList.innerHTML =
+                "";
+
+
+            resultCount.textContent =
+                `${shops.length} ${
+                    shops.length === 1
+                        ? "shop"
+                        : "shops"
+                }`;
+
+
+            if (
+                shops.length === 0
+            ) {
+
+                const empty =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                empty.className =
+                    "empty-state";
+
+
+                empty.innerHTML =
+                    `
+                    <div class="empty-state-icon">
+                        —
+                    </div>
+
+                    <h3>
+                        No Fair Price Shops found
+                    </h3>
+
+                    <p>
+                        Try a different district, locality
+                        or FPS ID.
+                    </p>
+                    `;
+
+
+                shopList.appendChild(
+                    empty
+                );
+
+
+                return;
+
+            }
+
+
+            shops.forEach(
+                function (shop) {
+
+                    shopList.appendChild(
+                        createShopCard(
+                            shop
+                        )
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           SEARCH
+           ===================================================== */
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const district =
+                    document
+                        .getElementById(
+                            "district"
+                        )
+                        .value
+                        .trim();
+
+
+                const locality =
+                    document
+                        .getElementById(
+                            "locality"
+                        )
+                        .value
+                        .trim();
+
+
+                const fpsId =
+                    document
+                        .getElementById(
+                            "fpsId"
+                        )
+                        .value
+                        .trim();
+
+
+                if (
+                    !district &&
+                    !locality &&
+                    !fpsId
+                ) {
+
+                    showMessage(
+                        "Please enter at least one search field.",
+                        "error"
+                    );
+
+                    results.hidden =
+                        true;
+
+                    return;
+
+                }
+
+
+                hideMessage();
+
+
+                searchButton.disabled =
+                    true;
+
+                searchButton.textContent =
+                    "Searching...";
+
+
+                try {
+
+                    const params =
+                        new URLSearchParams();
+
+
+                    if (district) {
+
+                        params.set(
+                            "district",
+                            district
+                        );
+
+                    }
+
+
+                    if (locality) {
+
+                        params.set(
+                            "locality",
+                            locality
+                        );
+
+                    }
+
+
+                    if (fpsId) {
+
+                        params.set(
+                            "fpsId",
+                            fpsId
+                        );
+
+                    }
+
+
+                    const token =
+                        localStorage.getItem(
+                            "rationPortalToken"
+                        );
+
+
+                    const headers = {
+                        "Content-Type":
+                            "application/json"
+                    };
+
+
+                    if (token) {
+
+                        headers.Authorization =
+                            "Bearer " +
+                            token;
+
+                    }
+
+
+                    /*
+                     * The frontend first attempts the FPS endpoint.
+                     * If the backend does not expose it yet, a clear
+                     * message is shown instead of breaking the page.
+                     */
+
+                    const response =
+                        await fetch(
+                            `${API}/fair-price-shops?${params.toString()}`,
+                            {
+                                method: "GET",
+                                headers: headers
+                            }
+                        );
+
+
+                    let data = null;
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (error) {
+
+                        data =
+                            null;
+
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data?.message ||
+                            data?.error ||
+                            "Unable to retrieve Fair Price Shop information."
+                        );
+
+                    }
+
+
+                    const shops =
+                        normalizeResults(
+                            data
+                        );
+
+
+                    renderResults(
+                        shops
+                    );
+
+
+                    results.hidden =
+                        false;
+
+
+                    results.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Fair Price Shop search error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to retrieve Fair Price Shop information.",
+                        "error"
+                    );
+
+
+                    results.hidden =
+                        true;
+
+                } finally {
+
+                    searchButton.disabled =
+                        false;
+
+                    searchButton.textContent =
+                        "Search Shops";
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           CURRENT YEAR
+           ===================================================== */
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>

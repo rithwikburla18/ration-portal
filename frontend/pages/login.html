@@ -1,4 +1,801 @@
-﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Citizen Login - Ration Portal"><title>Citizen Login | Ration Portal</title><link rel="stylesheet" href="../css/style.css"><script src="../config.js"></script></head><body class="login-page"><header class="top-bar"><div>Public Distribution System</div></header><nav class="navbar"><div class="brand"><span class="brand-logo">IN</span><span>RATION PORTAL</span></div><div class="nav-links"><a href="../index.html">Home</a><a href="e-ration-card.html">Ration Card</a><a href="fair-price-shop.html">Fair Price Shop</a><a href="grievance.html">Grievance</a></div></nav><main class="login-container"><section class="login-hero"><div class="login-emblem">IN</div><span class="login-badge">PUBLIC DISTRIBUTION SYSTEM</span><h1>Welcome back</h1><p>Sign in securely to access your ration card services, applications, grievances and citizen information.</p><div class="login-highlights"><div><strong>Secure</strong><span>Protected citizen access</span></div><div><strong>Simple</strong><span>Easy online services</span></div><div><strong>Accessible</strong><span>Citizen-focused portal</span></div></div></section><section class="login-card"><div class="login-card-header"><span class="login-icon">IN</span><div><h2>Citizen Login</h2><p>Enter your registered account details.</p></div></div><form id="loginForm" novalidate><div class="login-field"><label for="email">Email Address</label><input id="email" name="email" type="email" placeholder="Enter your email address" autocomplete="email" required><small id="emailError" class="field-error"></small></div><div class="login-field"><label for="password">Password</label><div class="password-wrapper"><input id="password" name="password" type="password" placeholder="Enter your password" minlength="8" autocomplete="current-password" required><button type="button" id="togglePassword" class="password-toggle">Show</button></div><small id="passwordError" class="field-error"></small></div><button type="submit" id="loginButton" class="login-submit"><span id="loginButtonText">Sign in</span><span id="loginSpinner" class="login-spinner" hidden></span></button></form><div id="loginResult" class="login-result" aria-live="polite"></div><div class="login-divider"><span>New citizen?</span></div><a href="register.html" class="register-link">Create a citizen account</a><p class="login-note">Your information is transmitted securely to the Ration Portal backend.</p></section></main><footer class="login-footer"><p>Educational Project - Not an official Government of India website.</p></footer><script>const API=window.RATION_API_BASE;const loginForm=document.getElementById("loginForm"),emailInput=document.getElementById("email"),passwordInput=document.getElementById("password"),loginButton=document.getElementById("loginButton"),loginButtonText=document.getElementById("loginButtonText"),loginSpinner=document.getElementById("loginSpinner"),loginResult=document.getElementById("loginResult"),emailError=document.getElementById("emailError"),passwordError=document.getElementById("passwordError"),togglePassword=document.getElementById("togglePassword");togglePassword.addEventListener("click",()=>{const showing=passwordInput.type==="text";passwordInput.type=showing?"password":"text";togglePassword.textContent=showing?"Show":"Hide"});function clearErrors(){emailError.textContent="";passwordError.textContent="";loginResult.textContent="";loginResult.className="login-result"}function setLoading(loading){loginButton.disabled=loading;loginSpinner.hidden=!loading;loginButtonText.textContent=loading?"Signing in...":"Sign in"}loginForm.addEventListener("submit",async function(event){event.preventDefault();clearErrors();const email=emailInput.value.trim(),password=passwordInput.value;if(!email){emailError.textContent="Please enter your email address.";emailInput.focus();return}if(!emailInput.checkValidity()){emailError.textContent="Please enter a valid email address.";emailInput.focus();return}if(!password){passwordError.textContent="Please enter your password.";passwordInput.focus();return}if(password.length<8){passwordError.textContent="Password must contain at least 8 characters.";passwordInput.focus();return}setLoading(true);loginResult.className="login-result loading";loginResult.innerHTML="<strong>Connecting to the secure server...</strong><br><span>The first request may take a little longer while the server starts.</span>";try{const response=await fetch(API+"/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,password:password})});let data={};try{data=await response.json()}catch(error){}if(!response.ok)throw new Error(data.message||"Invalid email or password.");sessionStorage.setItem("rationPortalToken",data.token);sessionStorage.setItem("rationPortalUser",JSON.stringify({fullName:data.fullName,role:data.role,email:email}));loginResult.className="login-result success";loginResult.innerHTML="<strong>Login successful.</strong><br><span>Redirecting to your citizen dashboard...</span>";loginButtonText.textContent="Success";setTimeout(()=>{const redirect=new URLSearchParams(window.location.search).get("redirect");window.location.href=redirect&&redirect.startsWith("/")?redirect:"../index.html"},700)}catch(error){loginResult.className="login-result error";loginResult.innerHTML="<strong>Unable to sign in.</strong><br><span>"+(error.message||"The server could not process your request. Please try again.")+"</span>";setLoading(false)}});</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Secure Citizen Login — Ration Portal"
+    >
+
+    <title>Citizen Login | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script src="../config.js"></script>
+
+</head>
 
 
+<body class="auth-page">
 
+    <!-- =====================================================
+         TRICOLOUR TOP LINE
+         ===================================================== -->
+
+    <div class="tricolour-line" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+
+    <!-- =====================================================
+         GOVERNMENT TOP BAR
+         ===================================================== -->
+
+    <div class="gov-bar">
+
+        <div class="container gov-bar-inner">
+
+            <div class="gov-bar-left">
+                <span>Government Service Portal</span>
+            </div>
+
+            <div class="gov-bar-right">
+                <span>भारत सरकार</span>
+                <span aria-hidden="true">|</span>
+                <span>Government of India</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BRAND HEADER
+         ===================================================== -->
+
+    <header class="brand-header">
+
+        <div class="container brand-header-inner">
+
+            <a
+                href="../index.html"
+                class="brand"
+                aria-label="Ration Portal home"
+            >
+
+                <div
+                    class="brand-emblem"
+                    aria-hidden="true"
+                >
+                    <div class="chakra">☸</div>
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-title">
+                        RATION PORTAL
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Public Distribution System
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <div class="header-utility">
+
+                <span>
+                    Citizen Services
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         LOGIN MAIN
+         ===================================================== -->
+
+    <main class="auth-main">
+
+        <div class="container auth-container">
+
+            <section class="login-card">
+
+                <!-- LEFT INFORMATION PANEL -->
+
+                <div class="login-info">
+
+                    <span class="section-kicker">
+                        SECURE CITIZEN ACCESS
+                    </span>
+
+                    <h1>
+                        Welcome to the
+                        <span>Ration Portal</span>
+                    </h1>
+
+                    <p class="login-info-text">
+                        Sign in securely to access ration card
+                        services, applications, grievances,
+                        e-ration services and citizen information.
+                    </p>
+
+
+                    <div class="login-benefits">
+
+                        <div class="login-benefit">
+
+                            <span class="benefit-icon">
+                                ✓
+                            </span>
+
+                            <div>
+                                <strong>
+                                    Secure Access
+                                </strong>
+
+                                <p>
+                                    Protected citizen services
+                                    using secure authentication.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="login-benefit">
+
+                            <span class="benefit-icon">
+                                ✓
+                            </span>
+
+                            <div>
+                                <strong>
+                                    Citizen Services
+                                </strong>
+
+                                <p>
+                                    Access multiple ration-related
+                                    services from one portal.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="login-benefit">
+
+                            <span class="benefit-icon">
+                                ✓
+                            </span>
+
+                            <div>
+                                <strong>
+                                    Digital Services
+                                </strong>
+
+                                <p>
+                                    View applications and services
+                                    online with ease.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT LOGIN PANEL -->
+
+                <div class="login-panel">
+
+                    <div class="login-panel-header">
+
+                        <div class="login-icon">
+                            <span>↪</span>
+                        </div>
+
+                        <div>
+
+                            <span class="section-kicker">
+                                CITIZEN LOGIN
+                            </span>
+
+                            <h2>
+                                Sign in to your account
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LOGIN FORM -->
+
+                    <form
+                        id="loginForm"
+                        class="login-form"
+                        novalidate
+                    >
+
+                        <div
+                            id="loginMessage"
+                            class="form-message"
+                            role="alert"
+                            aria-live="polite"
+                            hidden
+                        ></div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="form-group">
+
+                            <label
+                                for="email"
+                            >
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Enter your email address"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- PASSWORD -->
+
+                        <div class="form-group">
+
+                            <div class="form-label-row">
+
+                                <label
+                                    for="password"
+                                >
+                                    Password
+                                </label>
+
+                            </div>
+
+                            <div class="password-field">
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Enter your password"
+                                    autocomplete="current-password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    id="togglePassword"
+                                    class="password-toggle"
+                                    aria-label="Show password"
+                                >
+                                    Show
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SUBMIT -->
+
+                        <button
+                            type="submit"
+                            id="loginButton"
+                            class="btn btn-primary btn-full"
+                        >
+                            <span>
+                                Sign In Securely
+                            </span>
+
+                            <span
+                                class="btn-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- REGISTER -->
+
+                    <div class="login-divider">
+
+                        <span>
+                            New citizen?
+                        </span>
+
+                    </div>
+
+
+                    <a
+                        href="register.html"
+                        class="btn btn-secondary btn-full"
+                    >
+                        Create Citizen Account
+                    </a>
+
+
+                    <!-- BACK HOME -->
+
+                    <a
+                        href="../index.html"
+                        class="back-home-link"
+                    >
+                        ← Back to Ration Portal
+                    </a>
+
+
+                    <!-- SECURITY NOTICE -->
+
+                    <div class="login-security">
+
+                        <span
+                            class="security-icon"
+                            aria-hidden="true"
+                        >
+                            🔒
+                        </span>
+
+                        <p>
+                            Your login information is transmitted
+                            through a secure connection.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DISCLAIMER
+                 ================================================= -->
+
+            <div class="auth-disclaimer">
+
+                <strong>
+                    Educational Project
+                </strong>
+
+                <span>
+                    This portal is a student-developed educational
+                    project inspired by Indian government service
+                    portal design. It is not an official Government
+                    of India website.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                Ration Portal.
+                Educational project.
+            </p>
+
+            <p>
+                Designed for citizen-focused digital services.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script>
+
+        const API =
+            window.RATION_API_BASE ||
+            "https://ration-portal-backend.onrender.com/api";
+
+
+        const TOKEN_KEY =
+            "rationPortalToken";
+
+
+        const USER_KEY =
+            "rationPortalUser";
+
+
+        const loginForm =
+            document.getElementById(
+                "loginForm"
+            );
+
+
+        const loginMessage =
+            document.getElementById(
+                "loginMessage"
+            );
+
+
+        const loginButton =
+            document.getElementById(
+                "loginButton"
+            );
+
+
+        const passwordInput =
+            document.getElementById(
+                "password"
+            );
+
+
+        const togglePassword =
+            document.getElementById(
+                "togglePassword"
+            );
+
+
+        /* -----------------------------------------------------
+           SHOW / HIDE PASSWORD
+           ----------------------------------------------------- */
+
+        if (togglePassword) {
+
+            togglePassword.addEventListener(
+                "click",
+                function () {
+
+                    const visible =
+                        passwordInput.type === "text";
+
+
+                    passwordInput.type =
+                        visible
+                            ? "password"
+                            : "text";
+
+
+                    togglePassword.textContent =
+                        visible
+                            ? "Show"
+                            : "Hide";
+
+
+                    togglePassword.setAttribute(
+                        "aria-label",
+                        visible
+                            ? "Show password"
+                            : "Hide password"
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* -----------------------------------------------------
+           MESSAGE
+           ----------------------------------------------------- */
+
+        function showMessage(
+            message,
+            type
+        ) {
+
+            loginMessage.hidden =
+                false;
+
+            loginMessage.className =
+                "form-message " +
+                "form-message-" +
+                type;
+
+            loginMessage.textContent =
+                message;
+
+        }
+
+
+        /* -----------------------------------------------------
+           LOGIN
+           ----------------------------------------------------- */
+
+        loginForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim();
+
+
+                const password =
+                    passwordInput
+                        .value;
+
+
+                if (!email) {
+
+                    showMessage(
+                        "Please enter your email address.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!password) {
+
+                    showMessage(
+                        "Please enter your password.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                loginButton.disabled =
+                    true;
+
+
+                loginButton.innerHTML =
+                    `
+                    <span>
+                        Signing in...
+                    </span>
+                    `;
+
+
+                loginMessage.hidden =
+                    true;
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `${API}/auth/login`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        email:
+                                            email,
+                                        password:
+                                            password
+                                    })
+                            }
+                        );
+
+
+                    let data = null;
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (error) {
+
+                        data = null;
+
+                    }
+
+
+                    if (!response.ok) {
+
+                        const errorMessage =
+                            data?.message ||
+                            data?.error ||
+                            "Invalid email or password.";
+
+                        throw new Error(
+                            errorMessage
+                        );
+
+                    }
+
+
+                    const token =
+                        data?.token ||
+                        data?.accessToken;
+
+
+                    if (!token) {
+
+                        throw new Error(
+                            "Login succeeded but no authentication token was returned."
+                        );
+
+                    }
+
+
+                    /* -----------------------------------------
+                       SAVE TOKEN
+                       ----------------------------------------- */
+
+                    sessionStorage.setItem(
+                        TOKEN_KEY,
+                        token
+                    );
+
+
+                    /* -----------------------------------------
+                       SAVE USER
+                       ----------------------------------------- */
+
+                    const user =
+                        data?.user ||
+                        data?.citizen ||
+                        {
+                            email:
+                                email
+                        };
+
+
+                    sessionStorage.setItem(
+                        USER_KEY,
+                        JSON.stringify(user)
+                    );
+
+
+                    /* -----------------------------------------
+                       REDIRECT
+                       ----------------------------------------- */
+
+                    const params =
+                        new URLSearchParams(
+                            window.location.search
+                        );
+
+
+                    const redirect =
+                        params.get(
+                            "redirect"
+                        );
+
+
+                    if (
+                        redirect &&
+                        redirect.startsWith("/")
+                    ) {
+
+                        window.location.replace(
+                            redirect
+                        );
+
+                    } else {
+
+                        window.location.replace(
+                            "../index.html"
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Login error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to sign in. Please try again.",
+                        "error"
+                    );
+
+
+                    loginButton.disabled =
+                        false;
+
+
+                    loginButton.innerHTML =
+                        `
+                        <span>
+                            Sign In Securely
+                        </span>
+
+                        <span
+                            class="btn-arrow"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+                        `;
+
+                }
+
+            }
+        );
+
+
+        /* -----------------------------------------------------
+           CURRENT YEAR
+           ----------------------------------------------------- */
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>

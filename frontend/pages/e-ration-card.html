@@ -1,2 +1,1414 @@
-﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Download e-Ration Card</title><link rel="stylesheet" href="../css/style.css"><script src="../config.js"></script><script src="../js/auth-guard.js"></script></head><body><main class="container"><h1>Download e-Ration Card</h1><p>Enter your ration card number to view and download your e-Ration Card.</p><input id="rationNumber" placeholder="Enter ration card number"><button onclick="loadCard()">View Card</button><div id="result"></div></main><script>const API=window.RATION_API_BASE;function loadCard(){const n=document.getElementById("rationNumber").value.trim();const r=document.getElementById("result");if(!n){r.textContent="Please enter a ration card number.";return;}r.textContent="Loading...";fetch(API+"/ration-cards/"+encodeURIComponent(n)).then(x=>{if(!x.ok)throw new Error();return x.json()}).then(c=>{r.innerHTML="<div class=\"result-card\"><h2>e-Ration Card</h2><p><strong>Ration Card Number:</strong> "+(c.rationCardNumber||"N/A")+"</p><p><strong>Card Type:</strong> "+(c.cardType||"N/A")+"</p><p><strong>Head of Family:</strong> "+(c.headOfFamily||"N/A")+"</p><p><strong>Address:</strong> "+(c.address||"N/A")+"</p><p><strong>District:</strong> "+(c.district||"N/A")+"</p><p><strong>State:</strong> "+(c.state||"N/A")+"</p><p><strong>Status:</strong> "+(c.status||"N/A")+"</p><button onclick=\"window.print()\">Print / Save as PDF</button></div>"}).catch(()=>r.textContent="Ration card not found or backend is unavailable.")}</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="View and download your e-Ration Card."
+    >
+
+    <title>e-Ration Card | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script src="../config.js"></script>
+    <script src="../js/auth-guard.js"></script>
+
+</head>
+
+<body>
+
+    <!-- =====================================================
+         TRICOLOUR LINE
+         ===================================================== -->
+
+    <div
+        class="tricolour-line"
+        aria-hidden="true"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+
+    <!-- =====================================================
+         GOVERNMENT BAR
+         ===================================================== -->
+
+    <div class="gov-bar">
+
+        <div class="container gov-bar-inner">
+
+            <div class="gov-bar-left">
+                <span>
+                    Government Service Portal
+                </span>
+            </div>
+
+            <div class="gov-bar-right">
+
+                <span>
+                    भारत सरकार
+                </span>
+
+                <span aria-hidden="true">
+                    |
+                </span>
+
+                <span>
+                    Government of India
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BRAND HEADER
+         ===================================================== -->
+
+    <header class="brand-header">
+
+        <div class="container brand-header-inner">
+
+            <a
+                href="../index.html"
+                class="brand"
+            >
+
+                <div
+                    class="brand-emblem"
+                    aria-hidden="true"
+                >
+                    <div class="chakra">
+                        ☸
+                    </div>
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-title">
+                        RATION PORTAL
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Public Distribution System
+                    </span>
+
+                </div>
+
+            </a>
+
+            <div
+                id="authArea"
+                class="header-auth-area"
+            ></div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         NAVIGATION
+         ===================================================== -->
+
+    <nav
+        class="main-nav"
+        id="mainNavigation"
+        aria-label="Main navigation"
+    >
+
+        <div class="container main-nav-inner">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="apply-ration-card.html">
+                Apply Ration Card
+            </a>
+
+            <a href="applications.html">
+                My Applications
+            </a>
+
+            <a
+                href="e-ration-card.html"
+                class="active"
+            >
+                e-Ration Card
+            </a>
+
+            <a href="fair-price-shop.html">
+                Fair Price Shops
+            </a>
+
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+            <a href="transparency.html">
+                Transparency
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         PAGE HERO
+         ===================================================== -->
+
+    <section class="page-hero">
+
+        <div class="container page-hero-inner">
+
+            <div>
+
+                <span class="section-kicker">
+                    DIGITAL DOCUMENT
+                </span>
+
+                <h1>
+                    e-Ration Card
+                </h1>
+
+                <p>
+                    Access your digital ration card and view
+                    your household information.
+                </p>
+
+            </div>
+
+            <div
+                class="page-hero-mark"
+                aria-hidden="true"
+            >
+                ID
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="page-main">
+
+        <div class="container">
+
+
+            <!-- =================================================
+                 SEARCH
+                 ================================================= -->
+
+            <section class="form-card">
+
+                <div class="form-card-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            DIGITAL RATION CARD
+                        </span>
+
+                        <h2>
+                            Find Your Ration Card
+                        </h2>
+
+                        <p>
+                            Enter your ration card number to
+                            retrieve your household details.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    id="rationCardForm"
+                    class="search-form"
+                >
+
+                    <div class="form-group">
+
+                        <label for="rationNumber">
+                            Ration Card Number
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="rationNumber"
+                            name="rationNumber"
+                            placeholder="Enter ration card number"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="searchButton"
+                    >
+                        View e-Ration Card
+                    </button>
+
+                </form>
+
+
+                <div
+                    id="cardMessage"
+                    class="form-message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DIGITAL CARD
+                 ================================================= -->
+
+            <section
+                id="rationCardResult"
+                class="digital-card-wrapper"
+                hidden
+            >
+
+                <div class="digital-card">
+
+                    <!-- =========================================
+                         CARD HEADER
+                         ========================================= -->
+
+                    <div class="digital-card-header">
+
+                        <div
+                            class="digital-card-emblem"
+                            aria-hidden="true"
+                        >
+                            ☸
+                        </div>
+
+                        <div>
+
+                            <span>
+                                PUBLIC DISTRIBUTION SYSTEM
+                            </span>
+
+                            <h2>
+                                e-Ration Card
+                            </h2>
+
+                            <small>
+                                Digital Household Identification
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         CARD BODY
+                         ========================================= -->
+
+                    <div class="digital-card-body">
+
+
+                        <div class="digital-card-number">
+
+                            <span>
+                                RATION CARD NUMBER
+                            </span>
+
+                            <strong
+                                id="cardNumber"
+                            >
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="digital-card-grid">
+
+
+                            <div class="digital-card-field">
+
+                                <span>
+                                    Head of Family
+                                </span>
+
+                                <strong
+                                    id="headOfFamily"
+                                >
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="digital-card-field">
+
+                                <span>
+                                    Card Type
+                                </span>
+
+                                <strong
+                                    id="cardType"
+                                >
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="digital-card-field">
+
+                                <span>
+                                    District
+                                </span>
+
+                                <strong
+                                    id="district"
+                                >
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="digital-card-field">
+
+                                <span>
+                                    State
+                                </span>
+
+                                <strong
+                                    id="state"
+                                >
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="digital-card-field">
+
+                                <span>
+                                    Family Members
+                                </span>
+
+                                <strong
+                                    id="memberCount"
+                                >
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="digital-card-field">
+
+                                <span>
+                                    Status
+                                </span>
+
+                                <strong
+                                    id="cardStatus"
+                                >
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div class="digital-card-field digital-card-address">
+
+                                <span>
+                                    Address
+                                </span>
+
+                                <strong
+                                    id="cardAddress"
+                                >
+                                    —
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================================
+                             FAMILY TABLE
+                             ===================================== -->
+
+                        <div class="family-table-section">
+
+                            <div class="table-heading">
+
+                                <div>
+
+                                    <span class="section-kicker">
+                                        HOUSEHOLD
+                                    </span>
+
+                                    <h3>
+                                        Family Members
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="table-wrapper">
+
+                                <table>
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>
+                                                #
+                                            </th>
+
+                                            <th>
+                                                Name
+                                            </th>
+
+                                            <th>
+                                                Age
+                                            </th>
+
+                                            <th>
+                                                Gender
+                                            </th>
+
+                                            <th>
+                                                Relationship
+                                            </th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody
+                                        id="familyMembersBody"
+                                    >
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =========================================
+                         CARD FOOTER
+                         ========================================= -->
+
+                    <div class="digital-card-footer">
+
+                        <div>
+
+                            <span>
+                                Digital record
+                            </span>
+
+                            <strong>
+                                Ration Portal
+                            </strong>
+
+                        </div>
+
+                        <div>
+                            Verify details through the portal.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     CARD ACTIONS
+                     ================================================= -->
+
+                <div class="digital-card-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="printCardButton"
+                    >
+                        Print e-Ration Card
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="downloadCardButton"
+                    >
+                        Download Card
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 INFORMATION
+                 ================================================= -->
+
+            <section class="support-grid">
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Digital Access
+                        </h3>
+
+                        <p>
+                            View your household ration card
+                            information online.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        ID
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Keep Your Number Safe
+                        </h3>
+
+                        <p>
+                            Your ration card number is used to
+                            identify your household record.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        ⓘ
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Check Your Details
+                        </h3>
+
+                        <p>
+                            Review the displayed family information
+                            before using the digital record.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 DISCLAIMER
+                 ================================================= -->
+
+            <div class="auth-disclaimer">
+
+                <strong>
+                    Educational Project
+                </strong>
+
+                <span>
+                    This portal is a student-developed educational
+                    project inspired by Indian government service
+                    portal design. It is not an official Government
+                    of India website.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                Ration Portal.
+                Educational project.
+            </p>
+
+            <p>
+                Public Distribution System citizen services.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="../js/app.js"></script>
+    <script src="../js/script.js"></script>
+
+
+    <script>
+
+        "use strict";
+
+
+        const API =
+            window.RATION_API_BASE ||
+            "https://ration-portal-backend.onrender.com/api";
+
+
+        const form =
+            document.getElementById(
+                "rationCardForm"
+            );
+
+
+        const input =
+            document.getElementById(
+                "rationNumber"
+            );
+
+
+        const button =
+            document.getElementById(
+                "searchButton"
+            );
+
+
+        const message =
+            document.getElementById(
+                "cardMessage"
+            );
+
+
+        const result =
+            document.getElementById(
+                "rationCardResult"
+            );
+
+
+        /* =====================================================
+           MESSAGE
+           ===================================================== */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.hidden =
+                false;
+
+            message.className =
+                "form-message form-message-" +
+                type;
+
+            message.textContent =
+                text;
+
+        }
+
+
+        function hideMessage() {
+
+            message.hidden =
+                true;
+
+            message.textContent =
+                "";
+
+        }
+
+
+        /* =====================================================
+           DISPLAY VALUE
+           ===================================================== */
+
+        function valueOrDash(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined ||
+                value === ""
+            ) {
+
+                return "—";
+
+            }
+
+            return String(value);
+
+        }
+
+
+        /* =====================================================
+           ESCAPE HTML
+           ===================================================== */
+
+        function escapeHtml(
+            value
+        ) {
+
+            return String(
+                value ?? ""
+            )
+                .replaceAll(
+                    "&",
+                    "&amp;"
+                )
+                .replaceAll(
+                    "<",
+                    "&lt;"
+                )
+                .replaceAll(
+                    ">",
+                    "&gt;"
+                )
+                .replaceAll(
+                    '"',
+                    "&quot;"
+                )
+                .replaceAll(
+                    "'",
+                    "&#039;"
+                );
+
+        }
+
+
+        /* =====================================================
+           FAMILY MEMBERS
+           ===================================================== */
+
+        function renderFamilyMembers(
+            members
+        ) {
+
+            const tbody =
+                document.getElementById(
+                    "familyMembersBody"
+                );
+
+
+            tbody.innerHTML =
+                "";
+
+
+            if (
+                !Array.isArray(
+                    members
+                ) ||
+                members.length === 0
+            ) {
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                row.innerHTML =
+                    `
+                    <td colspan="5">
+                        No family member records available.
+                    </td>
+                    `;
+
+
+                tbody.appendChild(
+                    row
+                );
+
+                return;
+
+            }
+
+
+            members.forEach(
+                function (
+                    member,
+                    index
+                ) {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML =
+                        `
+                        <td>
+                            ${index + 1}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                member.name ||
+                                member.memberName ||
+                                "—"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                member.age ??
+                                "—"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                member.gender ||
+                                "—"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                member.relationship ||
+                                "—"
+                            )}
+                        </td>
+                        `;
+
+
+                    tbody.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           DISPLAY CARD
+           ===================================================== */
+
+        function displayCard(
+            responseData
+        ) {
+
+            const data =
+                responseData?.data ||
+                responseData?.rationCard ||
+                responseData;
+
+
+            const members =
+                data.familyMembers ||
+                data.members ||
+                data.family ||
+                [];
+
+
+            document
+                .getElementById(
+                    "cardNumber"
+                )
+                .textContent =
+                valueOrDash(
+                    data.rationNumber ||
+                    data.rationCardNumber ||
+                    data.cardNumber
+                );
+
+
+            document
+                .getElementById(
+                    "headOfFamily"
+                )
+                .textContent =
+                valueOrDash(
+                    data.headOfFamily ||
+                    data.name ||
+                    data.holderName
+                );
+
+
+            document
+                .getElementById(
+                    "cardType"
+                )
+                .textContent =
+                valueOrDash(
+                    data.cardType
+                );
+
+
+            document
+                .getElementById(
+                    "district"
+                )
+                .textContent =
+                valueOrDash(
+                    data.district
+                );
+
+
+            document
+                .getElementById(
+                    "state"
+                )
+                .textContent =
+                valueOrDash(
+                    data.state
+                );
+
+
+            document
+                .getElementById(
+                    "memberCount"
+                )
+                .textContent =
+                members.length ||
+                data.familyMembersCount ||
+                data.memberCount ||
+                "0";
+
+
+            document
+                .getElementById(
+                    "cardStatus"
+                )
+                .textContent =
+                valueOrDash(
+                    data.status ||
+                    "Active"
+                );
+
+
+            document
+                .getElementById(
+                    "cardAddress"
+                )
+                .textContent =
+                valueOrDash(
+                    data.address
+                );
+
+
+            renderFamilyMembers(
+                members
+            );
+
+
+            result.hidden =
+                false;
+
+
+            result.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
+
+
+        /* =====================================================
+           SEARCH
+           ===================================================== */
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const rationNumber =
+                    input.value.trim();
+
+
+                if (!rationNumber) {
+
+                    showMessage(
+                        "Please enter your ration card number.",
+                        "error"
+                    );
+
+                    result.hidden =
+                        true;
+
+                    return;
+
+                }
+
+
+                hideMessage();
+
+
+                button.disabled =
+                    true;
+
+                button.textContent =
+                    "Loading...";
+
+
+                result.hidden =
+                    true;
+
+
+                try {
+
+                    const token =
+                        localStorage.getItem(
+                            "rationPortalToken"
+                        );
+
+
+                    const headers = {
+                        "Content-Type":
+                            "application/json"
+                    };
+
+
+                    if (token) {
+
+                        headers.Authorization =
+                            "Bearer " +
+                            token;
+
+                    }
+
+
+                    const response =
+                        await fetch(
+                            `${API}/ration-cards/${encodeURIComponent(rationNumber)}`,
+                            {
+                                method: "GET",
+                                headers: headers
+                            }
+                        );
+
+
+                    let data = null;
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (error) {
+
+                        data =
+                            null;
+
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data?.message ||
+                            data?.error ||
+                            "Ration card could not be found."
+                        );
+
+                    }
+
+
+                    displayCard(
+                        data
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "e-Ration Card error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to retrieve the ration card.",
+                        "error"
+                    );
+
+
+                } finally {
+
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        "View e-Ration Card";
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           PRINT
+           ===================================================== */
+
+        document
+            .getElementById(
+                "printCardButton"
+            )
+            .addEventListener(
+                "click",
+                function () {
+
+                    if (
+                        result.hidden
+                    ) {
+
+                        showMessage(
+                            "Please retrieve your ration card first.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    window.print();
+
+                }
+            );
+
+
+        /* =====================================================
+           DOWNLOAD
+           ===================================================== */
+
+        document
+            .getElementById(
+                "downloadCardButton"
+            )
+            .addEventListener(
+                "click",
+                function () {
+
+                    if (
+                        result.hidden
+                    ) {
+
+                        showMessage(
+                            "Please retrieve your ration card first.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    const card =
+                        document.querySelector(
+                            ".digital-card"
+                        );
+
+
+                    const popup =
+                        window.open(
+                            "",
+                            "_blank"
+                        );
+
+
+                    if (!popup) {
+
+                        showMessage(
+                            "Please allow pop-ups to download the card.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    const styles =
+                        Array.from(
+                            document.querySelectorAll(
+                                "link[rel='stylesheet']"
+                            )
+                        )
+                        .map(
+                            function (link) {
+
+                                return `
+                                <link
+                                    rel="stylesheet"
+                                    href="${link.href}"
+                                >
+                                `;
+
+                            }
+                        )
+                        .join("");
+
+
+                    popup.document.write(
+                        `
+                        <!DOCTYPE html>
+
+                        <html>
+
+                        <head>
+
+                            <meta charset="UTF-8">
+
+                            <title>
+                                e-Ration Card
+                            </title>
+
+                            ${styles}
+
+                            <style>
+
+                                body {
+                                    background: #ffffff;
+                                    padding: 30px;
+                                }
+
+                                .digital-card {
+                                    max-width: 900px;
+                                    margin: 0 auto;
+                                }
+
+                            </style>
+
+                        </head>
+
+                        <body>
+
+                            ${card.outerHTML}
+
+                        </body>
+
+                        </html>
+                        `
+                    );
+
+
+                    popup.document.close();
+
+
+                    popup.focus();
+
+
+                    setTimeout(
+                        function () {
+
+                            popup.print();
+
+                        },
+                        500
+                    );
+
+                }
+            );
+
+
+        /* =====================================================
+           CURRENT YEAR
+           ===================================================== */
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>

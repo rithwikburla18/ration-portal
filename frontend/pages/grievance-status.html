@@ -1,2 +1,1553 @@
-﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Grievance Status</title><link rel="stylesheet" href="../css/style.css"><script src="../config.js"></script><script src="../js/auth-guard.js"></script></head><body><main class="container"><h1>Grievance Status</h1><p>Enter your grievance number to check the current status.</p><form id="trackForm"><input id="grievanceNumber" placeholder="Grievance Number (e.g. GRV9926EE27)" required><button type="submit" id="trackButton">Check Status</button></form><div id="result"></div></main><script>const API=window.RATION_API_BASE;document.getElementById("trackForm").addEventListener("submit",async function(e){e.preventDefault();const b=document.getElementById("trackButton"),r=document.getElementById("result"),number=document.getElementById("grievanceNumber").value.trim();b.disabled=true;b.textContent="Searching...";r.textContent="";try{const response=await fetch(API+"/grievances/"+encodeURIComponent(number));if(!response.ok)throw new Error("not-found");const g=await response.json();r.innerHTML="<div class=\"result-card\"><h3>Grievance Details</h3><p><strong>Grievance Number:</strong> "+g.grievanceNumber+"</p><p><strong>Applicant Name:</strong> "+g.applicantName+"</p><p><strong>Ration Card Number:</strong> "+g.rationCardNumber+"</p><p><strong>Category:</strong> "+g.category+"</p><p><strong>Description:</strong> "+g.description+"</p><p><strong>Submitted:</strong> "+g.createdAt+"</p><p><strong>Status:</strong> "+g.status+"</p></div>"}catch(e){r.textContent=e.message==="not-found"?"Grievance not found. Please check the grievance number.":"Backend is unavailable. Please start the Spring Boot server."}finally{b.disabled=false;b.textContent="Check Status"}});</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Track the status of a grievance submitted through the Ration Portal."
+    >
+
+    <title>Grievance Status | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script src="../config.js"></script>
+    <script src="../js/auth-guard.js"></script>
+
+</head>
+
+<body>
+
+    <!-- =====================================================
+         TRICOLOUR LINE
+         ===================================================== -->
+
+    <div
+        class="tricolour-line"
+        aria-hidden="true"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+
+    <!-- =====================================================
+         GOVERNMENT BAR
+         ===================================================== -->
+
+    <div class="gov-bar">
+
+        <div class="container gov-bar-inner">
+
+            <div class="gov-bar-left">
+                <span>
+                    Government Service Portal
+                </span>
+            </div>
+
+            <div class="gov-bar-right">
+
+                <span>
+                    भारत सरकार
+                </span>
+
+                <span aria-hidden="true">
+                    |
+                </span>
+
+                <span>
+                    Government of India
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BRAND HEADER
+         ===================================================== -->
+
+    <header class="brand-header">
+
+        <div class="container brand-header-inner">
+
+            <a
+                href="../index.html"
+                class="brand"
+            >
+
+                <div
+                    class="brand-emblem"
+                    aria-hidden="true"
+                >
+                    <div class="chakra">
+                        ☸
+                    </div>
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-title">
+                        RATION PORTAL
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Public Distribution System
+                    </span>
+
+                </div>
+
+            </a>
+
+            <div
+                id="authArea"
+                class="header-auth-area"
+            ></div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         NAVIGATION
+         ===================================================== -->
+
+    <nav
+        class="main-nav"
+        id="mainNavigation"
+        aria-label="Main navigation"
+    >
+
+        <div class="container main-nav-inner">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="apply-ration-card.html">
+                Apply Ration Card
+            </a>
+
+            <a href="applications.html">
+                My Applications
+            </a>
+
+            <a href="e-ration-card.html">
+                e-Ration Card
+            </a>
+
+            <a href="fair-price-shop.html">
+                Fair Price Shops
+            </a>
+
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+            <a
+                href="grievance-status.html"
+                class="active"
+            >
+                Grievance Status
+            </a>
+
+            <a href="transparency.html">
+                Transparency
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         PAGE HERO
+         ===================================================== -->
+
+    <section class="page-hero">
+
+        <div class="container page-hero-inner">
+
+            <div>
+
+                <span class="section-kicker">
+                    CITIZEN SUPPORT
+                </span>
+
+                <h1>
+                    Grievance Status
+                </h1>
+
+                <p>
+                    Track the current status of your submitted
+                    grievance using the grievance number.
+                </p>
+
+            </div>
+
+            <div
+                class="page-hero-mark"
+                aria-hidden="true"
+            >
+                ✓
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="page-main">
+
+        <div class="container">
+
+
+            <!-- =================================================
+                 SEARCH CARD
+                 ================================================= -->
+
+            <section class="form-card">
+
+                <div class="form-card-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            STATUS SEARCH
+                        </span>
+
+                        <h2>
+                            Track Your Grievance
+                        </h2>
+
+                        <p>
+                            Enter the grievance number provided
+                            after submission.
+                        </p>
+
+                    </div>
+
+                    <div class="form-step">
+                        Track
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="statusMessage"
+                    class="form-message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+
+                <form
+                    id="statusForm"
+                    novalidate
+                >
+
+                    <div class="form-grid">
+
+                        <div class="form-group form-group-wide">
+
+                            <label for="grievanceNumber">
+                                Grievance Number
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="grievanceNumber"
+                                name="grievanceNumber"
+                                placeholder="Enter grievance number"
+                                autocomplete="off"
+                                required
+                            >
+
+                            <small class="field-help">
+                                Enter the grievance number exactly
+                                as provided during submission.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button
+                            type="reset"
+                            class="btn btn-secondary"
+                        >
+                            Clear
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="searchButton"
+                        >
+
+                            <span>
+                                Check Status
+                            </span>
+
+                            <span
+                                class="btn-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+
+            <!-- =================================================
+                 RESULT
+                 ================================================= -->
+
+            <section
+                id="resultSection"
+                class="result-section"
+                hidden
+            >
+
+                <!-- =============================================
+                     STATUS SUMMARY
+                     ============================================= -->
+
+                <div class="result-card">
+
+                    <div class="result-card-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                GRIEVANCE RECORD
+                            </span>
+
+                            <h2>
+                                Grievance Details
+                            </h2>
+
+                        </div>
+
+                        <span
+                            id="statusBadge"
+                            class="status-badge"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+
+                    <div class="result-grid">
+
+                        <div class="result-item">
+
+                            <span>
+                                Grievance Number
+                            </span>
+
+                            <strong id="resultNumber">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-item">
+
+                            <span>
+                                Submitted Date
+                            </span>
+
+                            <strong id="resultDate">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-item">
+
+                            <span>
+                                Applicant Name
+                            </span>
+
+                            <strong id="resultName">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-item">
+
+                            <span>
+                                Category
+                            </span>
+
+                            <strong id="resultCategory">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-item">
+
+                            <span>
+                                District
+                            </span>
+
+                            <strong id="resultDistrict">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-item">
+
+                            <span>
+                                Last Updated
+                            </span>
+
+                            <strong id="resultUpdated">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     SUBJECT / DESCRIPTION
+                     ============================================= -->
+
+                <div class="result-card">
+
+                    <div class="result-card-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                ISSUE INFORMATION
+                            </span>
+
+                            <h2>
+                                Submitted Grievance
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="grievance-description">
+
+                        <div class="result-item">
+
+                            <span>
+                                Subject
+                            </span>
+
+                            <strong id="resultSubject">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-item">
+
+                            <span>
+                                Description
+                            </span>
+
+                            <p id="resultDescription">
+                                —
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     STATUS TIMELINE
+                     ============================================= -->
+
+                <div class="result-card">
+
+                    <div class="result-card-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                PROGRESS
+                            </span>
+
+                            <h2>
+                                Grievance Progress
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-timeline">
+
+                        <div
+                            class="timeline-item"
+                            data-status-step="SUBMITTED"
+                        >
+
+                            <div class="timeline-marker">
+                                1
+                            </div>
+
+                            <div class="timeline-content">
+
+                                <h3>
+                                    Grievance Submitted
+                                </h3>
+
+                                <p>
+                                    Your grievance has been
+                                    registered in the system.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="timeline-item"
+                            data-status-step="UNDER_REVIEW"
+                        >
+
+                            <div class="timeline-marker">
+                                2
+                            </div>
+
+                            <div class="timeline-content">
+
+                                <h3>
+                                    Under Review
+                                </h3>
+
+                                <p>
+                                    The grievance is being reviewed
+                                    by the concerned authority.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="timeline-item"
+                            data-status-step="IN_PROGRESS"
+                        >
+
+                            <div class="timeline-marker">
+                                3
+                            </div>
+
+                            <div class="timeline-content">
+
+                                <h3>
+                                    Action in Progress
+                                </h3>
+
+                                <p>
+                                    Necessary action is being taken
+                                    on the grievance.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="timeline-item"
+                            data-status-step="RESOLVED"
+                        >
+
+                            <div class="timeline-marker">
+                                4
+                            </div>
+
+                            <div class="timeline-content">
+
+                                <h3>
+                                    Resolved
+                                </h3>
+
+                                <p>
+                                    The grievance has been resolved.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     REMARKS
+                     ============================================= -->
+
+                <div
+                    id="remarksCard"
+                    class="result-card"
+                    hidden
+                >
+
+                    <div class="result-card-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                AUTHORITY REMARKS
+                            </span>
+
+                            <h2>
+                                Latest Remarks
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="remarks-box">
+
+                        <p id="resultRemarks">
+                            —
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 ACTION CARDS
+                 ================================================= -->
+
+            <section class="support-grid">
+
+                <div class="support-card">
+
+                    <div class="support-card-icon">
+                        ?
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Need to submit a grievance?
+                        </h3>
+
+                        <p>
+                            Register a new grievance about a
+                            ration or PDS-related service.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="grievance.html"
+                        class="btn btn-secondary"
+                    >
+                        Lodge Grievance
+                    </a>
+
+                </div>
+
+
+                <div class="support-card">
+
+                    <div class="support-card-icon">
+                        ↗
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Need more assistance?
+                        </h3>
+
+                        <p>
+                            Keep your grievance number available
+                            when requesting support.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DISCLAIMER
+                 ================================================= -->
+
+            <div class="auth-disclaimer">
+
+                <strong>
+                    Educational Project
+                </strong>
+
+                <span>
+                    This portal is a student-developed educational
+                    project inspired by Indian government service
+                    portal design. It is not an official Government
+                    of India website.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                Ration Portal.
+                Educational project.
+            </p>
+
+            <p>
+                Public Distribution System citizen services.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="../js/app.js"></script>
+    <script src="../js/script.js"></script>
+
+
+    <script>
+
+        "use strict";
+
+
+        const API =
+            window.RATION_API_BASE ||
+            "https://ration-portal-backend.onrender.com/api";
+
+
+        const form =
+            document.getElementById(
+                "statusForm"
+            );
+
+
+        const message =
+            document.getElementById(
+                "statusMessage"
+            );
+
+
+        const resultSection =
+            document.getElementById(
+                "resultSection"
+            );
+
+
+        const searchButton =
+            document.getElementById(
+                "searchButton"
+            );
+
+
+        /* =====================================================
+           HELPERS
+           ===================================================== */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.hidden =
+                false;
+
+            message.className =
+                "form-message form-message-" +
+                type;
+
+            message.textContent =
+                text;
+
+        }
+
+
+        function hideMessage() {
+
+            message.hidden =
+                true;
+
+            message.textContent =
+                "";
+
+        }
+
+
+        function escapeHTML(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "";
+
+            }
+
+            return String(value)
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        function formatDate(
+            value
+        ) {
+
+            if (!value) {
+
+                return "—";
+
+            }
+
+
+            const date =
+                new Date(value);
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return String(value);
+
+            }
+
+
+            return date.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+
+        }
+
+
+        function formatCategory(
+            value
+        ) {
+
+            if (!value) {
+
+                return "—";
+
+            }
+
+
+            return String(value)
+                .replace(
+                    /_/g,
+                    " "
+                )
+                .toLowerCase()
+                .replace(
+                    /\b\w/g,
+                    function (letter) {
+
+                        return letter.toUpperCase();
+
+                    }
+                );
+
+        }
+
+
+        function normalizeStatus(
+            value
+        ) {
+
+            if (!value) {
+
+                return "SUBMITTED";
+
+            }
+
+
+            const status =
+                String(value)
+                    .toUpperCase()
+                    .replace(
+                        /[\s-]+/g,
+                        "_"
+                    );
+
+
+            if (
+                status.includes(
+                    "RESOLV"
+                ) ||
+                status === "CLOSED"
+            ) {
+
+                return "RESOLVED";
+
+            }
+
+
+            if (
+                status.includes(
+                    "PROGRESS"
+                )
+            ) {
+
+                return "IN_PROGRESS";
+
+            }
+
+
+            if (
+                status.includes(
+                    "REVIEW"
+                ) ||
+                status.includes(
+                    "PENDING"
+                )
+            ) {
+
+                return "UNDER_REVIEW";
+
+            }
+
+
+            return "SUBMITTED";
+
+        }
+
+
+        function getGrievanceObject(
+            data
+        ) {
+
+            if (!data) {
+
+                return null;
+
+            }
+
+
+            if (
+                data.data &&
+                typeof data.data === "object"
+            ) {
+
+                return data.data;
+
+            }
+
+
+            if (
+                data.grievance &&
+                typeof data.grievance === "object"
+            ) {
+
+                return data.grievance;
+
+            }
+
+
+            return data;
+
+        }
+
+
+        /* =====================================================
+           DISPLAY RESULT
+           ===================================================== */
+
+        function displayResult(
+            data
+        ) {
+
+            const grievance =
+                getGrievanceObject(
+                    data
+                );
+
+
+            if (!grievance) {
+
+                throw new Error(
+                    "No grievance information was returned."
+                );
+
+            }
+
+
+            const number =
+                grievance.grievanceNumber ||
+                grievance.number ||
+                grievance.grievanceNo ||
+                grievance.id ||
+                "—";
+
+
+            const name =
+                grievance.name ||
+                grievance.applicantName ||
+                grievance.userName ||
+                "—";
+
+
+            const category =
+                grievance.category ||
+                grievance.grievanceCategory ||
+                "—";
+
+
+            const district =
+                grievance.district ||
+                "—";
+
+
+            const subject =
+                grievance.subject ||
+                grievance.title ||
+                "—";
+
+
+            const description =
+                grievance.description ||
+                grievance.details ||
+                "—";
+
+
+            const status =
+                normalizeStatus(
+                    grievance.status
+                );
+
+
+            const submittedDate =
+                grievance.createdAt ||
+                grievance.submittedAt ||
+                grievance.createdDate;
+
+
+            const updatedDate =
+                grievance.updatedAt ||
+                grievance.lastUpdated ||
+                grievance.modifiedAt;
+
+
+            const remarks =
+                grievance.remarks ||
+                grievance.remark ||
+                grievance.response ||
+                grievance.message ||
+                "";
+
+
+            document.getElementById(
+                "resultNumber"
+            ).textContent =
+                number;
+
+
+            document.getElementById(
+                "resultDate"
+            ).textContent =
+                formatDate(
+                    submittedDate
+                );
+
+
+            document.getElementById(
+                "resultName"
+            ).textContent =
+                name;
+
+
+            document.getElementById(
+                "resultCategory"
+            ).textContent =
+                formatCategory(
+                    category
+                );
+
+
+            document.getElementById(
+                "resultDistrict"
+            ).textContent =
+                district;
+
+
+            document.getElementById(
+                "resultUpdated"
+            ).textContent =
+                formatDate(
+                    updatedDate
+                );
+
+
+            document.getElementById(
+                "resultSubject"
+            ).textContent =
+                subject;
+
+
+            document.getElementById(
+                "resultDescription"
+            ).textContent =
+                description;
+
+
+            const statusBadge =
+                document.getElementById(
+                    "statusBadge"
+                );
+
+
+            const statusLabels = {
+
+                SUBMITTED:
+                    "Submitted",
+
+                UNDER_REVIEW:
+                    "Under Review",
+
+                IN_PROGRESS:
+                    "In Progress",
+
+                RESOLVED:
+                    "Resolved"
+
+            };
+
+
+            statusBadge.textContent =
+                statusLabels[status] ||
+                formatCategory(status);
+
+
+            statusBadge.className =
+                "status-badge status-" +
+                status.toLowerCase();
+
+
+            updateTimeline(
+                status
+            );
+
+
+            const remarksCard =
+                document.getElementById(
+                    "remarksCard"
+                );
+
+
+            const remarksElement =
+                document.getElementById(
+                    "resultRemarks"
+                );
+
+
+            if (remarks) {
+
+                remarksElement.textContent =
+                    remarks;
+
+                remarksCard.hidden =
+                    false;
+
+            } else {
+
+                remarksElement.textContent =
+                    "";
+
+                remarksCard.hidden =
+                    true;
+
+            }
+
+
+            resultSection.hidden =
+                false;
+
+
+            resultSection.scrollIntoView(
+                {
+                    behavior: "smooth",
+                    block: "start"
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           TIMELINE
+           ===================================================== */
+
+        function updateTimeline(
+            currentStatus
+        ) {
+
+            const order = [
+
+                "SUBMITTED",
+
+                "UNDER_REVIEW",
+
+                "IN_PROGRESS",
+
+                "RESOLVED"
+
+            ];
+
+
+            const currentIndex =
+                order.indexOf(
+                    currentStatus
+                );
+
+
+            document
+                .querySelectorAll(
+                    ".timeline-item"
+                )
+                .forEach(
+                    function (
+                        item,
+                        index
+                    ) {
+
+                        item.classList.remove(
+                            "completed",
+                            "current"
+                        );
+
+
+                        if (
+                            currentIndex >= 0 &&
+                            index < currentIndex
+                        ) {
+
+                            item.classList.add(
+                                "completed"
+                            );
+
+                        }
+
+
+                        if (
+                            currentIndex >= 0 &&
+                            index === currentIndex
+                        ) {
+
+                            item.classList.add(
+                                "current"
+                            );
+
+                        }
+
+                    }
+                );
+
+        }
+
+
+        /* =====================================================
+           SEARCH
+           ===================================================== */
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                hideMessage();
+
+
+                const grievanceNumber =
+                    document
+                        .getElementById(
+                            "grievanceNumber"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!grievanceNumber) {
+
+                    showMessage(
+                        "Please enter a grievance number.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                resultSection.hidden =
+                    true;
+
+
+                searchButton.disabled =
+                    true;
+
+
+                searchButton.innerHTML =
+                    `
+                    <span>
+                        Checking...
+                    </span>
+                    `;
+
+
+                try {
+
+                    const token =
+                        localStorage.getItem(
+                            "rationPortalToken"
+                        );
+
+
+                    const headers = {};
+
+
+                    if (token) {
+
+                        headers.Authorization =
+                            "Bearer " +
+                            token;
+
+                    }
+
+
+                    const response =
+                        await fetch(
+                            `${API}/grievances/${encodeURIComponent(grievanceNumber)}`,
+                            {
+                                method: "GET",
+                                headers: headers
+                            }
+                        );
+
+
+                    let data = null;
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (error) {
+
+                        data =
+                            null;
+
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data?.message ||
+                            data?.error ||
+                            "Grievance not found."
+                        );
+
+                    }
+
+
+                    displayResult(
+                        data
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Grievance status error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to retrieve grievance status. Please try again.",
+                        "error"
+                    );
+
+                } finally {
+
+                    searchButton.disabled =
+                        false;
+
+                    searchButton.innerHTML =
+                        `
+                        <span>
+                            Check Status
+                        </span>
+
+                        <span
+                            class="btn-arrow"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+                        `;
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           RESET
+           ===================================================== */
+
+        form.addEventListener(
+            "reset",
+            function () {
+
+                hideMessage();
+
+                resultSection.hidden =
+                    true;
+
+            }
+        );
+
+
+        /* =====================================================
+           CURRENT YEAR
+           ===================================================== */
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>

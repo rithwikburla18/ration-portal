@@ -1,5 +1,1190 @@
-﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Apply New Ration Card | Ration Portal</title><link rel="stylesheet" href="../css/style.css"><script src="../config.js"></script><script src="../js/auth-guard.js"></script></head><body><header><div class="top-bar"><span>Public Distribution System</span><span>Accessibility | A- A A+ | English</span></div><div class="brand"><div class="logo">IN</div><div><h1>RATION PORTAL</h1><p>Public Distribution System</p></div></div><nav><a href="../index.html">Home</a><a href="#">Ration Card</a><a href="#">Services</a><a href="#">Fair Price Shop</a><a href="#">Grievance</a><a href="#">Help</a><a href="#">Citizen Login</a></nav></header><main class="page-content"><section class="service-page"><p class="section-label">CITIZEN SERVICE</p><h2>Apply for a New Ration Card</h2><p class="page-description">Submit your basic details to begin a new ration card application.</p><form class="ration-form"><div class="form-group"><label>Applicant Name</label><input type="text" id="applicantName" placeholder="Enter applicant name"></div><div class="form-group"><label>Number of Family Members</label><input type="number" id="familyMembers" min="1" placeholder="Enter number"></div><div class="form-group"><label>District</label><input type="text" id="district" placeholder="Enter district"></div><div class="form-group"><label>Address</label><textarea id="address" rows="4" placeholder="Enter residential address"></textarea></div><button type="button" onclick="submitApplication()">Submit Application</button><p id="applicationResult"></p></form></section></main><footer><p><strong>RATION PORTAL</strong></p><p>Public Distribution System</p><p>Educational project - Not an official Government of India website.</p></footer><script>function submitApplication(){const btn=document.querySelector("button");if(btn.disabled)return;btn.disabled=true;btn.textContent="Submitting...";const n=document.getElementById("applicantName").value.trim(),m=document.getElementById("familyMembers").value.trim(),d=document.getElementById("district").value.trim(),a=document.getElementById("address").value.trim();if(!n||!m||!d||!a){alert("Please fill in all fields.");return;}fetch(window.RATION_API_BASE+"/applications/ration-card",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({applicantName:n,familyMembers:Number(m),district:d,address:a})}).then(r=>{if(!r.ok)throw new Error("failed");return r.json()}).then(()=>{btn.textContent="Submitted";alert("Ration card application submitted successfully!")}).catch(()=>{btn.disabled=false;btn.textContent="Submit Application";alert("Unable to submit application. Please make sure the backend is running.")});}</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Apply for a new ration card — Ration Portal"
+    >
+
+    <title>Apply for Ration Card | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script src="../config.js"></script>
+
+    <script src="../js/auth-guard.js"></script>
+
+</head>
 
 
+<body>
+
+    <!-- =====================================================
+         TRICOLOUR LINE
+         ===================================================== -->
+
+    <div class="tricolour-line" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 
 
+    <!-- =====================================================
+         GOVERNMENT BAR
+         ===================================================== -->
+
+    <div class="gov-bar">
+
+        <div class="container gov-bar-inner">
+
+            <div class="gov-bar-left">
+                <span>Government Service Portal</span>
+            </div>
+
+            <div class="gov-bar-right">
+                <span>भारत सरकार</span>
+                <span aria-hidden="true">|</span>
+                <span>Government of India</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="brand-header">
+
+        <div class="container brand-header-inner">
+
+            <a
+                href="../index.html"
+                class="brand"
+            >
+
+                <div
+                    class="brand-emblem"
+                    aria-hidden="true"
+                >
+                    <div class="chakra">☸</div>
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-title">
+                        RATION PORTAL
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Public Distribution System
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <div id="authArea" class="header-auth-area"></div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         NAVIGATION
+         ===================================================== -->
+
+    <nav
+        class="main-nav"
+        id="mainNavigation"
+        aria-label="Main navigation"
+    >
+
+        <div class="container main-nav-inner">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a
+                href="apply-ration-card.html"
+                class="active"
+            >
+                Apply Ration Card
+            </a>
+
+            <a href="applications.html">
+                My Applications
+            </a>
+
+            <a href="e-ration-card.html">
+                e-Ration Card
+            </a>
+
+            <a href="fair-price-shop.html">
+                Fair Price Shops
+            </a>
+
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+            <a href="transparency.html">
+                Transparency
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         PAGE HERO
+         ===================================================== -->
+
+    <section class="page-hero">
+
+        <div class="container page-hero-inner">
+
+            <div>
+
+                <span class="section-kicker">
+                    CITIZEN SERVICE
+                </span>
+
+                <h1>
+                    Apply for a New Ration Card
+                </h1>
+
+                <p>
+                    Submit your application online and provide
+                    the required family information.
+                </p>
+
+            </div>
+
+            <div
+                class="page-hero-mark"
+                aria-hidden="true"
+            >
+                ☸
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="page-main">
+
+        <div class="container">
+
+
+            <!-- =================================================
+                 INFORMATION NOTICE
+                 ================================================= -->
+
+            <div class="notice-card">
+
+                <div class="notice-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Before you begin
+                    </strong>
+
+                    <p>
+                        Keep your family details and contact
+                        information ready. Please enter accurate
+                        information before submitting the application.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 APPLICATION CARD
+                 ================================================= -->
+
+            <section class="form-card">
+
+                <div class="form-card-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            APPLICATION FORM
+                        </span>
+
+                        <h2>
+                            Ration Card Application
+                        </h2>
+
+                        <p>
+                            Fields marked with
+                            <strong>*</strong>
+                            are required.
+                        </p>
+
+                    </div>
+
+                    <div class="form-step">
+                        Step 1
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="applicationMessage"
+                    class="form-message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+
+                <!-- =================================================
+                     FORM
+                     ================================================= -->
+
+                <form
+                    id="rationApplicationForm"
+                    novalidate
+                >
+
+
+                    <!-- =============================================
+                         APPLICANT DETAILS
+                         ============================================= -->
+
+                    <div class="form-section">
+
+                        <div class="form-section-title">
+
+                            <span>
+                                01
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    Applicant Details
+                                </h3>
+
+                                <p>
+                                    Enter the details of the head
+                                    of the family.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-grid">
+
+
+                            <!-- FULL NAME -->
+
+                            <div class="form-group">
+
+                                <label for="applicantName">
+                                    Full Name
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="applicantName"
+                                    name="applicantName"
+                                    placeholder="Enter full name"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- MOBILE -->
+
+                            <div class="form-group">
+
+                                <label for="mobile">
+                                    Mobile Number
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="mobile"
+                                    name="mobile"
+                                    placeholder="Enter mobile number"
+                                    autocomplete="tel"
+                                    maxlength="10"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+
+                            <div class="form-group">
+
+                                <label for="email">
+                                    Email Address
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Enter email address"
+                                    autocomplete="email"
+                                >
+
+                            </div>
+
+
+                            <!-- CARD TYPE -->
+
+                            <div class="form-group">
+
+                                <label for="cardType">
+                                    Ration Card Type
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="cardType"
+                                    name="cardType"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select card type
+                                    </option>
+
+                                    <option value="PHH">
+                                        PHH — Priority Household
+                                    </option>
+
+                                    <option value="AAY">
+                                        AAY — Antyodaya Anna Yojana
+                                    </option>
+
+                                    <option value="NPHH">
+                                        NPHH — Non-Priority Household
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =============================================
+                         ADDRESS
+                         ============================================= -->
+
+                    <div class="form-section">
+
+                        <div class="form-section-title">
+
+                            <span>
+                                02
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    Address Details
+                                </h3>
+
+                                <p>
+                                    Provide the residential address
+                                    associated with the application.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-grid">
+
+
+                            <div class="form-group form-group-wide">
+
+                                <label for="address">
+                                    Address
+                                    <span class="required">*</span>
+                                </label>
+
+                                <textarea
+                                    id="address"
+                                    name="address"
+                                    rows="3"
+                                    placeholder="House number, street, locality"
+                                    required
+                                ></textarea>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="district">
+                                    District
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="district"
+                                    name="district"
+                                    placeholder="Enter district"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="state">
+                                    State
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="state"
+                                    name="state"
+                                    value="Telangana"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="pincode">
+                                    PIN Code
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="pincode"
+                                    name="pincode"
+                                    placeholder="6-digit PIN code"
+                                    maxlength="6"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =============================================
+                         FAMILY INFORMATION
+                         ============================================= -->
+
+                    <div class="form-section">
+
+                        <div class="form-section-title">
+
+                            <span>
+                                03
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    Family Information
+                                </h3>
+
+                                <p>
+                                    Enter the number of members in
+                                    the household.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-grid">
+
+
+                            <div class="form-group">
+
+                                <label for="familyMembers">
+                                    Number of Family Members
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="familyMembers"
+                                    name="familyMembers"
+                                    min="1"
+                                    max="50"
+                                    placeholder="Enter number"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="annualIncome">
+                                    Annual Family Income
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="annualIncome"
+                                    name="annualIncome"
+                                    min="0"
+                                    placeholder="Enter annual income"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =============================================
+                         DECLARATION
+                         ============================================= -->
+
+                    <div class="form-section">
+
+                        <div class="form-section-title">
+
+                            <span>
+                                04
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    Declaration
+                                </h3>
+
+                                <p>
+                                    Please confirm the information
+                                    before submitting.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="declaration-box">
+
+                            <label class="form-checkbox">
+
+                                <input
+                                    type="checkbox"
+                                    id="declaration"
+                                    required
+                                >
+
+                                <span>
+                                    I declare that the information
+                                    provided in this application is
+                                    true and correct to the best of
+                                    my knowledge.
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =============================================
+                         ACTIONS
+                         ============================================= -->
+
+                    <div class="form-actions">
+
+                        <button
+                            type="reset"
+                            class="btn btn-secondary"
+                            id="resetApplication"
+                        >
+                            Reset Form
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="submitApplication"
+                        >
+
+                            <span>
+                                Submit Application
+                            </span>
+
+                            <span
+                                class="btn-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+
+            <!-- =================================================
+                 DISCLAIMER
+                 ================================================= -->
+
+            <div class="auth-disclaimer">
+
+                <strong>
+                    Educational Project
+                </strong>
+
+                <span>
+                    This portal is a student-developed educational
+                    project inspired by Indian government service
+                    portal design. It is not an official Government
+                    of India website.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                Ration Portal.
+                Educational project.
+            </p>
+
+            <p>
+                Public Distribution System citizen services.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="../js/app.js"></script>
+
+    <script src="../js/script.js"></script>
+
+
+    <script>
+
+        "use strict";
+
+
+        const API =
+            window.RATION_API_BASE ||
+            "https://ration-portal-backend.onrender.com/api";
+
+
+        const form =
+            document.getElementById(
+                "rationApplicationForm"
+            );
+
+
+        const message =
+            document.getElementById(
+                "applicationMessage"
+            );
+
+
+        const submitButton =
+            document.getElementById(
+                "submitApplication"
+            );
+
+
+        /* -----------------------------------------------------
+           MESSAGE
+           ----------------------------------------------------- */
+
+        function showApplicationMessage(
+            text,
+            type
+        ) {
+
+            message.hidden =
+                false;
+
+            message.className =
+                "form-message form-message-" +
+                type;
+
+            message.textContent =
+                text;
+
+        }
+
+
+        /* -----------------------------------------------------
+           FORM SUBMIT
+           ----------------------------------------------------- */
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const applicantName =
+                    document
+                        .getElementById(
+                            "applicantName"
+                        )
+                        .value
+                        .trim();
+
+
+                const mobile =
+                    document
+                        .getElementById(
+                            "mobile"
+                        )
+                        .value
+                        .trim();
+
+
+                const email =
+                    document
+                        .getElementById(
+                            "email"
+                        )
+                        .value
+                        .trim();
+
+
+                const cardType =
+                    document
+                        .getElementById(
+                            "cardType"
+                        )
+                        .value;
+
+
+                const address =
+                    document
+                        .getElementById(
+                            "address"
+                        )
+                        .value
+                        .trim();
+
+
+                const district =
+                    document
+                        .getElementById(
+                            "district"
+                        )
+                        .value
+                        .trim();
+
+
+                const state =
+                    document
+                        .getElementById(
+                            "state"
+                        )
+                        .value
+                        .trim();
+
+
+                const pincode =
+                    document
+                        .getElementById(
+                            "pincode"
+                        )
+                        .value
+                        .trim();
+
+
+                const familyMembers =
+                    Number(
+                        document
+                            .getElementById(
+                                "familyMembers"
+                            )
+                            .value
+                    );
+
+
+                const annualIncome =
+                    Number(
+                        document
+                            .getElementById(
+                                "annualIncome"
+                            )
+                            .value || 0
+                    );
+
+
+                const declaration =
+                    document
+                        .getElementById(
+                            "declaration"
+                        )
+                        .checked;
+
+
+                /* ---------------------------------------------
+                   VALIDATION
+                   --------------------------------------------- */
+
+                if (!applicantName) {
+
+                    showApplicationMessage(
+                        "Please enter the applicant name.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !/^[0-9]{10}$/.test(
+                        mobile
+                    )
+                ) {
+
+                    showApplicationMessage(
+                        "Please enter a valid 10-digit mobile number.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!cardType) {
+
+                    showApplicationMessage(
+                        "Please select a ration card type.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!address) {
+
+                    showApplicationMessage(
+                        "Please enter the residential address.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!district) {
+
+                    showApplicationMessage(
+                        "Please enter the district.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !/^[0-9]{6}$/.test(
+                        pincode
+                    )
+                ) {
+
+                    showApplicationMessage(
+                        "Please enter a valid 6-digit PIN code.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !familyMembers ||
+                    familyMembers < 1
+                ) {
+
+                    showApplicationMessage(
+                        "Please enter the number of family members.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!declaration) {
+
+                    showApplicationMessage(
+                        "Please accept the declaration before submitting.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ---------------------------------------------
+                   LOADING
+                   --------------------------------------------- */
+
+                submitButton.disabled =
+                    true;
+
+                submitButton.innerHTML =
+                    `
+                    <span>
+                        Submitting...
+                    </span>
+                    `;
+
+
+                message.hidden =
+                    true;
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `${API}/applications/ration-card`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        applicantName:
+                                            applicantName,
+
+                                        mobile:
+                                            mobile,
+
+                                        email:
+                                            email,
+
+                                        cardType:
+                                            cardType,
+
+                                        address:
+                                            address,
+
+                                        district:
+                                            district,
+
+                                        state:
+                                            state,
+
+                                        pincode:
+                                            pincode,
+
+                                        familyMembers:
+                                            familyMembers,
+
+                                        annualIncome:
+                                            annualIncome
+
+                                    })
+                            }
+                        );
+
+
+                    let data = null;
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (error) {
+
+                        data = null;
+
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data?.message ||
+                            data?.error ||
+                            "Unable to submit the application."
+                        );
+
+                    }
+
+
+                    showApplicationMessage(
+                        "Your ration card application has been submitted successfully.",
+                        "success"
+                    );
+
+
+                    form.reset();
+
+
+                    document
+                        .getElementById(
+                            "state"
+                        )
+                        .value =
+                        "Telangana";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Application submission error:",
+                        error
+                    );
+
+
+                    showApplicationMessage(
+                        error.message ||
+                        "Unable to submit the application. Please try again.",
+                        "error"
+                    );
+
+                } finally {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.innerHTML =
+                        `
+                        <span>
+                            Submit Application
+                        </span>
+
+                        <span
+                            class="btn-arrow"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+                        `;
+
+                }
+
+            }
+        );
+
+
+        /* -----------------------------------------------------
+           CURRENT YEAR
+           ----------------------------------------------------- */
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>

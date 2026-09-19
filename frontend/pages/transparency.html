@@ -1,2 +1,1171 @@
-﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Transparency Dashboard</title><link rel="stylesheet" href="../css/style.css"><script src="../config.js"></script><script src="../js/auth-guard.js"></script></head><body><main class="container"><h1>Transparency Dashboard</h1><p>Public summary of key Ration Portal activities.</p><div id="cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:25px"><div class="result-card"><h3>Ration Cards</h3><p id="rationCards">Loading...</p></div><div class="result-card"><h3>Family Members</h3><p id="familyMembers">Loading...</p></div><div class="result-card"><h3>Distribution Records</h3><p id="distributionRecords">Loading...</p></div><div class="result-card"><h3>Applications</h3><p id="applications">Loading...</p></div><div class="result-card"><h3>Grievances</h3><p id="grievances">Loading...</p></div></div><div id="status" style="margin-top:25px"></div></main><script>const API=window.RATION_API_BASE;async function loadDashboard(){try{const response=await fetch(API+"/transparency/summary");if(!response.ok)throw new Error();const d=await response.json();document.getElementById("rationCards").textContent=d.totalRationCards;document.getElementById("familyMembers").textContent=d.totalFamilyMembers;document.getElementById("distributionRecords").textContent=d.totalDistributionRecords;document.getElementById("applications").textContent=d.totalApplications;document.getElementById("grievances").textContent=d.totalGrievances;document.getElementById("status").textContent="Data loaded successfully from the Ration Portal database."}catch(e){document.getElementById("status").textContent="Unable to load dashboard data. Please make sure the backend is running."}}loadDashboard();</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Transparency and public distribution information dashboard for the Ration Portal."
+    >
+
+    <title>Transparency Dashboard | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script src="../config.js"></script>
+    <script src="../js/auth-guard.js"></script>
+
+</head>
+
+<body>
+
+    <!-- =====================================================
+         TRICOLOUR LINE
+         ===================================================== -->
+
+    <div
+        class="tricolour-line"
+        aria-hidden="true"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+
+    <!-- =====================================================
+         GOVERNMENT BAR
+         ===================================================== -->
+
+    <div class="gov-bar">
+
+        <div class="container gov-bar-inner">
+
+            <div class="gov-bar-left">
+                <span>
+                    Government Service Portal
+                </span>
+            </div>
+
+            <div class="gov-bar-right">
+
+                <span>
+                    भारत सरकार
+                </span>
+
+                <span aria-hidden="true">
+                    |
+                </span>
+
+                <span>
+                    Government of India
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BRAND HEADER
+         ===================================================== -->
+
+    <header class="brand-header">
+
+        <div class="container brand-header-inner">
+
+            <a
+                href="../index.html"
+                class="brand"
+            >
+
+                <div
+                    class="brand-emblem"
+                    aria-hidden="true"
+                >
+                    <div class="chakra">
+                        ☸
+                    </div>
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-title">
+                        RATION PORTAL
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Public Distribution System
+                    </span>
+
+                </div>
+
+            </a>
+
+            <div
+                id="authArea"
+                class="header-auth-area"
+            ></div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         NAVIGATION
+         ===================================================== -->
+
+    <nav
+        class="main-nav"
+        id="mainNavigation"
+        aria-label="Main navigation"
+    >
+
+        <div class="container main-nav-inner">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="apply-ration-card.html">
+                Apply Ration Card
+            </a>
+
+            <a href="applications.html">
+                My Applications
+            </a>
+
+            <a href="e-ration-card.html">
+                e-Ration Card
+            </a>
+
+            <a href="fair-price-shop.html">
+                Fair Price Shops
+            </a>
+
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+            <a
+                href="transparency.html"
+                class="active"
+            >
+                Transparency
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         PAGE HERO
+         ===================================================== -->
+
+    <section class="page-hero">
+
+        <div class="container page-hero-inner">
+
+            <div>
+
+                <span class="section-kicker">
+                    PUBLIC INFORMATION
+                </span>
+
+                <h1>
+                    Transparency Dashboard
+                </h1>
+
+                <p>
+                    View key public distribution indicators
+                    and service information.
+                </p>
+
+            </div>
+
+            <div
+                class="page-hero-mark"
+                aria-hidden="true"
+            >
+                ◫
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="page-main">
+
+        <div class="container">
+
+
+            <!-- =================================================
+                 INFORMATION NOTICE
+                 ================================================= -->
+
+            <div class="notice-card">
+
+                <div class="notice-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Public information
+                    </strong>
+
+                    <p>
+                        The figures displayed on this page are
+                        retrieved from the connected portal data
+                        service and may change as records are
+                        updated.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 DASHBOARD HEADER
+                 ================================================= -->
+
+            <section class="dashboard-heading">
+
+                <div>
+
+                    <span class="section-kicker">
+                        SERVICE OVERVIEW
+                    </span>
+
+                    <h2>
+                        PDS at a Glance
+                    </h2>
+
+                    <p>
+                        Key indicators from the ration portal
+                        system.
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="refreshButton"
+                >
+                    Refresh Data
+                </button>
+
+            </section>
+
+
+            <!-- =================================================
+                 MESSAGE
+                 ================================================= -->
+
+            <div
+                id="dashboardMessage"
+                class="form-message"
+                role="alert"
+                aria-live="polite"
+                hidden
+            ></div>
+
+
+            <!-- =================================================
+                 STATISTICS
+                 ================================================= -->
+
+            <section class="dashboard-stats">
+
+                <div class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-icon">
+                        ▣
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total Ration Cards
+                        </span>
+
+                        <strong id="totalCards">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-icon">
+                        ◈
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Rice Distributed
+                        </span>
+
+                        <strong id="riceDistributed">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-icon">
+                        ◎
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Active FPS
+                        </span>
+
+                        <strong id="activeFps">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-stat-card">
+
+                    <div class="dashboard-stat-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            System Status
+                        </span>
+
+                        <strong id="systemStatus">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DISTRIBUTION SUMMARY
+                 ================================================= -->
+
+            <section class="result-card">
+
+                <div class="result-card-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            DISTRIBUTION
+                        </span>
+
+                        <h2>
+                            Distribution Summary
+                        </h2>
+
+                        <p>
+                            Summary information returned by the
+                            transparency service.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result-grid">
+
+                    <div class="result-item">
+
+                        <span>
+                            Total Distribution Records
+                        </span>
+
+                        <strong id="distributionRecords">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Total Rice Quantity
+                        </span>
+
+                        <strong id="totalRice">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Active Ration Cards
+                        </span>
+
+                        <strong id="activeCards">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Registered Family Members
+                        </span>
+
+                        <strong id="familyMembers">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DATA NOTE
+                 ================================================= -->
+
+            <section class="support-card">
+
+                <div class="support-card-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h3>
+                        Data availability
+                    </h3>
+
+                    <p>
+                        Dashboard values depend on the records
+                        available in the connected database.
+                        A missing value does not necessarily mean
+                        that the corresponding government service
+                        is unavailable.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 RELATED SERVICES
+                 ================================================= -->
+
+            <section class="citizen-section">
+
+                <div class="section-heading">
+
+                    <span class="section-kicker">
+                        RELATED SERVICES
+                    </span>
+
+                    <h2>
+                        Explore Portal Services
+                    </h2>
+
+                    <p>
+                        Access other citizen-facing services
+                        available through the portal.
+                    </p>
+
+                </div>
+
+
+                <div class="citizen-cards">
+
+                    <a
+                        href="e-ration-card.html"
+                        class="citizen-card"
+                    >
+
+                        <div class="citizen-card-icon">
+                            ▣
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                e-Ration Card
+                            </h3>
+
+                            <p>
+                                Search and view digital ration
+                                card information.
+                            </p>
+
+                        </div>
+
+                        <span
+                            class="card-arrow"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="fair-price-shop.html"
+                        class="citizen-card"
+                    >
+
+                        <div class="citizen-card-icon">
+                            ◎
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Fair Price Shops
+                            </h3>
+
+                            <p>
+                                Search available fair price shop
+                                information.
+                            </p>
+
+                        </div>
+
+                        <span
+                            class="card-arrow"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="grievance.html"
+                        class="citizen-card"
+                    >
+
+                        <div class="citizen-card-icon">
+                            ?
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Lodge Grievance
+                            </h3>
+
+                            <p>
+                                Submit an issue related to ration
+                                and PDS services.
+                            </p>
+
+                        </div>
+
+                        <span
+                            class="card-arrow"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DISCLAIMER
+                 ================================================= -->
+
+            <div class="auth-disclaimer">
+
+                <strong>
+                    Educational Project
+                </strong>
+
+                <span>
+                    This portal is a student-developed educational
+                    project inspired by Indian government service
+                    portal design. It is not an official Government
+                    of India website.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                Ration Portal.
+                Educational project.
+            </p>
+
+            <p>
+                Public Distribution System citizen services.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="../js/app.js"></script>
+    <script src="../js/script.js"></script>
+
+
+    <script>
+
+        "use strict";
+
+
+        const API =
+            window.RATION_API_BASE ||
+            "https://ration-portal-backend.onrender.com/api";
+
+
+        const refreshButton =
+            document.getElementById(
+                "refreshButton"
+            );
+
+
+        const message =
+            document.getElementById(
+                "dashboardMessage"
+            );
+
+
+        /* =====================================================
+           HELPERS
+           ===================================================== */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.hidden =
+                false;
+
+            message.className =
+                "form-message form-message-" +
+                type;
+
+            message.textContent =
+                text;
+
+        }
+
+
+        function hideMessage() {
+
+            message.hidden =
+                true;
+
+            message.textContent =
+                "";
+
+        }
+
+
+        function findValue(
+            object,
+            keys,
+            fallback = "—"
+        ) {
+
+            for (
+                const key of keys
+            ) {
+
+                if (
+                    object &&
+                    object[key] !== undefined &&
+                    object[key] !== null
+                ) {
+
+                    return object[key];
+
+                }
+
+            }
+
+
+            return fallback;
+
+        }
+
+
+        function getObject(
+            data
+        ) {
+
+            if (
+                data &&
+                typeof data.data === "object" &&
+                !Array.isArray(data.data)
+            ) {
+
+                return data.data;
+
+            }
+
+
+            return data || {};
+
+        }
+
+
+        function formatNumber(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined ||
+                value === ""
+            ) {
+
+                return "—";
+
+            }
+
+
+            const number =
+                Number(value);
+
+
+            if (
+                Number.isNaN(number)
+            ) {
+
+                return String(value);
+
+            }
+
+
+            return number.toLocaleString(
+                "en-IN"
+            );
+
+        }
+
+
+        function formatQuantity(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined ||
+                value === ""
+            ) {
+
+                return "—";
+
+            }
+
+
+            const number =
+                Number(value);
+
+
+            if (
+                Number.isNaN(number)
+            ) {
+
+                return String(value);
+
+            }
+
+
+            return `${number.toLocaleString("en-IN")} kg`;
+
+        }
+
+
+        /* =====================================================
+           LOAD TRANSPARENCY DATA
+           ===================================================== */
+
+        async function loadTransparency() {
+
+            hideMessage();
+
+
+            refreshButton.disabled =
+                true;
+
+
+            refreshButton.textContent =
+                "Loading...";
+
+
+            try {
+
+                const token =
+                    localStorage.getItem(
+                        "rationPortalToken"
+                    );
+
+
+                const headers = {};
+
+
+                if (token) {
+
+                    headers.Authorization =
+                        "Bearer " +
+                        token;
+
+                }
+
+
+                /*
+                 * Transparency endpoint.
+                 *
+                 * The backend route is protected by the
+                 * existing SecurityConfig.
+                 */
+
+                const response =
+                    await fetch(
+                        `${API}/transparency`,
+                        {
+                            method: "GET",
+                            headers: headers
+                        }
+                    );
+
+
+                let data = null;
+
+
+                try {
+
+                    data =
+                        await response.json();
+
+                } catch (error) {
+
+                    data =
+                        null;
+
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data?.message ||
+                        data?.error ||
+                        "Unable to load transparency data."
+                    );
+
+                }
+
+
+                const result =
+                    getObject(
+                        data
+                    );
+
+
+                const totalCards =
+                    findValue(
+                        result,
+                        [
+                            "totalCards",
+                            "totalRationCards",
+                            "rationCards",
+                            "totalCardCount"
+                        ]
+                    );
+
+
+                const riceDistributed =
+                    findValue(
+                        result,
+                        [
+                            "riceDistributed",
+                            "totalRiceDistributed",
+                            "distributedRice",
+                            "riceQuantity"
+                        ]
+                    );
+
+
+                const activeFps =
+                    findValue(
+                        result,
+                        [
+                            "activeFps",
+                            "activeFPS",
+                            "activeFairPriceShops",
+                            "fpsCount"
+                        ]
+                    );
+
+
+                const distributionRecords =
+                    findValue(
+                        result,
+                        [
+                            "distributionRecords",
+                            "totalDistributionRecords",
+                            "distributionCount",
+                            "totalTransactions"
+                        ]
+                    );
+
+
+                const totalRice =
+                    findValue(
+                        result,
+                        [
+                            "totalRice",
+                            "totalRiceQuantity",
+                            "riceDistributed",
+                            "distributedRice"
+                        ]
+                    );
+
+
+                const activeCards =
+                    findValue(
+                        result,
+                        [
+                            "activeCards",
+                            "activeRationCards",
+                            "activeCardCount"
+                        ]
+                    );
+
+
+                const familyMembers =
+                    findValue(
+                        result,
+                        [
+                            "familyMembers",
+                            "totalFamilyMembers",
+                            "memberCount"
+                        ]
+                    );
+
+
+                document.getElementById(
+                    "totalCards"
+                ).textContent =
+                    formatNumber(
+                        totalCards
+                    );
+
+
+                document.getElementById(
+                    "riceDistributed"
+                ).textContent =
+                    formatQuantity(
+                        riceDistributed
+                    );
+
+
+                document.getElementById(
+                    "activeFps"
+                ).textContent =
+                    formatNumber(
+                        activeFps
+                    );
+
+
+                document.getElementById(
+                    "distributionRecords"
+                ).textContent =
+                    formatNumber(
+                        distributionRecords
+                    );
+
+
+                document.getElementById(
+                    "totalRice"
+                ).textContent =
+                    formatQuantity(
+                        totalRice
+                    );
+
+
+                document.getElementById(
+                    "activeCards"
+                ).textContent =
+                    formatNumber(
+                        activeCards
+                    );
+
+
+                document.getElementById(
+                    "familyMembers"
+                ).textContent =
+                    formatNumber(
+                        familyMembers
+                    );
+
+
+                document.getElementById(
+                    "systemStatus"
+                ).textContent =
+                    "Operational";
+
+
+                document.getElementById(
+                    "systemStatus"
+                ).className =
+                    "status-online";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Transparency error:",
+                    error
+                );
+
+
+                showMessage(
+                    error.message ||
+                    "Unable to load transparency data. Please try again.",
+                    "error"
+                );
+
+
+                document.getElementById(
+                    "systemStatus"
+                ).textContent =
+                    "Unavailable";
+
+
+                document.getElementById(
+                    "systemStatus"
+                ).className =
+                    "status-offline";
+
+            } finally {
+
+                refreshButton.disabled =
+                    false;
+
+                refreshButton.textContent =
+                    "Refresh Data";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           REFRESH
+           ===================================================== */
+
+        refreshButton.addEventListener(
+            "click",
+            loadTransparency
+        );
+
+
+        /* =====================================================
+           CURRENT YEAR
+           ===================================================== */
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+            );
+
+
+        /* =====================================================
+           INITIAL LOAD
+           ===================================================== */
+
+        loadTransparency();
+
+    </script>
+
+</body>
+</html>

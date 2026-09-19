@@ -1,35 +1,1034 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Citizen Registration - Ration Portal</title>
-<link rel="stylesheet" href="../css/style.css">
-<script src="../config.js"></script></head>
-<body>
-<header class="top-bar"><div>Public Distribution System</div></header>
-<nav class="navbar"><div class="brand"><span class="brand-logo">IN</span><span>RATION PORTAL</span></div><div class="nav-links"><a href="../index.html">Home</a><a href="login.html">Citizen Login</a></div></nav>
-<main class="container">
-<section class="form-section">
-<h1>Citizen Registration</h1>
-<p>Create an account to access citizen services.</p>
-<form id="registerForm">
-<label for="fullName">Full Name</label>
-<input id="fullName" type="text" required maxlength="120" autocomplete="name">
-<label for="email">Email Address</label>
-<input id="email" type="email" required maxlength="150" autocomplete="email">
-<label for="password">Password</label>
-<input id="password" type="password" required minlength="8" autocomplete="new-password">
-<button type="submit" class="primary-btn">Create Account</button>
-</form>
-<div id="registerResult"></div>
-<p>Already registered? <a href="login.html">Sign in</a></p>
-</section>
-</main>
-<footer><p>Educational Project ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Not an official Government of India website.</p></footer>
-<script>
-const API=window.RATION_API_BASE;
-document.getElementById("registerForm").addEventListener("submit",async function(e){e.preventDefault();const result=document.getElementById("registerResult");result.textContent="Creating account...";try{const response=await fetch(API+"/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fullName:document.getElementById("fullName").value.trim(),email:document.getElementById("email").value.trim(),password:document.getElementById("password").value})});const data=await response.json();if(!response.ok)throw new Error(data.message||"Registration failed");result.textContent="Registration successful. Redirecting to login...";setTimeout(()=>window.location.href="login.html",900)}catch(error){result.textContent=error.message}});
-</script>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Citizen Registration — Ration Portal"
+    >
+
+    <title>Create Citizen Account | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script src="../config.js"></script>
+
+</head>
+
+
+<body class="auth-page">
+
+    <!-- =====================================================
+         TRICOLOUR TOP LINE
+         ===================================================== -->
+
+    <div class="tricolour-line" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+
+    <!-- =====================================================
+         GOVERNMENT TOP BAR
+         ===================================================== -->
+
+    <div class="gov-bar">
+
+        <div class="container gov-bar-inner">
+
+            <div class="gov-bar-left">
+                <span>Government Service Portal</span>
+            </div>
+
+            <div class="gov-bar-right">
+                <span>भारत सरकार</span>
+                <span aria-hidden="true">|</span>
+                <span>Government of India</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BRAND HEADER
+         ===================================================== -->
+
+    <header class="brand-header">
+
+        <div class="container brand-header-inner">
+
+            <a
+                href="../index.html"
+                class="brand"
+                aria-label="Ration Portal home"
+            >
+
+                <div
+                    class="brand-emblem"
+                    aria-hidden="true"
+                >
+                    <div class="chakra">☸</div>
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-title">
+                        RATION PORTAL
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Public Distribution System
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <div class="header-utility">
+                <span>Citizen Services</span>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         REGISTRATION MAIN
+         ===================================================== -->
+
+    <main class="auth-main">
+
+        <div class="container auth-container">
+
+            <section class="login-card">
+
+                <!-- =================================================
+                     LEFT INFORMATION PANEL
+                     ================================================= -->
+
+                <div class="login-info">
+
+                    <span class="section-kicker">
+                        CITIZEN REGISTRATION
+                    </span>
+
+                    <h1>
+                        Create your
+                        <span>Citizen Account</span>
+                    </h1>
+
+                    <p class="login-info-text">
+                        Register once to access ration card services,
+                        applications, grievance services and other
+                        digital citizen facilities.
+                    </p>
+
+
+                    <div class="login-benefits">
+
+                        <div class="login-benefit">
+
+                            <span class="benefit-icon">
+                                01
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Simple Registration
+                                </strong>
+
+                                <p>
+                                    Create your account using your
+                                    basic citizen information.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="login-benefit">
+
+                            <span class="benefit-icon">
+                                02
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Secure Account
+                                </strong>
+
+                                <p>
+                                    Your account is protected using
+                                    secure authentication.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="login-benefit">
+
+                            <span class="benefit-icon">
+                                03
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    One Portal
+                                </strong>
+
+                                <p>
+                                    Access multiple ration-related
+                                    citizen services from one place.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     REGISTRATION PANEL
+                     ================================================= -->
+
+                <div class="login-panel">
+
+                    <div class="login-panel-header">
+
+                        <div class="login-icon">
+                            <span>+</span>
+                        </div>
+
+                        <div>
+
+                            <span class="section-kicker">
+                                NEW CITIZEN
+                            </span>
+
+                            <h2>
+                                Create an account
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         REGISTRATION FORM
+                         ================================================= -->
+
+                    <form
+                        id="registerForm"
+                        class="login-form"
+                        novalidate
+                    >
+
+                        <div
+                            id="registerMessage"
+                            class="form-message"
+                            role="alert"
+                            aria-live="polite"
+                            hidden
+                        ></div>
+
+
+                        <!-- NAME -->
+
+                        <div class="form-group">
+
+                            <label for="name">
+                                Full Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                required
+                                minlength="2"
+                            >
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Enter your email address"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- PASSWORD -->
+
+                        <div class="form-group">
+
+                            <label for="password">
+                                Password
+                            </label>
+
+                            <div class="password-field">
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Create a password"
+                                    autocomplete="new-password"
+                                    required
+                                    minlength="6"
+                                >
+
+                                <button
+                                    type="button"
+                                    id="togglePassword"
+                                    class="password-toggle"
+                                    aria-label="Show password"
+                                >
+                                    Show
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CONFIRM PASSWORD -->
+
+                        <div class="form-group">
+
+                            <label for="confirmPassword">
+                                Confirm Password
+                            </label>
+
+                            <div class="password-field">
+
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    placeholder="Re-enter your password"
+                                    autocomplete="new-password"
+                                    required
+                                    minlength="6"
+                                >
+
+                                <button
+                                    type="button"
+                                    id="toggleConfirmPassword"
+                                    class="password-toggle"
+                                    aria-label="Show confirmation password"
+                                >
+                                    Show
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TERMS -->
+
+                        <div class="form-checkbox">
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                name="terms"
+                                required
+                            >
+
+                            <label for="terms">
+                                I understand that this is an
+                                educational project portal and agree
+                                to use the services responsibly.
+                            </label>
+
+                        </div>
+
+
+                        <!-- REGISTER BUTTON -->
+
+                        <button
+                            type="submit"
+                            id="registerButton"
+                            class="btn btn-primary btn-full"
+                        >
+
+                            <span>
+                                Create Citizen Account
+                            </span>
+
+                            <span
+                                class="btn-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- =================================================
+                         LOGIN LINK
+                         ================================================= -->
+
+                    <div class="login-divider">
+
+                        <span>
+                            Already registered?
+                        </span>
+
+                    </div>
+
+
+                    <a
+                        href="login.html"
+                        class="btn btn-secondary btn-full"
+                    >
+                        Sign In to Existing Account
+                    </a>
+
+
+                    <!-- BACK HOME -->
+
+                    <a
+                        href="../index.html"
+                        class="back-home-link"
+                    >
+                        ← Back to Ration Portal
+                    </a>
+
+
+                    <!-- SECURITY NOTICE -->
+
+                    <div class="login-security">
+
+                        <span
+                            class="security-icon"
+                            aria-hidden="true"
+                        >
+                            🔒
+                        </span>
+
+                        <p>
+                            Keep your login credentials private and
+                            do not share your password with anyone.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 EDUCATIONAL DISCLAIMER
+                 ================================================= -->
+
+            <div class="auth-disclaimer">
+
+                <strong>
+                    Educational Project
+                </strong>
+
+                <span>
+                    This portal is a student-developed educational
+                    project inspired by Indian government service
+                    portal design. It is not an official Government
+                    of India website.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                Ration Portal.
+                Educational project.
+            </p>
+
+            <p>
+                Designed for citizen-focused digital services.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         REGISTRATION JAVASCRIPT
+         ===================================================== -->
+
+    <script>
+
+        "use strict";
+
+
+        /* -----------------------------------------------------
+           API
+           ----------------------------------------------------- */
+
+        const API =
+            window.RATION_API_BASE ||
+            "https://ration-portal-backend.onrender.com/api";
+
+
+        /* -----------------------------------------------------
+           ELEMENTS
+           ----------------------------------------------------- */
+
+        const registerForm =
+            document.getElementById(
+                "registerForm"
+            );
+
+
+        const registerMessage =
+            document.getElementById(
+                "registerMessage"
+            );
+
+
+        const registerButton =
+            document.getElementById(
+                "registerButton"
+            );
+
+
+        const passwordInput =
+            document.getElementById(
+                "password"
+            );
+
+
+        const confirmPasswordInput =
+            document.getElementById(
+                "confirmPassword"
+            );
+
+
+        const togglePassword =
+            document.getElementById(
+                "togglePassword"
+            );
+
+
+        const toggleConfirmPassword =
+            document.getElementById(
+                "toggleConfirmPassword"
+            );
+
+
+        /* -----------------------------------------------------
+           MESSAGE
+           ----------------------------------------------------- */
+
+        function showMessage(
+            message,
+            type
+        ) {
+
+            registerMessage.hidden =
+                false;
+
+            registerMessage.className =
+                "form-message form-message-" +
+                type;
+
+            registerMessage.textContent =
+                message;
+
+        }
+
+
+        function hideMessage() {
+
+            registerMessage.hidden =
+                true;
+
+            registerMessage.textContent =
+                "";
+
+        }
+
+
+        /* -----------------------------------------------------
+           PASSWORD TOGGLE
+           ----------------------------------------------------- */
+
+        if (togglePassword) {
+
+            togglePassword.addEventListener(
+                "click",
+                function () {
+
+                    const visible =
+                        passwordInput.type === "text";
+
+
+                    passwordInput.type =
+                        visible
+                            ? "password"
+                            : "text";
+
+
+                    togglePassword.textContent =
+                        visible
+                            ? "Show"
+                            : "Hide";
+
+
+                    togglePassword.setAttribute(
+                        "aria-label",
+                        visible
+                            ? "Show password"
+                            : "Hide password"
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* -----------------------------------------------------
+           CONFIRM PASSWORD TOGGLE
+           ----------------------------------------------------- */
+
+        if (toggleConfirmPassword) {
+
+            toggleConfirmPassword.addEventListener(
+                "click",
+                function () {
+
+                    const visible =
+                        confirmPasswordInput.type === "text";
+
+
+                    confirmPasswordInput.type =
+                        visible
+                            ? "password"
+                            : "text";
+
+
+                    toggleConfirmPassword.textContent =
+                        visible
+                            ? "Show"
+                            : "Hide";
+
+
+                    toggleConfirmPassword.setAttribute(
+                        "aria-label",
+                        visible
+                            ? "Show confirmation password"
+                            : "Hide confirmation password"
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* -----------------------------------------------------
+           PASSWORD MATCH CHECK
+           ----------------------------------------------------- */
+
+        function validatePasswordMatch() {
+
+            if (
+                passwordInput.value &&
+                confirmPasswordInput.value &&
+                passwordInput.value !==
+                confirmPasswordInput.value
+            ) {
+
+                confirmPasswordInput.setCustomValidity(
+                    "Passwords do not match."
+                );
+
+                return false;
+
+            }
+
+
+            confirmPasswordInput.setCustomValidity(
+                ""
+            );
+
+            return true;
+
+        }
+
+
+        passwordInput.addEventListener(
+            "input",
+            validatePasswordMatch
+        );
+
+
+        confirmPasswordInput.addEventListener(
+            "input",
+            validatePasswordMatch
+        );
+
+
+        /* -----------------------------------------------------
+           REGISTRATION
+           ----------------------------------------------------- */
+
+        registerForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                hideMessage();
+
+
+                const name =
+                    document
+                        .getElementById("name")
+                        .value
+                        .trim();
+
+
+                const email =
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim();
+
+
+                const password =
+                    passwordInput.value;
+
+
+                const confirmPassword =
+                    confirmPasswordInput.value;
+
+
+                const terms =
+                    document
+                        .getElementById("terms")
+                        .checked;
+
+
+                /* ---------------------------------------------
+                   VALIDATION
+                   --------------------------------------------- */
+
+                if (!name) {
+
+                    showMessage(
+                        "Please enter your full name.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (name.length < 2) {
+
+                    showMessage(
+                        "Please enter a valid full name.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!email) {
+
+                    showMessage(
+                        "Please enter your email address.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!password) {
+
+                    showMessage(
+                        "Please create a password.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (password.length < 6) {
+
+                    showMessage(
+                        "Password must contain at least 6 characters.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    password !==
+                    confirmPassword
+                ) {
+
+                    showMessage(
+                        "Passwords do not match.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!terms) {
+
+                    showMessage(
+                        "Please accept the project usage statement to continue.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ---------------------------------------------
+                   LOADING
+                   --------------------------------------------- */
+
+                registerButton.disabled =
+                    true;
+
+
+                registerButton.innerHTML =
+                    `
+                    <span>
+                        Creating Account...
+                    </span>
+                    `;
+
+
+                try {
+
+                    /* -----------------------------------------
+                       REGISTER REQUEST
+                       ----------------------------------------- */
+
+                    const response =
+                        await fetch(
+                            `${API}/auth/register`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        name:
+                                            name,
+
+                                        email:
+                                            email,
+
+                                        password:
+                                            password
+                                    })
+                            }
+                        );
+
+
+                    let data = null;
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (error) {
+
+                        data = null;
+
+                    }
+
+
+                    /* -----------------------------------------
+                       ERROR
+                       ----------------------------------------- */
+
+                    if (!response.ok) {
+
+                        const errorMessage =
+                            data?.message ||
+                            data?.error ||
+                            "Registration failed. Please try again.";
+
+
+                        throw new Error(
+                            errorMessage
+                        );
+
+                    }
+
+
+                    /* -----------------------------------------
+                       SUCCESS
+                       ----------------------------------------- */
+
+                    showMessage(
+                        "Your account has been created successfully. Redirecting to login...",
+                        "success"
+                    );
+
+
+                    registerForm.reset();
+
+
+                    setTimeout(
+                        function () {
+
+                            window.location.href =
+                                "login.html";
+
+                        },
+                        1500
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Registration error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to create your account. Please try again.",
+                        "error"
+                    );
+
+
+                    registerButton.disabled =
+                        false;
+
+
+                    registerButton.innerHTML =
+                        `
+                        <span>
+                            Create Citizen Account
+                        </span>
+
+                        <span
+                            class="btn-arrow"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+                        `;
+
+                }
+
+            }
+        );
+
+
+        /* -----------------------------------------------------
+           CURRENT YEAR
+           ----------------------------------------------------- */
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+            );
+
+    </script>
+
 </body>
 </html>

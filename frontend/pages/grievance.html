@@ -1,2 +1,1208 @@
-﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Lodge Grievance</title><link rel="stylesheet" href="../css/style.css"><script src="../config.js"></script><script src="../js/auth-guard.js"></script></head><body><main class="container"><h1>Lodge Grievance</h1><p>Submit your complaint or grievance related to ration services.</p><form id="grievanceForm"><input id="name" placeholder="Applicant Name" required><input id="rationNumber" placeholder="Ration Card Number" required><select id="category" required><option value="">Select Grievance Category</option><option>Ration Card</option><option>Fair Price Shop</option><option>Ration Distribution</option><option>Family Member</option><option>Other</option></select><input id="contact" placeholder="Contact Number" required><textarea id="description" placeholder="Describe your grievance" rows="6" required></textarea><button type="submit" id="submitButton">Submit Grievance</button></form><div id="result"></div></main><script>const API=window.RATION_API_BASE;document.getElementById("grievanceForm").addEventListener("submit",async function(e){e.preventDefault();const b=document.getElementById("submitButton"),r=document.getElementById("result");b.disabled=true;b.textContent="Submitting...";try{const response=await fetch(API+"/grievances",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({applicantName:document.getElementById("name").value.trim(),rationCardNumber:document.getElementById("rationNumber").value.trim(),category:document.getElementById("category").value,contactNumber:document.getElementById("contact").value.trim(),description:document.getElementById("description").value.trim()})});if(!response.ok)throw new Error();const g=await response.json();r.innerHTML="<div class=\"result-card\"><h3>Grievance Submitted Successfully</h3><p><strong>Grievance ID:</strong> "+g.grievanceNumber+"</p><p>Please keep this ID for future reference.</p><p><strong>Status:</strong> "+g.status+"</p></div>";this.reset()}catch(e){r.textContent="Unable to submit grievance. Please make sure the backend is running."}finally{b.disabled=false;b.textContent="Submit Grievance"}});</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Submit and track a grievance through the Ration Portal."
+    >
+
+    <title>Lodge Grievance | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script src="../config.js"></script>
+    <script src="../js/auth-guard.js"></script>
+
+</head>
+
+<body>
+
+    <!-- =====================================================
+         TRICOLOUR LINE
+         ===================================================== -->
+
+    <div
+        class="tricolour-line"
+        aria-hidden="true"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+
+    <!-- =====================================================
+         GOVERNMENT BAR
+         ===================================================== -->
+
+    <div class="gov-bar">
+
+        <div class="container gov-bar-inner">
+
+            <div class="gov-bar-left">
+                <span>
+                    Government Service Portal
+                </span>
+            </div>
+
+            <div class="gov-bar-right">
+
+                <span>
+                    भारत सरकार
+                </span>
+
+                <span aria-hidden="true">
+                    |
+                </span>
+
+                <span>
+                    Government of India
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BRAND HEADER
+         ===================================================== -->
+
+    <header class="brand-header">
+
+        <div class="container brand-header-inner">
+
+            <a
+                href="../index.html"
+                class="brand"
+            >
+
+                <div
+                    class="brand-emblem"
+                    aria-hidden="true"
+                >
+                    <div class="chakra">
+                        ☸
+                    </div>
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-title">
+                        RATION PORTAL
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Public Distribution System
+                    </span>
+
+                </div>
+
+            </a>
+
+            <div
+                id="authArea"
+                class="header-auth-area"
+            ></div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         NAVIGATION
+         ===================================================== -->
+
+    <nav
+        class="main-nav"
+        id="mainNavigation"
+        aria-label="Main navigation"
+    >
+
+        <div class="container main-nav-inner">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="apply-ration-card.html">
+                Apply Ration Card
+            </a>
+
+            <a href="applications.html">
+                My Applications
+            </a>
+
+            <a href="e-ration-card.html">
+                e-Ration Card
+            </a>
+
+            <a href="fair-price-shop.html">
+                Fair Price Shops
+            </a>
+
+            <a
+                href="grievance.html"
+                class="active"
+            >
+                Grievance
+            </a>
+
+            <a href="transparency.html">
+                Transparency
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         PAGE HERO
+         ===================================================== -->
+
+    <section class="page-hero">
+
+        <div class="container page-hero-inner">
+
+            <div>
+
+                <span class="section-kicker">
+                    CITIZEN SUPPORT
+                </span>
+
+                <h1>
+                    Lodge a Grievance
+                </h1>
+
+                <p>
+                    Submit an issue related to ration card or
+                    Public Distribution System services.
+                </p>
+
+            </div>
+
+            <div
+                class="page-hero-mark"
+                aria-hidden="true"
+            >
+                ?
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="page-main">
+
+        <div class="container">
+
+
+            <!-- =================================================
+                 INFORMATION NOTICE
+                 ================================================= -->
+
+            <div class="notice-card">
+
+                <div class="notice-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Before submitting
+                    </strong>
+
+                    <p>
+                        Provide clear and accurate information.
+                        Your grievance details may be used to
+                        understand and process the issue.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 GRIEVANCE FORM
+                 ================================================= -->
+
+            <section class="form-card">
+
+                <div class="form-card-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            GRIEVANCE REGISTRATION
+                        </span>
+
+                        <h2>
+                            Submit Your Grievance
+                        </h2>
+
+                        <p>
+                            Fields marked with
+                            <strong>*</strong>
+                            are required.
+                        </p>
+
+                    </div>
+
+                    <div class="form-step">
+                        Citizen
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="grievanceMessage"
+                    class="form-message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+
+                <form
+                    id="grievanceForm"
+                    novalidate
+                >
+
+
+                    <!-- =========================================
+                         CONTACT DETAILS
+                         ========================================= -->
+
+                    <div class="form-section">
+
+                        <div class="form-section-title">
+
+                            <span>
+                                01
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    Contact Details
+                                </h3>
+
+                                <p>
+                                    Provide information that can
+                                    be used for communication.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-grid">
+
+
+                            <div class="form-group">
+
+                                <label for="name">
+                                    Name
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    placeholder="Enter your name"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="mobile">
+                                    Mobile Number
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="mobile"
+                                    name="mobile"
+                                    placeholder="10-digit mobile number"
+                                    autocomplete="tel"
+                                    maxlength="10"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="email">
+                                    Email Address
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Enter email address"
+                                    autocomplete="email"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="rationNumber">
+                                    Ration Card Number
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="rationNumber"
+                                    name="rationNumber"
+                                    placeholder="Enter ration card number"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         GRIEVANCE DETAILS
+                         ========================================= -->
+
+                    <div class="form-section">
+
+                        <div class="form-section-title">
+
+                            <span>
+                                02
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    Grievance Details
+                                </h3>
+
+                                <p>
+                                    Select the issue category and
+                                    explain the problem clearly.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-grid">
+
+
+                            <div class="form-group">
+
+                                <label for="category">
+                                    Grievance Category
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="category"
+                                    name="category"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select category
+                                    </option>
+
+                                    <option value="RATION_CARD">
+                                        Ration Card
+                                    </option>
+
+                                    <option value="RATION_DISTRIBUTION">
+                                        Ration Distribution
+                                    </option>
+
+                                    <option value="FAIR_PRICE_SHOP">
+                                        Fair Price Shop
+                                    </option>
+
+                                    <option value="APPLICATION">
+                                        Application
+                                    </option>
+
+                                    <option value="E_RATION_CARD">
+                                        e-Ration Card
+                                    </option>
+
+                                    <option value="OTHER">
+                                        Other
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="district">
+                                    District
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="district"
+                                    name="district"
+                                    placeholder="Enter district"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group form-group-wide">
+
+                                <label for="subject">
+                                    Subject
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="subject"
+                                    name="subject"
+                                    placeholder="Briefly describe the issue"
+                                    maxlength="150"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group form-group-wide">
+
+                                <label for="description">
+                                    Description
+                                    <span class="required">*</span>
+                                </label>
+
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    rows="6"
+                                    placeholder="Describe your grievance in detail..."
+                                    maxlength="2000"
+                                    required
+                                ></textarea>
+
+                                <small class="field-help">
+                                    Maximum 2000 characters.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         DECLARATION
+                         ========================================= -->
+
+                    <div class="form-section">
+
+                        <div class="form-section-title">
+
+                            <span>
+                                03
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    Declaration
+                                </h3>
+
+                                <p>
+                                    Confirm that the information
+                                    submitted is accurate.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="declaration-box">
+
+                            <label class="form-checkbox">
+
+                                <input
+                                    type="checkbox"
+                                    id="declaration"
+                                    required
+                                >
+
+                                <span>
+                                    I confirm that the information
+                                    provided in this grievance is
+                                    true and accurate to the best
+                                    of my knowledge.
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         ACTIONS
+                         ========================================= -->
+
+                    <div class="form-actions">
+
+                        <button
+                            type="reset"
+                            class="btn btn-secondary"
+                        >
+                            Reset Form
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="submitButton"
+                        >
+
+                            <span>
+                                Submit Grievance
+                            </span>
+
+                            <span
+                                class="btn-arrow"
+                                aria-hidden="true"
+                            >
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+
+            <!-- =================================================
+                 TRACK GRIEVANCE
+                 ================================================= -->
+
+            <section class="support-card">
+
+                <div class="support-card-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h3>
+                        Already submitted a grievance?
+                    </h3>
+
+                    <p>
+                        Use the grievance status service to
+                        check its current progress.
+                    </p>
+
+                </div>
+
+                <a
+                    href="grievance-status.html"
+                    class="btn btn-secondary"
+                >
+                    Track Grievance
+                </a>
+
+            </section>
+
+
+            <!-- =================================================
+                 DISCLAIMER
+                 ================================================= -->
+
+            <div class="auth-disclaimer">
+
+                <strong>
+                    Educational Project
+                </strong>
+
+                <span>
+                    This portal is a student-developed educational
+                    project inspired by Indian government service
+                    portal design. It is not an official Government
+                    of India website.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                Ration Portal.
+                Educational project.
+            </p>
+
+            <p>
+                Public Distribution System citizen services.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="../js/app.js"></script>
+    <script src="../js/script.js"></script>
+
+
+    <script>
+
+        "use strict";
+
+
+        const API =
+            window.RATION_API_BASE ||
+            "https://ration-portal-backend.onrender.com/api";
+
+
+        const form =
+            document.getElementById(
+                "grievanceForm"
+            );
+
+
+        const message =
+            document.getElementById(
+                "grievanceMessage"
+            );
+
+
+        const submitButton =
+            document.getElementById(
+                "submitButton"
+            );
+
+
+        /* =====================================================
+           MESSAGE
+           ===================================================== */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.hidden =
+                false;
+
+            message.className =
+                "form-message form-message-" +
+                type;
+
+            message.textContent =
+                text;
+
+        }
+
+
+        function hideMessage() {
+
+            message.hidden =
+                true;
+
+            message.textContent =
+                "";
+
+        }
+
+
+        /* =====================================================
+           FORM SUBMIT
+           ===================================================== */
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const name =
+                    document
+                        .getElementById(
+                            "name"
+                        )
+                        .value
+                        .trim();
+
+
+                const mobile =
+                    document
+                        .getElementById(
+                            "mobile"
+                        )
+                        .value
+                        .trim();
+
+
+                const email =
+                    document
+                        .getElementById(
+                            "email"
+                        )
+                        .value
+                        .trim();
+
+
+                const rationNumber =
+                    document
+                        .getElementById(
+                            "rationNumber"
+                        )
+                        .value
+                        .trim();
+
+
+                const category =
+                    document
+                        .getElementById(
+                            "category"
+                        )
+                        .value;
+
+
+                const district =
+                    document
+                        .getElementById(
+                            "district"
+                        )
+                        .value
+                        .trim();
+
+
+                const subject =
+                    document
+                        .getElementById(
+                            "subject"
+                        )
+                        .value
+                        .trim();
+
+
+                const description =
+                    document
+                        .getElementById(
+                            "description"
+                        )
+                        .value
+                        .trim();
+
+
+                const declaration =
+                    document
+                        .getElementById(
+                            "declaration"
+                        )
+                        .checked;
+
+
+                /* =============================================
+                   VALIDATION
+                   ============================================= */
+
+                if (!name) {
+
+                    showMessage(
+                        "Please enter your name.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !/^[0-9]{10}$/.test(
+                        mobile
+                    )
+                ) {
+
+                    showMessage(
+                        "Please enter a valid 10-digit mobile number.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    email &&
+                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                        email
+                    )
+                ) {
+
+                    showMessage(
+                        "Please enter a valid email address.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!category) {
+
+                    showMessage(
+                        "Please select a grievance category.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!subject) {
+
+                    showMessage(
+                        "Please enter the grievance subject.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    description.length < 10
+                ) {
+
+                    showMessage(
+                        "Please provide a little more detail about the grievance.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!declaration) {
+
+                    showMessage(
+                        "Please accept the declaration before submitting.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                hideMessage();
+
+
+                submitButton.disabled =
+                    true;
+
+                submitButton.innerHTML =
+                    `
+                    <span>
+                        Submitting...
+                    </span>
+                    `;
+
+
+                try {
+
+                    const token =
+                        localStorage.getItem(
+                            "rationPortalToken"
+                        );
+
+
+                    const headers = {
+
+                        "Content-Type":
+                            "application/json"
+
+                    };
+
+
+                    if (token) {
+
+                        headers.Authorization =
+                            "Bearer " +
+                            token;
+
+                    }
+
+
+                    /*
+                     * POST /api/grievances
+                     */
+
+                    const response =
+                        await fetch(
+                            `${API}/grievances`,
+                            {
+                                method: "POST",
+                                headers: headers,
+
+                                body:
+                                    JSON.stringify({
+
+                                        name:
+                                            name,
+
+                                        mobile:
+                                            mobile,
+
+                                        email:
+                                            email,
+
+                                        rationNumber:
+                                            rationNumber,
+
+                                        category:
+                                            category,
+
+                                        district:
+                                            district,
+
+                                        subject:
+                                            subject,
+
+                                        description:
+                                            description
+
+                                    })
+                            }
+                        );
+
+
+                    let data = null;
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (error) {
+
+                        data =
+                            null;
+
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data?.message ||
+                            data?.error ||
+                            "Unable to submit the grievance."
+                        );
+
+                    }
+
+
+                    const grievance =
+                        data?.data ||
+                        data?.grievance ||
+                        data;
+
+
+                    const grievanceNumber =
+                        grievance?.grievanceNumber ||
+                        grievance?.number ||
+                        grievance?.id;
+
+
+                    if (grievanceNumber) {
+
+                        showMessage(
+                            `Grievance submitted successfully. Your grievance number is ${grievanceNumber}. Please keep this number for tracking.`,
+                            "success"
+                        );
+
+                    } else {
+
+                        showMessage(
+                            "Your grievance has been submitted successfully.",
+                            "success"
+                        );
+
+                    }
+
+
+                    form.reset();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Grievance submission error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to submit the grievance. Please try again.",
+                        "error"
+                    );
+
+                } finally {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.innerHTML =
+                        `
+                        <span>
+                            Submit Grievance
+                        </span>
+
+                        <span
+                            class="btn-arrow"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+                        `;
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           CHARACTER COUNT
+           ===================================================== */
+
+        const description =
+            document.getElementById(
+                "description"
+            );
+
+
+        const descriptionHelp =
+            description
+                .parentElement
+                .querySelector(
+                    ".field-help"
+                );
+
+
+        description.addEventListener(
+            "input",
+            function () {
+
+                const remaining =
+                    2000 -
+                    description.value.length;
+
+
+                descriptionHelp.textContent =
+                    `${remaining} characters remaining.`;
+
+            }
+        );
+
+
+        /* =====================================================
+           CURRENT YEAR
+           ===================================================== */
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>

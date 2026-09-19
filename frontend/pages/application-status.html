@@ -1,2 +1,1397 @@
-﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Track Application Status</title><link rel="stylesheet" href="../css/style.css"><script src="../config.js"></script><script src="../js/auth-guard.js"></script></head><body><div class="container"><h1>Track Application Status</h1><p>Enter your application ID to check status.</p><input id="applicationId" type="number" min="1" placeholder="Application ID"><button onclick="checkStatus()">Check Status</button><div id="result"></div></div><script>function checkStatus(){let id=document.getElementById("applicationId").value.trim(),r=document.getElementById("result");if(!id){r.textContent="Please enter an application ID.";return}r.textContent="Checking...";fetch(window.RATION_API_BASE+"/applications/ration-card/"+encodeURIComponent(id)).then(x=>{if(!x.ok)throw Error();return x.json()}).then(a=>{r.innerHTML="<h2>Status: "+a.status+"</h2><p><b>Application ID:</b> "+a.id+"</p><p><b>Applicant:</b> "+a.applicantName+"</p><p><b>Family Members:</b> "+a.familyMembers+"</p><p><b>District:</b> "+a.district+"</p><p><b>Address:</b> "+a.address+"</p><p><b>Submitted:</b> "+a.createdAt+"</p>"}).catch(()=>r.textContent="Application not found or backend unavailable.")}</script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Track your ration card application status."
+    >
+
+    <title>Application Status | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script src="../config.js"></script>
+    <script src="../js/auth-guard.js"></script>
+
+</head>
+
+<body>
+
+    <!-- =====================================================
+         TRICOLOUR LINE
+         ===================================================== -->
+
+    <div
+        class="tricolour-line"
+        aria-hidden="true"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+
+    <!-- =====================================================
+         GOVERNMENT BAR
+         ===================================================== -->
+
+    <div class="gov-bar">
+
+        <div class="container gov-bar-inner">
+
+            <div class="gov-bar-left">
+                <span>
+                    Government Service Portal
+                </span>
+            </div>
+
+            <div class="gov-bar-right">
+
+                <span>
+                    भारत सरकार
+                </span>
+
+                <span aria-hidden="true">
+                    |
+                </span>
+
+                <span>
+                    Government of India
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BRAND HEADER
+         ===================================================== -->
+
+    <header class="brand-header">
+
+        <div class="container brand-header-inner">
+
+            <a
+                href="../index.html"
+                class="brand"
+            >
+
+                <div
+                    class="brand-emblem"
+                    aria-hidden="true"
+                >
+                    <div class="chakra">
+                        ☸
+                    </div>
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-title">
+                        RATION PORTAL
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Public Distribution System
+                    </span>
+
+                </div>
+
+            </a>
+
+            <div
+                id="authArea"
+                class="header-auth-area"
+            ></div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         NAVIGATION
+         ===================================================== -->
+
+    <nav
+        class="main-nav"
+        id="mainNavigation"
+        aria-label="Main navigation"
+    >
+
+        <div class="container main-nav-inner">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="apply-ration-card.html">
+                Apply Ration Card
+            </a>
+
+            <a href="applications.html">
+                My Applications
+            </a>
+
+            <a href="e-ration-card.html">
+                e-Ration Card
+            </a>
+
+            <a href="fair-price-shop.html">
+                Fair Price Shops
+            </a>
+
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+            <a href="transparency.html">
+                Transparency
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         PAGE HERO
+         ===================================================== -->
+
+    <section class="page-hero">
+
+        <div class="container page-hero-inner">
+
+            <div>
+
+                <span class="section-kicker">
+                    CITIZEN SERVICE
+                </span>
+
+                <h1>
+                    Application Status
+                </h1>
+
+                <p>
+                    Track the current status of your ration
+                    card application using your application number.
+                </p>
+
+            </div>
+
+            <div
+                class="page-hero-mark"
+                aria-hidden="true"
+            >
+                ✓
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="page-main">
+
+        <div class="container">
+
+
+            <!-- =================================================
+                 STATUS SEARCH
+                 ================================================= -->
+
+            <section class="form-card">
+
+                <div class="form-card-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            TRACK APPLICATION
+                        </span>
+
+                        <h2>
+                            Check Your Application
+                        </h2>
+
+                        <p>
+                            Enter your application number below.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    id="statusForm"
+                    class="search-form"
+                >
+
+                    <div class="form-group">
+
+                        <label for="applicationNumber">
+                            Application Number
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="applicationNumber"
+                            name="applicationNumber"
+                            placeholder="Example: RAP-2026-000001"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="statusButton"
+                    >
+                        Check Status
+                    </button>
+
+                </form>
+
+
+                <div
+                    id="statusMessage"
+                    class="form-message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+            </section>
+
+
+            <!-- =================================================
+                 STATUS RESULT
+                 ================================================= -->
+
+            <section
+                id="statusResult"
+                class="result-card"
+                hidden
+            >
+
+                <div class="result-card-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            APPLICATION STATUS
+                        </span>
+
+                        <h2>
+                            Application Details
+                        </h2>
+
+                    </div>
+
+                    <span
+                        id="statusBadge"
+                        class="status-badge status-pending"
+                    >
+                        Pending
+                    </span>
+
+                </div>
+
+
+                <!-- =============================================
+                     APPLICATION SUMMARY
+                     ============================================= -->
+
+                <div class="result-grid">
+
+                    <div class="result-item">
+
+                        <span>
+                            Application Number
+                        </span>
+
+                        <strong
+                            id="applicationNumberResult"
+                        >
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Applicant Name
+                        </span>
+
+                        <strong
+                            id="applicantNameResult"
+                        >
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Ration Card Type
+                        </span>
+
+                        <strong
+                            id="cardTypeResult"
+                        >
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            District
+                        </span>
+
+                        <strong
+                            id="districtResult"
+                        >
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Submitted Date
+                        </span>
+
+                        <strong
+                            id="submittedDateResult"
+                        >
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            Last Updated
+                        </span>
+
+                        <strong
+                            id="updatedDateResult"
+                        >
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     STATUS TIMELINE
+                     ============================================= -->
+
+                <div class="application-progress">
+
+                    <div
+                        id="stepSubmitted"
+                        class="progress-step active"
+                    >
+
+                        <span class="progress-number">
+                            1
+                        </span>
+
+                        <span>
+                            Submitted
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress-line"></div>
+
+
+                    <div
+                        id="stepVerification"
+                        class="progress-step"
+                    >
+
+                        <span class="progress-number">
+                            2
+                        </span>
+
+                        <span>
+                            Verification
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress-line"></div>
+
+
+                    <div
+                        id="stepApproval"
+                        class="progress-step"
+                    >
+
+                        <span class="progress-number">
+                            3
+                        </span>
+
+                        <span>
+                            Approval
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress-line"></div>
+
+
+                    <div
+                        id="stepCompleted"
+                        class="progress-step"
+                    >
+
+                        <span class="progress-number">
+                            4
+                        </span>
+
+                        <span>
+                            Completed
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     REMARKS
+                     ============================================= -->
+
+                <div
+                    id="remarksBox"
+                    class="result-notes"
+                    hidden
+                >
+
+                    <strong>
+                        Application Remark
+                    </strong>
+
+                    <p id="remarksText"></p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 STATUS INFORMATION
+                 ================================================= -->
+
+            <section class="support-grid">
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        1
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Submitted
+                        </h3>
+
+                        <p>
+                            Your application has been successfully
+                            received by the portal.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        2
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Verification
+                        </h3>
+
+                        <p>
+                            Application information is reviewed
+                            according to the applicable process.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        3
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Approval
+                        </h3>
+
+                        <p>
+                            The application proceeds through the
+                            approval stage after verification.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="support-card">
+
+                    <div class="support-card-icon">
+                        4
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Completion
+                        </h3>
+
+                        <p>
+                            The final application outcome is
+                            recorded in the system.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 LINK TO APPLICATIONS
+                 ================================================= -->
+
+            <div class="center-action">
+
+                <a
+                    href="applications.html"
+                    class="btn btn-secondary"
+                >
+                    View My Applications
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 DISCLAIMER
+                 ================================================= -->
+
+            <div class="auth-disclaimer">
+
+                <strong>
+                    Educational Project
+                </strong>
+
+                <span>
+                    This portal is a student-developed educational
+                    project inspired by Indian government service
+                    portal design. It is not an official Government
+                    of India website.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                Ration Portal.
+                Educational project.
+            </p>
+
+            <p>
+                Public Distribution System citizen services.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="../js/app.js"></script>
+    <script src="../js/script.js"></script>
+
+
+    <script>
+
+        "use strict";
+
+
+        const API =
+            window.RATION_API_BASE ||
+            "https://ration-portal-backend.onrender.com/api";
+
+
+        const form =
+            document.getElementById(
+                "statusForm"
+            );
+
+
+        const input =
+            document.getElementById(
+                "applicationNumber"
+            );
+
+
+        const button =
+            document.getElementById(
+                "statusButton"
+            );
+
+
+        const message =
+            document.getElementById(
+                "statusMessage"
+            );
+
+
+        const result =
+            document.getElementById(
+                "statusResult"
+            );
+
+
+        /* =====================================================
+           MESSAGE
+           ===================================================== */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.hidden =
+                false;
+
+            message.className =
+                "form-message form-message-" +
+                type;
+
+            message.textContent =
+                text;
+
+        }
+
+
+        function hideMessage() {
+
+            message.hidden =
+                true;
+
+            message.textContent =
+                "";
+
+        }
+
+
+        /* =====================================================
+           VALUE HELPER
+           ===================================================== */
+
+        function valueOrDash(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined ||
+                value === ""
+            ) {
+
+                return "—";
+
+            }
+
+            return String(value);
+
+        }
+
+
+        /* =====================================================
+           DATE FORMAT
+           ===================================================== */
+
+        function formatDate(
+            value
+        ) {
+
+            if (!value) {
+
+                return "—";
+
+            }
+
+
+            const date =
+                new Date(value);
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return valueOrDash(
+                    value
+                );
+
+            }
+
+
+            return date.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           STATUS NORMALIZATION
+           ===================================================== */
+
+        function normalizeStatus(
+            status
+        ) {
+
+            return String(
+                status || "PENDING"
+            )
+                .trim()
+                .toUpperCase()
+                .replaceAll(
+                    " ",
+                    "_"
+                );
+
+        }
+
+
+        /* =====================================================
+           STATUS BADGE
+           ===================================================== */
+
+        function updateBadge(
+            status
+        ) {
+
+            const badge =
+                document.getElementById(
+                    "statusBadge"
+                );
+
+
+            const normalized =
+                normalizeStatus(
+                    status
+                );
+
+
+            const readable =
+                normalized
+                    .replaceAll(
+                        "_",
+                        " "
+                    );
+
+
+            badge.textContent =
+                readable;
+
+
+            badge.className =
+                "status-badge";
+
+
+            if (
+                normalized === "APPROVED" ||
+                normalized === "ACCEPTED" ||
+                normalized === "COMPLETED"
+            ) {
+
+                badge.classList.add(
+                    "status-success"
+                );
+
+            } else if (
+                normalized === "REJECTED" ||
+                normalized === "CANCELLED"
+            ) {
+
+                badge.classList.add(
+                    "status-danger"
+                );
+
+            } else {
+
+                badge.classList.add(
+                    "status-pending"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           TIMELINE
+           ===================================================== */
+
+        function updateTimeline(
+            status
+        ) {
+
+            const submitted =
+                document.getElementById(
+                    "stepSubmitted"
+                );
+
+
+            const verification =
+                document.getElementById(
+                    "stepVerification"
+                );
+
+
+            const approval =
+                document.getElementById(
+                    "stepApproval"
+                );
+
+
+            const completed =
+                document.getElementById(
+                    "stepCompleted"
+                );
+
+
+            const steps = [
+                submitted,
+                verification,
+                approval,
+                completed
+            ];
+
+
+            steps.forEach(
+                function (step) {
+
+                    step.classList.remove(
+                        "active",
+                        "completed"
+                    );
+
+                }
+            );
+
+
+            submitted.classList.add(
+                "completed"
+            );
+
+
+            const normalized =
+                normalizeStatus(
+                    status
+                );
+
+
+            if (
+                normalized === "PENDING" ||
+                normalized === "SUBMITTED" ||
+                normalized === "RECEIVED"
+            ) {
+
+                submitted.classList.remove(
+                    "completed"
+                );
+
+                submitted.classList.add(
+                    "active"
+                );
+
+                return;
+
+            }
+
+
+            if (
+                normalized === "VERIFICATION" ||
+                normalized === "UNDER_VERIFICATION" ||
+                normalized === "VERIFIED"
+            ) {
+
+                verification.classList.add(
+                    "active"
+                );
+
+                return;
+
+            }
+
+
+            if (
+                normalized === "APPROVAL" ||
+                normalized === "UNDER_APPROVAL"
+            ) {
+
+                verification.classList.add(
+                    "completed"
+                );
+
+                approval.classList.add(
+                    "active"
+                );
+
+                return;
+
+            }
+
+
+            if (
+                normalized === "APPROVED" ||
+                normalized === "ACCEPTED"
+            ) {
+
+                verification.classList.add(
+                    "completed"
+                );
+
+                approval.classList.add(
+                    "completed"
+                );
+
+                completed.classList.add(
+                    "active"
+                );
+
+                return;
+
+            }
+
+
+            if (
+                normalized === "COMPLETED"
+            ) {
+
+                verification.classList.add(
+                    "completed"
+                );
+
+                approval.classList.add(
+                    "completed"
+                );
+
+                completed.classList.add(
+                    "completed"
+                );
+
+                return;
+
+            }
+
+
+            if (
+                normalized === "REJECTED" ||
+                normalized === "CANCELLED"
+            ) {
+
+                verification.classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           DISPLAY RESULT
+           ===================================================== */
+
+        function displayResult(
+            responseData
+        ) {
+
+            const data =
+                responseData?.data ||
+                responseData?.application ||
+                responseData;
+
+
+            document
+                .getElementById(
+                    "applicationNumberResult"
+                )
+                .textContent =
+                valueOrDash(
+                    data.applicationNumber ||
+                    data.applicationNo ||
+                    data.id
+                );
+
+
+            document
+                .getElementById(
+                    "applicantNameResult"
+                )
+                .textContent =
+                valueOrDash(
+                    data.applicantName ||
+                    data.name
+                );
+
+
+            document
+                .getElementById(
+                    "cardTypeResult"
+                )
+                .textContent =
+                valueOrDash(
+                    data.cardType
+                );
+
+
+            document
+                .getElementById(
+                    "districtResult"
+                )
+                .textContent =
+                valueOrDash(
+                    data.district
+                );
+
+
+            document
+                .getElementById(
+                    "submittedDateResult"
+                )
+                .textContent =
+                formatDate(
+                    data.createdAt ||
+                    data.submittedAt ||
+                    data.applicationDate
+                );
+
+
+            document
+                .getElementById(
+                    "updatedDateResult"
+                )
+                .textContent =
+                formatDate(
+                    data.updatedAt ||
+                    data.lastUpdated
+                );
+
+
+            const status =
+                data.status ||
+                "PENDING";
+
+
+            updateBadge(
+                status
+            );
+
+
+            updateTimeline(
+                status
+            );
+
+
+            const remarks =
+                data.remarks ||
+                data.remark ||
+                data.notes ||
+                data.message;
+
+
+            const remarksBox =
+                document.getElementById(
+                    "remarksBox"
+                );
+
+
+            const remarksText =
+                document.getElementById(
+                    "remarksText"
+                );
+
+
+            if (remarks) {
+
+                remarksBox.hidden =
+                    false;
+
+                remarksText.textContent =
+                    remarks;
+
+            } else {
+
+                remarksBox.hidden =
+                    true;
+
+                remarksText.textContent =
+                    "";
+
+            }
+
+
+            result.hidden =
+                false;
+
+
+            result.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
+
+
+        /* =====================================================
+           SUBMIT
+           ===================================================== */
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const applicationNumber =
+                    input.value.trim();
+
+
+                if (!applicationNumber) {
+
+                    showMessage(
+                        "Please enter your application number.",
+                        "error"
+                    );
+
+                    result.hidden =
+                        true;
+
+                    return;
+
+                }
+
+
+                hideMessage();
+
+
+                button.disabled =
+                    true;
+
+                button.textContent =
+                    "Checking...";
+
+
+                result.hidden =
+                    true;
+
+
+                try {
+
+                    const token =
+                        localStorage.getItem(
+                            "rationPortalToken"
+                        );
+
+
+                    const headers = {
+                        "Content-Type":
+                            "application/json"
+                    };
+
+
+                    if (token) {
+
+                        headers.Authorization =
+                            "Bearer " +
+                            token;
+
+                    }
+
+
+                    const response =
+                        await fetch(
+                            `${API}/applications/ration-card/${encodeURIComponent(applicationNumber)}`,
+                            {
+                                method: "GET",
+                                headers: headers
+                            }
+                        );
+
+
+                    let data = null;
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (error) {
+
+                        data =
+                            null;
+
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data?.message ||
+                            data?.error ||
+                            "Application could not be found."
+                        );
+
+                    }
+
+
+                    displayResult(
+                        data
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Application status error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to retrieve application status.",
+                        "error"
+                    );
+
+
+                } finally {
+
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        "Check Status";
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           CURRENT YEAR
+           ===================================================== */
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+            );
+
+    </script>
+
+</body>
+</html>

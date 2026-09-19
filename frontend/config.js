@@ -1,1 +1,7 @@
-window.RATION_API_BASE = window.RATION_API_BASE || "https://ration-portal-backend.onrender.com/api";
+/* =========================================================
+   RATION PORTAL — PRODUCTION API CONFIGURATION
+   ========================================================= */
+
+window.RATION_API_BASE =
+    window.RATION_API_BASE ||
+    "https://ration-portal-backend.onrender.com/api";
