@@ -1,1 +1,677 @@
-/* FINAL PREMIUM GOVERNMENT REDESIGN 2026 */ *{box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:#f5f7fa!important;color:#172033!important;line-height:1.6}body:before{content:"";position:fixed;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#ff9933 0 33.33%,#fff 33.33% 66.66%,#138808 66.66%);z-index:9999}.topbar{background:#082b49!important;color:#dce9f3!important;padding:9px 7%!important;font-size:12px!important;border:0!important}.brand{background:rgba(255,255,255,.98)!important;padding:18px 7%!important;display:flex!important;align-items:center!important;gap:16px!important;border-bottom:1px solid #e4e9ef!important;box-shadow:0 4px 18px rgba(8,43,73,.07)!important}.logo{width:62px!important;height:62px!important;border-radius:50%!important;background:radial-gradient(circle,#fff 0 30%,#0b3152 31% 37%,#fff 38% 42%,#0b3152 43% 48%,#fff 49% 52%,#0b3152 53% 100%)!important;color:transparent!important;border:3px solid #d59b28!important;box-shadow:0 5px 18px rgba(8,43,73,.16)!important;position:relative!important}.logo:after{content:"";position:absolute;inset:13px;border:2px dotted #d59b28;border-radius:50%}.brand h1{font-size:25px!important;font-weight:800!important;color:#082b49!important;letter-spacing:1px!important;margin:0!important}.brand p{color:#64748b!important;margin:2px 0 0!important;font-size:13px!important}nav{background:#082b49!important;border-bottom:3px solid #ff9933!important;min-height:58px!important;padding:0 7%!important;display:flex!important;align-items:center!important;gap:3px!important;box-shadow:0 5px 18px rgba(8,43,73,.18)!important}nav a{color:#fff!important;text-decoration:none!important;font-weight:600!important;font-size:14px!important;padding:19px 15px!important;border-radius:0!important;transition:.2s ease!important}nav a:hover{background:#12496f!important;color:#fff!important}nav .login,.auth-area .login{background:#ff9933!important;color:#132238!important;border-radius:7px!important;margin-left:8px!important;padding:10px 17px!important;font-weight:800!important}.hero{min-height:500px!important;padding:82px 8%!important;background:radial-gradient(circle at 85% 30%,rgba(19,136,8,.09),transparent 28%),radial-gradient(circle at 15% 20%,rgba(255,153,51,.1),transparent 30%),linear-gradient(135deg,#eef5f9,#fff 55%,#f4faf6)!important;display:flex!important;align-items:center!important;gap:70px!important;position:relative!important;overflow:hidden!important;border-bottom:1px solid #dce5ec!important}.hero:after{content:"";position:absolute;right:-120px;bottom:-180px;width:430px;height:430px;border:45px solid rgba(8,43,73,.035);border-radius:50%}.hero>div:first-child{position:relative;z-index:2;flex:1}.tag{display:inline-block!important;color:#e87516!important;font-weight:800!important;font-size:12px!important;letter-spacing:2px!important;background:#fff2e7!important;padding:7px 12px!important;border-radius:30px!important;border:1px solid #ffd8ba!important}.hero h2{font-size:54px!important;line-height:1.08!important;color:#082b49!important;font-weight:800!important;margin:18px 0 15px!important;letter-spacing:-1px!important}.hero p{max-width:690px!important;color:#536477!important;font-size:17px!important;line-height:1.8!important}.search-box{max-width:680px!important;margin-top:30px!important;background:#fff!important;padding:7px!important;border:1px solid #d5e0e8!important;border-radius:12px!important;box-shadow:0 12px 35px rgba(8,43,73,.12)!important;display:flex!important}.search-box input{flex:1!important;border:0!important;outline:0!important;background:#fff!important;color:#172033!important;font-size:15px!important;padding:15px 17px!important}.search-box button{background:#082b49!important;color:#fff!important;border:0!important;padding:14px 22px!important;border-radius:8px!important;font-weight:700!important;cursor:pointer!important}.search-box button:hover{background:#12608c!important}.hero-card{width:310px!important;padding:38px 30px!important;background:rgba(255,255,255,.92)!important;border:1px solid #dce5ec!important;border-radius:22px!important;box-shadow:0 22px 55px rgba(8,43,73,.14)!important;text-align:center!important;position:relative!important;z-index:2!important}.hero-card:before{content:"";display:block;height:5px;margin:-38px -30px 30px;background:linear-gradient(90deg,#ff9933,#fff,#138808);border-radius:22px 22px 0 0}.hero-icon{width:92px!important;height:92px!important;border-radius:50%!important;margin:0 auto 22px!important;background:#082b49!important;border:5px solid #e9c878!important;display:grid!important;place-items:center!important}.hero-icon:after{content:"✦"!important;font-size:42px!important;color:#fff!important}.hero-card h3{color:#082b49!important;font-size:22px!important}.hero-card p{font-size:14px!important;color:#64748b!important}.section{padding:78px 7%!important}.section-title{text-align:center!important;margin-bottom:44px!important}.section-title span{color:#e87516!important;font-size:12px!important;font-weight:800!important;letter-spacing:2px!important}.section-title h2{color:#082b49!important;font-size:35px!important;margin:8px 0!important}.cards{gap:24px!important}.cards article{background:#fff!important;border:1px solid #dfe7ee!important;border-top:4px solid #082b49!important;border-radius:16px!important;padding:30px!important;min-height:300px!important;box-shadow:0 8px 28px rgba(8,43,73,.07)!important;transition:transform .25s ease,box-shadow .25s ease!important;position:relative!important;overflow:hidden!important}.cards article:after{content:"";position:absolute;right:-35px;bottom:-35px;width:100px;height:100px;border-radius:50%;border:20px solid rgba(8,43,73,.035)}.cards article:nth-child(1){border-top-color:#ff9933!important}.cards article:nth-child(2){border-top-color:#082b49!important}.cards article:nth-child(3){border-top-color:#138808!important}.cards article:nth-child(4){border-top-color:#d59b28!important}.cards article:hover{transform:translateY(-8px)!important;box-shadow:0 18px 42px rgba(8,43,73,.13)!important}.icon{width:54px!important;height:54px!important;border-radius:14px!important;background:#edf4f8!important;color:#082b49!important;display:grid!important;place-items:center!important;font-size:0!important;margin-bottom:20px!important}.icon:after{content:"✦"!important;font-size:25px!important;font-weight:800!important}.cards article:nth-child(1) .icon{background:#fff1e5!important;color:#e87516!important}.cards article:nth-child(3) .icon{background:#eaf7ee!important;color:#138808!important}.cards article:nth-child(4) .icon{background:#fff8e7!important;color:#a77912!important}.cards h3{font-size:19px!important;color:#082b49!important;margin-bottom:9px!important}.cards p{color:#64748b!important;line-height:1.7!important}.cards article button{background:#082b49!important;color:#fff!important;border:0!important;border-radius:8px!important;padding:11px 19px!important;font-weight:700!important;cursor:pointer!important}.cards article button:hover{background:#12608c!important}.notice{margin:0 7% 70px!important;background:#fff!important;border-left:5px solid #ff9933!important;border-radius:14px!important;padding:30px 34px!important;box-shadow:0 8px 28px rgba(8,43,73,.07)!important}.notice h2,.support h2{color:#082b49!important}.notice p,.support p{color:#64748b!important;line-height:1.75!important}.notice-date{color:#082b49!important}.notice-date strong{color:#e87516!important;font-size:25px!important}.support{padding:65px 7%!important;background:#fff!important;border-top:1px solid #e4e9ef!important;border-bottom:1px solid #e4e9ef!important}.support-box{background:#f5f9fc!important;border:1px solid #dce6ed!important;border-radius:12px!important;color:#082b49!important;padding:23px!important}.support-box strong{color:#082b49!important}footer{background:#082b49!important;border-top:5px solid #138808!important;color:#c9d7e2!important;padding:48px 7%!important}footer strong{color:#fff!important}footer p{color:#b7c7d3!important}.disclaimer{color:#91a6b5!important;border-top:1px solid rgba(255,255,255,.12)!important;padding-top:18px!important;margin-top:20px!important}.card,.service-card,.quick-card,.result-card,.login-card,.form-card{border:1px solid #dce5ec!important;border-radius:15px!important;box-shadow:0 9px 30px rgba(8,43,73,.08)!important;background:#fff!important}.card:hover,.service-card:hover,.quick-card:hover{box-shadow:0 15px 38px rgba(8,43,73,.13)!important}.btn,.primary-btn,button{font-weight:700!important}.form-control,input,select,textarea{border-color:#d5e0e8!important;border-radius:8px!important}.form-control:focus,input:focus,select:focus,textarea:focus{border-color:#12608c!important;box-shadow:0 0 0 3px rgba(18,96,140,.12)!important;outline:none!important}@media(max-width:800px){nav{flex-wrap:wrap;padding:5px 4%!important}nav a{padding:12px 9px!important;font-size:13px!important}.brand{padding:15px 5%!important}.hero{padding:55px 6%!important;display:block!important}.hero h2{font-size:40px!important}.hero-card{width:100%!important;margin-top:38px!important}.search-box{display:block!important}.search-box input{width:100%!important}.search-box button{width:100%!important;margin-top:5px!important}.section{padding:55px 6%!important}.notice{margin:0 6% 50px!important}.support{padding:50px 6%!important}}@media(max-width:480px){.logo{width:50px!important;height:50px!important}.brand h1{font-size:19px!important}.hero h2{font-size:34px!important}.hero p{font-size:15px!important}.section-title h2{font-size:29px!important}}
+/* =========================================================
+   RATION PORTAL
+   FINAL PREMIUM GOVERNMENT VISUAL LAYER
+   ========================================================= */
+
+/*
+   This file works together with:
+
+   frontend/index.html
+   frontend/css/style.css
+
+   It contains visual enhancement only.
+   Authentication and API logic remain in JavaScript.
+*/
+
+
+/* =========================================================
+   GLOBAL PREMIUM POLISH
+   ========================================================= */
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* =========================================================
+   TRICOLOUR TOP ACCENT
+   ========================================================= */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 3px;
+
+    z-index: 99999;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff9933 0%,
+            #ff9933 33.333%,
+            #ffffff 33.333%,
+            #ffffff 66.666%,
+            #138808 66.666%,
+            #138808 100%
+        );
+
+    box-shadow:
+        0 1px 7px rgba(0, 0, 0, .12);
+}
+
+
+/* =========================================================
+   PREMIUM SELECTION
+   ========================================================= */
+
+::selection {
+    background: rgba(8, 127, 229, .18);
+    color: #06284a;
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   BUTTON POLISH
+   ========================================================= */
+
+button,
+.btn,
+.rp-btn {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:active,
+.btn:active,
+.rp-btn:active {
+    transform: translateY(0) scale(.98);
+}
+
+
+/* =========================================================
+   INPUT POLISH
+   ========================================================= */
+
+input,
+select,
+textarea {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #8a9aaa;
+}
+
+
+/* =========================================================
+   TABLE POLISH
+   ========================================================= */
+
+.table-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #9db1c3 transparent;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f5f8;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #9db1c3;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #71899e;
+}
+
+
+/* =========================================================
+   PREMIUM CARD HIGHLIGHT
+   ========================================================= */
+
+.card,
+.service-card,
+.stat-card,
+.form-card,
+.search-panel,
+.auth-card {
+    position: relative;
+}
+
+.card::before,
+.service-card::before,
+.stat-card::before,
+.form-card::before,
+.search-panel::before,
+.auth-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 18px;
+    right: 18px;
+
+    height: 1px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 153, 51, .45),
+            rgba(255, 255, 255, .8),
+            rgba(19, 136, 8, .45),
+            transparent
+        );
+
+    opacity: .8;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   PAGE SECTION BACKGROUND
+   ========================================================= */
+
+.page-section {
+    position: relative;
+    isolation: isolate;
+}
+
+.page-section::before {
+    content: "";
+
+    position: absolute;
+
+    width: 380px;
+    height: 380px;
+
+    left: -220px;
+    top: 50px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 153, 51, .07),
+            transparent 68%
+        );
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+.page-section::after {
+    content: "";
+
+    position: absolute;
+
+    width: 380px;
+    height: 380px;
+
+    right: -220px;
+    bottom: 20px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(19, 136, 8, .06),
+            transparent 68%
+        );
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* =========================================================
+   PAGE HERO TRICOLOUR ACCENT
+   ========================================================= */
+
+.page-hero {
+    border-bottom: 4px solid transparent;
+
+    border-image:
+        linear-gradient(
+            90deg,
+            #ff9933,
+            #ffffff,
+            #138808
+        ) 1;
+}
+
+
+/* =========================================================
+   SECTION TITLE ACCENT
+   ========================================================= */
+
+.section-title {
+    position: relative;
+    padding-bottom: 9px;
+}
+
+.section-title::after {
+    content: "";
+
+    display: block;
+
+    width: 48px;
+    height: 4px;
+
+    margin-top: 7px;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff9933 0 33%,
+            #ffffff 33% 66%,
+            #138808 66%
+        );
+
+    box-shadow:
+        0 0 0 1px rgba(6, 40, 74, .04);
+}
+
+
+/* =========================================================
+   SERVICE CARD ICON EFFECT
+   ========================================================= */
+
+.service-icon {
+    position: relative;
+    overflow: hidden;
+}
+
+.service-icon::after {
+    content: "";
+
+    position: absolute;
+
+    width: 70%;
+    height: 70%;
+
+    top: -55%;
+    left: -55%;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, .24);
+
+    transform: rotate(25deg);
+
+    transition:
+        transform .45s ease;
+}
+
+.service-card:hover .service-icon::after {
+    transform:
+        translate3d(95px, 95px, 0)
+        rotate(25deg);
+}
+
+
+/* =========================================================
+   STATUS BADGE DOT
+   ========================================================= */
+
+.status-badge::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    margin-right: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+/* =========================================================
+   FORM LABEL ACCENT
+   ========================================================= */
+
+.form-group label {
+    position: relative;
+}
+
+.form-group label::before {
+    content: "";
+
+    display: inline-block;
+
+    width: 3px;
+    height: 12px;
+
+    margin-right: 7px;
+
+    vertical-align: -1px;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ff9933 0 33%,
+            #0b4775 33% 66%,
+            #138808 66%
+        );
+}
+
+
+/* =========================================================
+   FORM BUTTON PREMIUM EFFECT
+   ========================================================= */
+
+.form-actions .btn {
+    min-width: 125px;
+}
+
+.form-actions .btn-primary {
+    position: relative;
+    overflow: hidden;
+}
+
+.form-actions .btn-primary::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: -80px;
+
+    width: 45px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, .28),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    transition:
+        left .45s ease;
+}
+
+.form-actions .btn-primary:hover::before {
+    left: 130%;
+}
+
+
+/* =========================================================
+   AUTH CARD PREMIUM TOP ACCENT
+   ========================================================= */
+
+.auth-card {
+    overflow: hidden;
+}
+
+.auth-card::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff9933 0 33.333%,
+            #ffffff 33.333% 66.666%,
+            #138808 66.666% 100%
+        );
+}
+
+
+/* =========================================================
+   AUTH LOGO
+   ========================================================= */
+
+.auth-logo {
+    position: relative;
+
+    box-shadow:
+        0 8px 22px rgba(6, 40, 74, .10);
+}
+
+.auth-logo::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 5px;
+
+    border-radius: 50%;
+
+    border:
+        1px dashed rgba(6, 40, 74, .35);
+
+    animation:
+        chakraRotate 18s linear infinite;
+}
+
+@keyframes chakraRotate {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
+
+.auth-card .btn-primary {
+    width: 100%;
+
+    min-height: 48px;
+
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   PROFILE MENU
+   ========================================================= */
+
+.profile-dropdown {
+    animation:
+        profileMenuIn .18s ease;
+}
+
+@keyframes profileMenuIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   FOOTER TRICOLOUR ACCENT
+   ========================================================= */
+
+.site-footer {
+    position: relative;
+
+    border-top:
+        4px solid transparent;
+
+    border-image:
+        linear-gradient(
+            90deg,
+            #ff9933,
+            #ffffff,
+            #138808
+        ) 1;
+}
+
+
+/* =========================================================
+   FOOTER LINKS
+   ========================================================= */
+
+.footer-links a {
+    position: relative;
+    padding-bottom: 3px;
+}
+
+.footer-links a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 100%;
+    bottom: 0;
+
+    height: 1px;
+
+    background: #ffffff;
+
+    transition:
+        right .2s ease;
+}
+
+.footer-links a:hover::after {
+    right: 0;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #7892a8 #eef3f7;
+}
+
+html::-webkit-scrollbar {
+    width: 9px;
+}
+
+html::-webkit-scrollbar-track {
+    background: #eef3f7;
+}
+
+html::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #7892a8,
+            #476a84
+        );
+}
+
+
+/* =========================================================
+   MOBILE TOUCH EXPERIENCE
+   ========================================================= */
+
+@media (max-width: 820px) {
+
+    .service-card:hover {
+        transform: none;
+    }
+
+    .card:hover {
+        box-shadow: var(--shadow-sm);
+    }
+
+    .service-card,
+    .card,
+    .stat-card {
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .auth-logo::after,
+    .profile-dropdown,
+    .notification {
+        animation: none !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+    }
+}
+
+
+/* =========================================================
+   FINAL RESPONSIVE SAFETY
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .page-section::before,
+    .page-section::after {
+        display: none;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    .notification {
+        right: 12px;
+        bottom: 12px;
+        width: calc(100vw - 24px);
+    }
+}

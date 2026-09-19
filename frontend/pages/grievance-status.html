@@ -1,900 +1,1182 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta
         name="description"
-        content="Track the status of a grievance submitted through the Ration Portal."
+        content="Track your Ration Portal grievance status."
     >
+
+    <meta name="theme-color" content="#06284a">
 
     <title>Grievance Status | Ration Portal</title>
 
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/redesign.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
-        href="../css/style.css"
     >
 
-    <script src="../config.js"></script>
-    <script src="../js/auth-guard.js"></script>
+    <style>
+        .status-page {
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 8% 10%,
+                    rgba(245,130,32,.07),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 92% 50%,
+                    rgba(19,136,8,.07),
+                    transparent 30%
+                ),
+                #f4f8fb;
+        }
 
+        .status-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 44px 20px 76px;
+            color: #fff;
+            background:
+                linear-gradient(
+                    135deg,
+                    #041d38,
+                    #073d68 55%,
+                    #0b4775
+                );
+        }
+
+        .status-hero::before {
+            content: "";
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            right: -210px;
+            top: -260px;
+            border: 2px solid rgba(255,255,255,.08);
+            border-radius: 50%;
+        }
+
+        .status-hero::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 4px;
+            background:
+                linear-gradient(
+                    90deg,
+                    #f58220 0 33.33%,
+                    #fff 33.33% 66.66%,
+                    #138808 66.66%
+                );
+        }
+
+        .status-hero-inner {
+            position: relative;
+            z-index: 2;
+            width: min(1180px, 100%);
+            margin: auto;
+        }
+
+        .breadcrumb {
+            margin-bottom: 14px;
+            color: rgba(255,255,255,.68);
+            font-size: 12px;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,.92);
+        }
+
+        .status-hero h1 {
+            margin: 0 0 8px;
+            color: #fff;
+            font-size: clamp(30px, 4vw, 43px);
+            font-weight: 850;
+            letter-spacing: -.8px;
+        }
+
+        .status-hero p {
+            max-width: 720px;
+            margin: 0;
+            color: rgba(255,255,255,.78);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .status-content {
+            position: relative;
+            z-index: 3;
+            width: min(1000px, 100%);
+            margin: -42px auto 0;
+            padding: 0 20px 70px;
+        }
+
+        .search-card {
+            padding: 25px;
+            border: 1px solid #dce6ee;
+            border-radius: 19px;
+            background: #fff;
+            box-shadow: 0 22px 55px rgba(6,40,74,.12);
+        }
+
+        .search-card h2 {
+            margin: 0 0 6px;
+            color: #062d56;
+            font-size: 19px;
+            font-weight: 850;
+        }
+
+        .search-card p {
+            margin: 0 0 20px;
+            color: #718398;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .status-search-form {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
+        }
+
+        .status-input {
+            width: 100%;
+            min-height: 46px;
+            padding: 0 14px;
+            border: 1px solid #d4e0e9;
+            border-radius: 9px;
+            outline: none;
+            color: #24384b;
+            background: #fff;
+            font-family: inherit;
+            font-size: 11px;
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .status-input:focus {
+            border-color: #087fe5;
+            box-shadow: 0 0 0 3px rgba(8,127,229,.08);
+        }
+
+        .status-search-button {
+            min-width: 145px;
+            min-height: 46px;
+            padding: 0 20px;
+            border: 0;
+            border-radius: 9px;
+            color: #fff;
+            background:
+                linear-gradient(
+                    135deg,
+                    #0789ef,
+                    #086bc4
+                );
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .status-search-button:disabled {
+            opacity: .7;
+            cursor: wait;
+        }
+
+        .alert-box {
+            display: none;
+            margin-top: 16px;
+            padding: 13px 15px;
+            border-radius: 9px;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .alert-box.show {
+            display: block;
+        }
+
+        .alert-box.error {
+            color: #8f1c1c;
+            border: 1px solid #f2c3c3;
+            background: #fff0f0;
+        }
+
+        .alert-box.info {
+            color: #07548b;
+            border: 1px solid #b9dbf3;
+            background: #eef8ff;
+        }
+
+        .result-area {
+            display: none;
+            margin-top: 18px;
+        }
+
+        .result-area.show {
+            display: block;
+        }
+
+        .result-card {
+            overflow: hidden;
+            border: 1px solid #dce6ee;
+            border-radius: 19px;
+            background: #fff;
+            box-shadow: 0 15px 42px rgba(6,40,74,.08);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 22px 25px;
+            border-bottom: 1px solid #e5edf3;
+            background: #fbfdff;
+        }
+
+        .result-header h2 {
+            margin: 0 0 4px;
+            color: #062d56;
+            font-size: 18px;
+            font-weight: 850;
+        }
+
+        .result-header p {
+            margin: 0;
+            color: #8291a1;
+            font-size: 9px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 28px;
+            padding: 0 11px;
+            border-radius: 999px;
+            font-size: 8px;
+            font-weight: 850;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+
+        .status-badge.pending {
+            color: #8a5600;
+            background: #fff4d6;
+        }
+
+        .status-badge.processing {
+            color: #07548b;
+            background: #e6f4ff;
+        }
+
+        .status-badge.resolved {
+            color: #075b2b;
+            background: #e5f7eb;
+        }
+
+        .status-badge.rejected {
+            color: #8f1c1c;
+            background: #ffe8e8;
+        }
+
+        .result-body {
+            padding: 25px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 13px;
+            margin-bottom: 28px;
+        }
+
+        .detail-box {
+            min-height: 74px;
+            padding: 13px;
+            border: 1px solid #e4edf3;
+            border-radius: 10px;
+            background: #fbfdff;
+        }
+
+        .detail-label {
+            margin-bottom: 6px;
+            color: #8796a5;
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .35px;
+        }
+
+        .detail-value {
+            color: #173954;
+            font-size: 11px;
+            font-weight: 750;
+            word-break: break-word;
+        }
+
+        .timeline-title {
+            margin: 0 0 17px;
+            color: #062d56;
+            font-size: 14px;
+            font-weight: 850;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: #dce7ef;
+        }
+
+        .timeline-item {
+            position: relative;
+            display: flex;
+            gap: 14px;
+            padding-bottom: 20px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: relative;
+            z-index: 2;
+            flex: 0 0 22px;
+            width: 22px;
+            height: 22px;
+            border: 4px solid #fff;
+            border-radius: 50%;
+            background: #d5e1ea;
+            box-shadow: 0 0 0 1px #d5e1ea;
+        }
+
+        .timeline-item.active .timeline-dot {
+            background: #0789ef;
+            box-shadow: 0 0 0 1px #0789ef;
+        }
+
+        .timeline-item.completed .timeline-dot {
+            background: #138808;
+            box-shadow: 0 0 0 1px #138808;
+        }
+
+        .timeline-item.rejected .timeline-dot {
+            background: #c92c2c;
+            box-shadow: 0 0 0 1px #c92c2c;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding-top: 1px;
+        }
+
+        .timeline-content h4 {
+            margin: 0 0 4px;
+            color: #173954;
+            font-size: 10px;
+            font-weight: 850;
+        }
+
+        .timeline-content p {
+            margin: 0;
+            color: #8190a0;
+            font-size: 8px;
+            line-height: 1.55;
+        }
+
+        .empty-state {
+            padding: 35px 20px;
+            text-align: center;
+            color: #7b8d9f;
+        }
+
+        .empty-icon {
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 12px;
+            border-radius: 14px;
+            color: #0871c9;
+            background: #eaf5fd;
+            font-size: 21px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 6px;
+            color: #173954;
+            font-size: 14px;
+            font-weight: 850;
+        }
+
+        .empty-state p {
+            max-width: 430px;
+            margin: auto;
+            font-size: 9px;
+            line-height: 1.6;
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+            margin-top: 25px;
+            padding-top: 18px;
+            border-top: 1px solid #e8eef3;
+        }
+
+        .result-action {
+            min-height: 38px;
+            padding: 0 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d5e0e8;
+            border-radius: 8px;
+            color: #526a80;
+            background: #fff;
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        .result-action.primary {
+            border-color: #0878d0;
+            color: #fff;
+            background: #0878d0;
+        }
+
+        .loading-state {
+            display: none;
+            padding: 35px 20px;
+            text-align: center;
+        }
+
+        .loading-state.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 31px;
+            height: 31px;
+            margin: 0 auto 12px;
+            border: 3px solid #dceaf4;
+            border-top-color: #0789ef;
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        .loading-state p {
+            margin: 0;
+            color: #7b8d9f;
+            font-size: 9px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .status-content {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .search-card {
+                padding: 18px;
+            }
+
+            .status-search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .status-search-button {
+                width: 100%;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .result-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .status-hero {
+                padding: 35px 15px 62px;
+            }
+
+            .result-body {
+                padding: 18px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-actions {
+                flex-direction: column;
+            }
+
+            .result-action {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .spinner {
+                animation: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- =====================================================
-         TRICOLOUR LINE
-         ===================================================== -->
+<div class="tricolour-line" aria-hidden="true"></div>
 
-    <div
-        class="tricolour-line"
-        aria-hidden="true"
-    >
-        <span></span>
-        <span></span>
-        <span></span>
+
+<div class="gov-bar">
+
+    <div class="gov-bar-left">
+        <span>Government Service Portal</span>
+        <span aria-hidden="true">•</span>
+        <span>Digital Public Distribution System</span>
     </div>
 
-
-    <!-- =====================================================
-         GOVERNMENT BAR
-         ===================================================== -->
-
-    <div class="gov-bar">
-
-        <div class="container gov-bar-inner">
-
-            <div class="gov-bar-left">
-                <span>
-                    Government Service Portal
-                </span>
-            </div>
-
-            <div class="gov-bar-right">
-
-                <span>
-                    भारत सरकार
-                </span>
-
-                <span aria-hidden="true">
-                    |
-                </span>
-
-                <span>
-                    Government of India
-                </span>
-
-            </div>
-
-        </div>
-
+    <div class="gov-bar-right">
+        <a href="../index.html">Home</a>
+        <span aria-hidden="true">|</span>
+        <span>English</span>
     </div>
 
+</div>
 
-    <!-- =====================================================
-         BRAND HEADER
-         ===================================================== -->
 
-    <header class="brand-header">
+<header class="brand-header">
 
-        <div class="container brand-header-inner">
+    <div class="brand-header-inner">
 
-            <a
-                href="../index.html"
-                class="brand"
-            >
+        <a href="../index.html" class="brand">
 
-                <div
-                    class="brand-emblem"
-                    aria-hidden="true"
+            <div class="brand-emblem" aria-hidden="true">
+                <span
+                    style="
+                        font-size:31px;
+                        font-weight:800;
+                        line-height:1;
+                    "
                 >
-                    <div class="chakra">
-                        ☸
-                    </div>
+                    ✦
+                </span>
+            </div>
+
+            <div>
+                <div class="brand-title">
+                    Ration Portal
                 </div>
 
-                <div class="brand-text">
-
-                    <span class="brand-title">
-                        RATION PORTAL
-                    </span>
-
-                    <span class="brand-subtitle">
-                        Public Distribution System
-                    </span>
-
+                <div class="brand-subtitle">
+                    Public Distribution System
                 </div>
+            </div>
 
-            </a>
-
-            <div
-                id="authArea"
-                class="header-auth-area"
-            ></div>
-
-        </div>
-
-    </header>
+        </a>
 
 
-    <!-- =====================================================
-         NAVIGATION
-         ===================================================== -->
-
-    <nav
-        class="main-nav"
-        id="mainNavigation"
-        aria-label="Main navigation"
-    >
-
-        <div class="container main-nav-inner">
+        <nav class="main-nav" aria-label="Main navigation">
 
             <a href="../index.html">
                 Home
             </a>
 
             <a href="apply-ration-card.html">
-                Apply Ration Card
+                Apply Online
             </a>
 
             <a href="applications.html">
                 My Applications
             </a>
 
-            <a href="e-ration-card.html">
-                e-Ration Card
-            </a>
-
-            <a href="fair-price-shop.html">
-                Fair Price Shops
-            </a>
-
             <a href="grievance.html">
                 Grievance
-            </a>
-
-            <a
-                href="grievance-status.html"
-                class="active"
-            >
-                Grievance Status
             </a>
 
             <a href="transparency.html">
                 Transparency
             </a>
 
+        </nav>
+
+
+        <div class="header-actions">
+
+            <a
+                href="grievance.html"
+                class="btn btn-primary"
+            >
+                Lodge Grievance
+            </a>
+
         </div>
 
-    </nav>
+    </div>
+
+</header>
 
 
-    <!-- =====================================================
-         PAGE HERO
-         ===================================================== -->
+<main class="status-page">
 
-    <section class="page-hero">
 
-        <div class="container page-hero-inner">
+    <section class="status-hero">
 
-            <div>
+        <div class="status-hero-inner">
 
-                <span class="section-kicker">
-                    CITIZEN SUPPORT
-                </span>
+            <div class="breadcrumb">
 
-                <h1>
-                    Grievance Status
-                </h1>
+                <a href="../index.html">
+                    Home
+                </a>
 
-                <p>
-                    Track the current status of your submitted
-                    grievance using the grievance number.
-                </p>
+                &nbsp; / &nbsp;
+
+                <a href="grievance.html">
+                    Grievance
+                </a>
+
+                &nbsp; / &nbsp;
+
+                Status
 
             </div>
 
-            <div
-                class="page-hero-mark"
-                aria-hidden="true"
-            >
-                ✓
-            </div>
+
+            <h1>
+                Track Grievance
+            </h1>
+
+
+            <p>
+                Enter your grievance reference number to view
+                the latest status and processing timeline.
+            </p>
 
         </div>
 
     </section>
 
 
-    <!-- =====================================================
-         MAIN
-         ===================================================== -->
-
-    <main class="page-main">
-
-        <div class="container">
+    <section class="status-content">
 
 
-            <!-- =================================================
-                 SEARCH CARD
-                 ================================================= -->
+        <div class="search-card">
 
-            <section class="form-card">
+            <h2>
+                Grievance Status Search
+            </h2>
 
-                <div class="form-card-header">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            STATUS SEARCH
-                        </span>
-
-                        <h2>
-                            Track Your Grievance
-                        </h2>
-
-                        <p>
-                            Enter the grievance number provided
-                            after submission.
-                        </p>
-
-                    </div>
-
-                    <div class="form-step">
-                        Track
-                    </div>
-
-                </div>
+            <p>
+                Enter the reference number received after submitting
+                your grievance.
+            </p>
 
 
-                <div
-                    id="statusMessage"
-                    class="form-message"
-                    role="alert"
-                    aria-live="polite"
-                    hidden
-                ></div>
-
-
-                <form
-                    id="statusForm"
-                    novalidate
-                >
-
-                    <div class="form-grid">
-
-                        <div class="form-group form-group-wide">
-
-                            <label for="grievanceNumber">
-                                Grievance Number
-                                <span class="required">*</span>
-                            </label>
-
-                            <input
-                                type="text"
-                                id="grievanceNumber"
-                                name="grievanceNumber"
-                                placeholder="Enter grievance number"
-                                autocomplete="off"
-                                required
-                            >
-
-                            <small class="field-help">
-                                Enter the grievance number exactly
-                                as provided during submission.
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="form-actions">
-
-                        <button
-                            type="reset"
-                            class="btn btn-secondary"
-                        >
-                            Clear
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                            id="searchButton"
-                        >
-
-                            <span>
-                                Check Status
-                            </span>
-
-                            <span
-                                class="btn-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </section>
-
-
-            <!-- =================================================
-                 RESULT
-                 ================================================= -->
-
-            <section
-                id="resultSection"
-                class="result-section"
-                hidden
+            <form
+                id="statusSearchForm"
+                class="status-search-form"
             >
 
-                <!-- =============================================
-                     STATUS SUMMARY
-                     ============================================= -->
-
-                <div class="result-card">
-
-                    <div class="result-card-header">
-
-                        <div>
-
-                            <span class="section-kicker">
-                                GRIEVANCE RECORD
-                            </span>
-
-                            <h2>
-                                Grievance Details
-                            </h2>
-
-                        </div>
-
-                        <span
-                            id="statusBadge"
-                            class="status-badge"
-                        >
-                            —
-                        </span>
-
-                    </div>
-
-
-                    <div class="result-grid">
-
-                        <div class="result-item">
-
-                            <span>
-                                Grievance Number
-                            </span>
-
-                            <strong id="resultNumber">
-                                —
-                            </strong>
-
-                        </div>
-
-
-                        <div class="result-item">
-
-                            <span>
-                                Submitted Date
-                            </span>
-
-                            <strong id="resultDate">
-                                —
-                            </strong>
-
-                        </div>
-
-
-                        <div class="result-item">
-
-                            <span>
-                                Applicant Name
-                            </span>
-
-                            <strong id="resultName">
-                                —
-                            </strong>
-
-                        </div>
-
-
-                        <div class="result-item">
-
-                            <span>
-                                Category
-                            </span>
-
-                            <strong id="resultCategory">
-                                —
-                            </strong>
-
-                        </div>
-
-
-                        <div class="result-item">
-
-                            <span>
-                                District
-                            </span>
-
-                            <strong id="resultDistrict">
-                                —
-                            </strong>
-
-                        </div>
-
-
-                        <div class="result-item">
-
-                            <span>
-                                Last Updated
-                            </span>
-
-                            <strong id="resultUpdated">
-                                —
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =============================================
-                     SUBJECT / DESCRIPTION
-                     ============================================= -->
-
-                <div class="result-card">
-
-                    <div class="result-card-header">
-
-                        <div>
-
-                            <span class="section-kicker">
-                                ISSUE INFORMATION
-                            </span>
-
-                            <h2>
-                                Submitted Grievance
-                            </h2>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="grievance-description">
-
-                        <div class="result-item">
-
-                            <span>
-                                Subject
-                            </span>
-
-                            <strong id="resultSubject">
-                                —
-                            </strong>
-
-                        </div>
-
-
-                        <div class="result-item">
-
-                            <span>
-                                Description
-                            </span>
-
-                            <p id="resultDescription">
-                                —
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =============================================
-                     STATUS TIMELINE
-                     ============================================= -->
-
-                <div class="result-card">
-
-                    <div class="result-card-header">
-
-                        <div>
-
-                            <span class="section-kicker">
-                                PROGRESS
-                            </span>
-
-                            <h2>
-                                Grievance Progress
-                            </h2>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="status-timeline">
-
-                        <div
-                            class="timeline-item"
-                            data-status-step="SUBMITTED"
-                        >
-
-                            <div class="timeline-marker">
-                                1
-                            </div>
-
-                            <div class="timeline-content">
-
-                                <h3>
-                                    Grievance Submitted
-                                </h3>
-
-                                <p>
-                                    Your grievance has been
-                                    registered in the system.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            class="timeline-item"
-                            data-status-step="UNDER_REVIEW"
-                        >
-
-                            <div class="timeline-marker">
-                                2
-                            </div>
-
-                            <div class="timeline-content">
-
-                                <h3>
-                                    Under Review
-                                </h3>
-
-                                <p>
-                                    The grievance is being reviewed
-                                    by the concerned authority.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            class="timeline-item"
-                            data-status-step="IN_PROGRESS"
-                        >
-
-                            <div class="timeline-marker">
-                                3
-                            </div>
-
-                            <div class="timeline-content">
-
-                                <h3>
-                                    Action in Progress
-                                </h3>
-
-                                <p>
-                                    Necessary action is being taken
-                                    on the grievance.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            class="timeline-item"
-                            data-status-step="RESOLVED"
-                        >
-
-                            <div class="timeline-marker">
-                                4
-                            </div>
-
-                            <div class="timeline-content">
-
-                                <h3>
-                                    Resolved
-                                </h3>
-
-                                <p>
-                                    The grievance has been resolved.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =============================================
-                     REMARKS
-                     ============================================= -->
-
-                <div
-                    id="remarksCard"
-                    class="result-card"
-                    hidden
+                <input
+                    type="text"
+                    id="grievanceNumber"
+                    class="status-input"
+                    placeholder="Enter grievance reference number"
+                    autocomplete="off"
+                    required
                 >
 
-                    <div class="result-card-header">
+                <button
+                    type="submit"
+                    id="searchButton"
+                    class="status-search-button"
+                >
+                    Check Status
+                </button>
 
-                        <div>
+            </form>
 
-                            <span class="section-kicker">
-                                AUTHORITY REMARKS
-                            </span>
 
-                            <h2>
-                                Latest Remarks
-                            </h2>
+            <div
+                id="alertBox"
+                class="alert-box"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+        </div>
+
+
+        <div
+            id="resultArea"
+            class="result-area"
+        >
+
+            <div class="result-card">
+
+
+                <div class="result-header">
+
+                    <div>
+
+                        <h2>
+                            Grievance Details
+                        </h2>
+
+                        <p id="resultReference">
+                            Reference: —
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        id="statusBadge"
+                        class="status-badge pending"
+                    >
+                        Pending
+                    </span>
+
+                </div>
+
+
+                <div class="result-body">
+
+
+                    <div class="details-grid">
+
+
+                        <div class="detail-box">
+
+                            <div class="detail-label">
+                                Citizen Name
+                            </div>
+
+                            <div
+                                id="detailName"
+                                class="detail-value"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-box">
+
+                            <div class="detail-label">
+                                Category
+                            </div>
+
+                            <div
+                                id="detailCategory"
+                                class="detail-value"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-box">
+
+                            <div class="detail-label">
+                                District
+                            </div>
+
+                            <div
+                                id="detailDistrict"
+                                class="detail-value"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-box">
+
+                            <div class="detail-label">
+                                Submitted On
+                            </div>
+
+                            <div
+                                id="detailSubmitted"
+                                class="detail-value"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-box">
+
+                            <div class="detail-label">
+                                Subject
+                            </div>
+
+                            <div
+                                id="detailSubject"
+                                class="detail-value"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-box">
+
+                            <div class="detail-label">
+                                Priority
+                            </div>
+
+                            <div
+                                id="detailPriority"
+                                class="detail-value"
+                            >
+                                —
+                            </div>
 
                         </div>
 
                     </div>
 
 
-                    <div class="remarks-box">
-
-                        <p id="resultRemarks">
-                            —
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
+                    <h3 class="timeline-title">
+                        Grievance Processing Timeline
+                    </h3>
 
 
-            <!-- =================================================
-                 ACTION CARDS
-                 ================================================= -->
-
-            <section class="support-grid">
-
-                <div class="support-card">
-
-                    <div class="support-card-icon">
-                        ?
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Need to submit a grievance?
-                        </h3>
-
-                        <p>
-                            Register a new grievance about a
-                            ration or PDS-related service.
-                        </p>
-
-                    </div>
-
-                    <a
-                        href="grievance.html"
-                        class="btn btn-secondary"
-                    >
-                        Lodge Grievance
-                    </a>
-
-                </div>
+                    <ol
+                        id="timeline"
+                        class="timeline"
+                    ></ol>
 
 
-                <div class="support-card">
+                    <div class="result-actions">
 
-                    <div class="support-card-icon">
-                        ↗
-                    </div>
+                        <a
+                            href="grievance.html"
+                            class="result-action primary"
+                        >
+                            Lodge Another Grievance
+                        </a>
 
-                    <div>
-
-                        <h3>
-                            Need more assistance?
-                        </h3>
-
-                        <p>
-                            Keep your grievance number available
-                            when requesting support.
-                        </p>
+                        <button
+                            type="button"
+                            id="printButton"
+                            class="result-action"
+                        >
+                            Print Status
+                        </button>
 
                     </div>
 
                 </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 DISCLAIMER
-                 ================================================= -->
-
-            <div class="auth-disclaimer">
-
-                <strong>
-                    Educational Project
-                </strong>
-
-                <span>
-                    This portal is a student-developed educational
-                    project inspired by Indian government service
-                    portal design. It is not an official Government
-                    of India website.
-                </span>
 
             </div>
 
         </div>
 
-    </main>
 
+        <div
+            id="loadingState"
+            class="loading-state"
+        >
 
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
-
-    <footer class="site-footer">
-
-        <div class="container footer-bottom">
+            <div class="spinner"></div>
 
             <p>
-                ©
-                <span data-current-year>
-                    2026
-                </span>
-                Ration Portal.
-                Educational project.
-            </p>
-
-            <p>
-                Public Distribution System citizen services.
+                Fetching grievance information...
             </p>
 
         </div>
 
-    </footer>
+
+        <div
+            id="emptyState"
+            class="empty-state"
+        >
+
+            <div class="empty-icon">
+                ?
+            </div>
+
+            <h3>
+                Track Your Grievance
+            </h3>
+
+            <p>
+                Enter a valid grievance reference number above
+                to view its current status and processing details.
+            </p>
+
+        </div>
 
 
-    <!-- =====================================================
-         JAVASCRIPT
-         ===================================================== -->
+    </section>
 
-    <script src="../js/app.js"></script>
-    <script src="../js/script.js"></script>
+</main>
 
 
-    <script>
+<footer class="site-footer">
 
-        "use strict";
+    <div class="footer-grid">
+
+        <div class="footer-brand">
+
+            <div
+                class="footer-emblem"
+                aria-hidden="true"
+            >
+                ✦
+            </div>
+
+            <div>
+
+                <h3>
+                    Ration Portal
+                </h3>
+
+                <p>
+                    Public Distribution System
+                </p>
+
+            </div>
+
+        </div>
 
 
-        const API =
-            window.RATION_API_BASE ||
-            "https://ration-portal-backend.onrender.com/api";
+        <div class="footer-links">
 
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="apply-ration-card.html">
+                Apply
+            </a>
+
+            <a href="applications.html">
+                Applications
+            </a>
+
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+        </div>
+
+
+        <div class="footer-disclaimer">
+
+            <div>
+                ©
+                <span id="currentYear"></span>
+                Ration Portal
+            </div>
+
+            <div>
+                Educational demonstration project.
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="../config.js"></script>
+<script src="../js/auth-guard.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/script.js"></script>
+
+
+<script>
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
         const form =
             document.getElementById(
-                "statusForm"
+                "statusSearchForm"
             );
 
-
-        const message =
+        const input =
             document.getElementById(
-                "statusMessage"
+                "grievanceNumber"
             );
-
-
-        const resultSection =
-            document.getElementById(
-                "resultSection"
-            );
-
 
         const searchButton =
             document.getElementById(
                 "searchButton"
             );
 
+        const alertBox =
+            document.getElementById(
+                "alertBox"
+            );
 
-        /* =====================================================
-           HELPERS
-           ===================================================== */
+        const resultArea =
+            document.getElementById(
+                "resultArea"
+            );
 
-        function showMessage(
-            text,
+        const emptyState =
+            document.getElementById(
+                "emptyState"
+            );
+
+        const loadingState =
+            document.getElementById(
+                "loadingState"
+            );
+
+        const statusBadge =
+            document.getElementById(
+                "statusBadge"
+            );
+
+        const timeline =
+            document.getElementById(
+                "timeline"
+            );
+
+
+        function showAlert(
+            message,
             type
         ) {
 
-            message.hidden =
-                false;
+            alertBox.textContent =
+                message;
 
-            message.className =
-                "form-message form-message-" +
+            alertBox.className =
+                "alert-box show " +
                 type;
 
-            message.textContent =
-                text;
-
         }
 
 
-        function hideMessage() {
+        function clearAlert() {
 
-            message.hidden =
-                true;
-
-            message.textContent =
+            alertBox.textContent =
                 "";
 
+            alertBox.className =
+                "alert-box";
+
         }
 
 
-        function escapeHTML(
-            value
+        function unwrapResponse(
+            response
         ) {
 
+            if (!response) {
+                return {};
+            }
+
+
             if (
-                value === null ||
-                value === undefined
+                response.data &&
+                typeof response.data === "object"
             ) {
 
-                return "";
+                return response.data;
 
             }
 
-            return String(value)
-                .replace(
-                    /&/g,
-                    "&amp;"
-                )
-                .replace(
-                    /</g,
-                    "&lt;"
-                )
-                .replace(
-                    />/g,
-                    "&gt;"
-                )
-                .replace(
-                    /"/g,
-                    "&quot;"
-                )
-                .replace(
-                    /'/g,
-                    "&#039;"
-                );
+
+            return response;
+
+        }
+
+
+        function getValue(
+            object,
+            keys,
+            fallback
+        ) {
+
+            if (
+                !object ||
+                typeof object !== "object"
+            ) {
+
+                return fallback || "";
+
+            }
+
+
+            for (
+                let i = 0;
+                i < keys.length;
+                i++
+            ) {
+
+                const value =
+                    object[keys[i]];
+
+
+                if (
+                    value !== undefined &&
+                    value !== null &&
+                    String(value).trim() !== ""
+                ) {
+
+                    return value;
+
+                }
+
+            }
+
+
+            return fallback || "";
 
         }
 
@@ -904,9 +1186,7 @@
         ) {
 
             if (!value) {
-
                 return "—";
-
             }
 
 
@@ -937,60 +1217,22 @@
         }
 
 
-        function formatCategory(
-            value
-        ) {
-
-            if (!value) {
-
-                return "—";
-
-            }
-
-
-            return String(value)
-                .replace(
-                    /_/g,
-                    " "
-                )
-                .toLowerCase()
-                .replace(
-                    /\b\w/g,
-                    function (letter) {
-
-                        return letter.toUpperCase();
-
-                    }
-                );
-
-        }
-
-
         function normalizeStatus(
             value
         ) {
 
-            if (!value) {
-
-                return "SUBMITTED";
-
-            }
-
-
             const status =
-                String(value)
-                    .toUpperCase()
-                    .replace(
-                        /[\s-]+/g,
-                        "_"
-                    );
+                String(
+                    value || "PENDING"
+                )
+                    .trim()
+                    .toUpperCase();
 
 
             if (
-                status.includes(
-                    "RESOLV"
-                ) ||
-                status === "CLOSED"
+                status.includes("RESOLVED") ||
+                status.includes("CLOSED") ||
+                status.includes("COMPLETED")
             ) {
 
                 return "RESOLVED";
@@ -999,62 +1241,527 @@
 
 
             if (
-                status.includes(
-                    "PROGRESS"
-                )
+                status.includes("REJECT")
             ) {
 
-                return "IN_PROGRESS";
+                return "REJECTED";
 
             }
 
 
             if (
-                status.includes(
-                    "REVIEW"
-                ) ||
-                status.includes(
-                    "PENDING"
-                )
+                status.includes("PROCESS") ||
+                status.includes("REVIEW")
             ) {
 
-                return "UNDER_REVIEW";
+                return "PROCESSING";
 
             }
 
 
-            return "SUBMITTED";
+            return "PENDING";
 
         }
 
 
-        function getGrievanceObject(
-            data
+        function statusLabel(
+            status
         ) {
 
-            if (!data) {
+            const labels = {
+                PENDING: "Pending",
+                PROCESSING: "Processing",
+                RESOLVED: "Resolved",
+                REJECTED: "Rejected"
+            };
+
+
+            return (
+                labels[status] ||
+                "Pending"
+            );
+
+        }
+
+
+        function statusClass(
+            status
+        ) {
+
+            const classes = {
+                PENDING: "pending",
+                PROCESSING: "processing",
+                RESOLVED: "resolved",
+                REJECTED: "rejected"
+            };
+
+
+            return (
+                classes[status] ||
+                "pending"
+            );
+
+        }
+
+
+        function escapeHtml(
+            value
+        ) {
+
+            if (
+                typeof window.escapeHtml ===
+                "function"
+            ) {
+
+                return window.escapeHtml(
+                    String(value || "")
+                );
+
+            }
+
+
+            return String(
+                value || ""
+            )
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        function createTimeline(
+            data,
+            status
+        ) {
+
+            const submitted =
+                getValue(
+                    data,
+                    [
+                        "createdAt",
+                        "submittedAt",
+                        "createdDate",
+                        "submissionDate"
+                    ],
+                    ""
+                );
+
+
+            const updated =
+                getValue(
+                    data,
+                    [
+                        "updatedAt",
+                        "resolvedAt",
+                        "closedAt",
+                        "lastUpdated"
+                    ],
+                    ""
+                );
+
+
+            const items = [
+                {
+                    title:
+                        "Grievance Submitted",
+                    description:
+                        submitted
+                            ? "Grievance received on " +
+                              formatDate(submitted) +
+                              "."
+                            : "Grievance has been received.",
+                    active: true,
+                    completed: true
+                },
+                {
+                    title:
+                        "Under Review",
+                    description:
+                        status === "PENDING"
+                            ? "Your grievance is awaiting review."
+                            : "The concerned department has reviewed the grievance.",
+                    active:
+                        status === "PROCESSING" ||
+                        status === "RESOLVED" ||
+                        status === "REJECTED",
+                    completed:
+                        status === "RESOLVED" ||
+                        status === "REJECTED"
+                },
+                {
+                    title:
+                        status === "REJECTED"
+                            ? "Grievance Closed"
+                            : "Resolution",
+                    description:
+                        status === "RESOLVED"
+                            ? (
+                                updated
+                                    ? "Grievance resolved on " +
+                                      formatDate(updated) +
+                                      "."
+                                    : "Grievance has been resolved."
+                              )
+                            : status === "REJECTED"
+                                ? (
+                                    updated
+                                        ? "Grievance closed on " +
+                                          formatDate(updated) +
+                                          "."
+                                        : "Grievance has been closed."
+                                  )
+                                : "Final action will be recorded after review.",
+                    active:
+                        status === "RESOLVED" ||
+                        status === "REJECTED",
+                    completed:
+                        status === "RESOLVED" ||
+                        status === "REJECTED",
+                    rejected:
+                        status === "REJECTED"
+                }
+            ];
+
+
+            timeline.innerHTML =
+                items
+                    .map(
+                        function (
+                            item
+                        ) {
+
+                            let className =
+                                "timeline-item";
+
+                            if (
+                                item.completed
+                            ) {
+
+                                className +=
+                                    " completed";
+
+                            }
+                            else if (
+                                item.active
+                            ) {
+
+                                className +=
+                                    " active";
+
+                            }
+
+                            if (
+                                item.rejected
+                            ) {
+
+                                className +=
+                                    " rejected";
+
+                            }
+
+
+                            return `
+                                <li class="${className}">
+                                    <div class="timeline-dot"></div>
+
+                                    <div class="timeline-content">
+                                        <h4>
+                                            ${escapeHtml(item.title)}
+                                        </h4>
+
+                                        <p>
+                                            ${escapeHtml(item.description)}
+                                        </p>
+                                    </div>
+                                </li>
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+        }
+
+
+        function displayResult(
+            rawData
+        ) {
+
+            const data =
+                unwrapResponse(
+                    rawData
+                );
+
+
+            const status =
+                normalizeStatus(
+                    getValue(
+                        data,
+                        [
+                            "status",
+                            "grievanceStatus",
+                            "state"
+                        ],
+                        "PENDING"
+                    )
+                );
+
+
+            const number =
+                getValue(
+                    data,
+                    [
+                        "grievanceNumber",
+                        "referenceNumber",
+                        "grievanceId",
+                        "number",
+                        "id"
+                    ],
+                    input.value.trim()
+                );
+
+
+            document.getElementById(
+                "resultReference"
+            ).textContent =
+                "Reference: " +
+                number;
+
+
+            document.getElementById(
+                "detailName"
+            ).textContent =
+                getValue(
+                    data,
+                    [
+                        "name",
+                        "citizenName",
+                        "applicantName"
+                    ],
+                    "—"
+                );
+
+
+            document.getElementById(
+                "detailCategory"
+            ).textContent =
+                getValue(
+                    data,
+                    [
+                        "category",
+                        "grievanceCategory",
+                        "type"
+                    ],
+                    "—"
+                );
+
+
+            document.getElementById(
+                "detailDistrict"
+            ).textContent =
+                getValue(
+                    data,
+                    [
+                        "district",
+                        "location"
+                    ],
+                    "—"
+                );
+
+
+            document.getElementById(
+                "detailSubmitted"
+            ).textContent =
+                formatDate(
+                    getValue(
+                        data,
+                        [
+                            "createdAt",
+                            "submittedAt",
+                            "createdDate",
+                            "submissionDate"
+                        ],
+                        ""
+                    )
+                );
+
+
+            document.getElementById(
+                "detailSubject"
+            ).textContent =
+                getValue(
+                    data,
+                    [
+                        "subject",
+                        "title"
+                    ],
+                    "—"
+                );
+
+
+            document.getElementById(
+                "detailPriority"
+            ).textContent =
+                getValue(
+                    data,
+                    [
+                        "priority",
+                        "urgency"
+                    ],
+                    "Normal"
+                );
+
+
+            statusBadge.textContent =
+                statusLabel(
+                    status
+                );
+
+            statusBadge.className =
+                "status-badge " +
+                statusClass(
+                    status
+                );
+
+
+            createTimeline(
+                data,
+                status
+            );
+
+
+            resultArea.classList.add(
+                "show"
+            );
+
+            emptyState.style.display =
+                "none";
+
+        }
+
+
+        async function searchGrievance(
+            number
+        ) {
+
+            const token =
+                localStorage.getItem(
+                    "rationPortalToken"
+                );
+
+
+            if (!token) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            const apiBase =
+                window.RATION_API_BASE ||
+                "http://localhost:8080/api";
+
+
+            /*
+             * Confirmed backend route:
+             *
+             * GET /api/grievances/{number}
+             */
+            const response =
+                await fetch(
+                    apiBase +
+                    "/grievances/" +
+                    encodeURIComponent(
+                        number
+                    ),
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Authorization":
+                                "Bearer " +
+                                token,
+
+                            "Accept":
+                                "application/json"
+                        }
+                    }
+                );
+
+
+            if (
+                response.status === 401
+            ) {
+
+                localStorage.removeItem(
+                    "rationPortalToken"
+                );
+
+                localStorage.removeItem(
+                    "rationPortalUser"
+                );
+
+                window.location.href =
+                    "login.html";
 
                 return null;
 
             }
 
 
-            if (
-                data.data &&
-                typeof data.data === "object"
+            let data = null;
+
+
+            try {
+
+                data =
+                    await response.json();
+
+            }
+            catch (
+                jsonError
             ) {
 
-                return data.data;
+                data = null;
 
             }
 
 
-            if (
-                data.grievance &&
-                typeof data.grievance === "object"
-            ) {
+            if (!response.ok) {
 
-                return data.grievance;
+                throw new Error(
+                    data &&
+                    (
+                        data.message ||
+                        data.error
+                    )
+                        ? (
+                            data.message ||
+                            data.error
+                        )
+                        : "Grievance not found."
+                );
 
             }
 
@@ -1064,329 +1771,113 @@
         }
 
 
-        /* =====================================================
-           DISPLAY RESULT
-           ===================================================== */
-
-        function displayResult(
-            data
+        async function performSearch(
+            number
         ) {
 
-            const grievance =
-                getGrievanceObject(
+            clearAlert();
+
+
+            resultArea.classList.remove(
+                "show"
+            );
+
+
+            emptyState.style.display =
+                "none";
+
+
+            loadingState.classList.add(
+                "show"
+            );
+
+
+            searchButton.disabled =
+                true;
+
+            searchButton.textContent =
+                "Searching...";
+
+
+            try {
+
+                const data =
+                    await searchGrievance(
+                        number
+                    );
+
+
+                if (
+                    data === null
+                ) {
+
+                    return;
+
+                }
+
+
+                displayResult(
                     data
                 );
 
+            }
+            catch (
+                error
+            ) {
 
-            if (!grievance) {
-
-                throw new Error(
-                    "No grievance information was returned."
+                console.error(
+                    "Grievance status error:",
+                    error
                 );
+
+
+                showAlert(
+                    error.message ||
+                    "Unable to retrieve grievance status.",
+                    "error"
+                );
+
+
+                emptyState.style.display =
+                    "block";
 
             }
+            finally {
 
-
-            const number =
-                grievance.grievanceNumber ||
-                grievance.number ||
-                grievance.grievanceNo ||
-                grievance.id ||
-                "—";
-
-
-            const name =
-                grievance.name ||
-                grievance.applicantName ||
-                grievance.userName ||
-                "—";
-
-
-            const category =
-                grievance.category ||
-                grievance.grievanceCategory ||
-                "—";
-
-
-            const district =
-                grievance.district ||
-                "—";
-
-
-            const subject =
-                grievance.subject ||
-                grievance.title ||
-                "—";
-
-
-            const description =
-                grievance.description ||
-                grievance.details ||
-                "—";
-
-
-            const status =
-                normalizeStatus(
-                    grievance.status
+                loadingState.classList.remove(
+                    "show"
                 );
 
-
-            const submittedDate =
-                grievance.createdAt ||
-                grievance.submittedAt ||
-                grievance.createdDate;
-
-
-            const updatedDate =
-                grievance.updatedAt ||
-                grievance.lastUpdated ||
-                grievance.modifiedAt;
-
-
-            const remarks =
-                grievance.remarks ||
-                grievance.remark ||
-                grievance.response ||
-                grievance.message ||
-                "";
-
-
-            document.getElementById(
-                "resultNumber"
-            ).textContent =
-                number;
-
-
-            document.getElementById(
-                "resultDate"
-            ).textContent =
-                formatDate(
-                    submittedDate
-                );
-
-
-            document.getElementById(
-                "resultName"
-            ).textContent =
-                name;
-
-
-            document.getElementById(
-                "resultCategory"
-            ).textContent =
-                formatCategory(
-                    category
-                );
-
-
-            document.getElementById(
-                "resultDistrict"
-            ).textContent =
-                district;
-
-
-            document.getElementById(
-                "resultUpdated"
-            ).textContent =
-                formatDate(
-                    updatedDate
-                );
-
-
-            document.getElementById(
-                "resultSubject"
-            ).textContent =
-                subject;
-
-
-            document.getElementById(
-                "resultDescription"
-            ).textContent =
-                description;
-
-
-            const statusBadge =
-                document.getElementById(
-                    "statusBadge"
-                );
-
-
-            const statusLabels = {
-
-                SUBMITTED:
-                    "Submitted",
-
-                UNDER_REVIEW:
-                    "Under Review",
-
-                IN_PROGRESS:
-                    "In Progress",
-
-                RESOLVED:
-                    "Resolved"
-
-            };
-
-
-            statusBadge.textContent =
-                statusLabels[status] ||
-                formatCategory(status);
-
-
-            statusBadge.className =
-                "status-badge status-" +
-                status.toLowerCase();
-
-
-            updateTimeline(
-                status
-            );
-
-
-            const remarksCard =
-                document.getElementById(
-                    "remarksCard"
-                );
-
-
-            const remarksElement =
-                document.getElementById(
-                    "resultRemarks"
-                );
-
-
-            if (remarks) {
-
-                remarksElement.textContent =
-                    remarks;
-
-                remarksCard.hidden =
+                searchButton.disabled =
                     false;
 
-            } else {
-
-                remarksElement.textContent =
-                    "";
-
-                remarksCard.hidden =
-                    true;
+                searchButton.textContent =
+                    "Check Status";
 
             }
 
-
-            resultSection.hidden =
-                false;
-
-
-            resultSection.scrollIntoView(
-                {
-                    behavior: "smooth",
-                    block: "start"
-                }
-            );
-
         }
 
-
-        /* =====================================================
-           TIMELINE
-           ===================================================== */
-
-        function updateTimeline(
-            currentStatus
-        ) {
-
-            const order = [
-
-                "SUBMITTED",
-
-                "UNDER_REVIEW",
-
-                "IN_PROGRESS",
-
-                "RESOLVED"
-
-            ];
-
-
-            const currentIndex =
-                order.indexOf(
-                    currentStatus
-                );
-
-
-            document
-                .querySelectorAll(
-                    ".timeline-item"
-                )
-                .forEach(
-                    function (
-                        item,
-                        index
-                    ) {
-
-                        item.classList.remove(
-                            "completed",
-                            "current"
-                        );
-
-
-                        if (
-                            currentIndex >= 0 &&
-                            index < currentIndex
-                        ) {
-
-                            item.classList.add(
-                                "completed"
-                            );
-
-                        }
-
-
-                        if (
-                            currentIndex >= 0 &&
-                            index === currentIndex
-                        ) {
-
-                            item.classList.add(
-                                "current"
-                            );
-
-                        }
-
-                    }
-                );
-
-        }
-
-
-        /* =====================================================
-           SEARCH
-           ===================================================== */
 
         form.addEventListener(
             "submit",
-            async function (event) {
+            function (
+                event
+            ) {
 
                 event.preventDefault();
 
 
-                hideMessage();
+                const number =
+                    input.value.trim();
 
 
-                const grievanceNumber =
-                    document
-                        .getElementById(
-                            "grievanceNumber"
-                        )
-                        .value
-                        .trim();
+                if (!number) {
 
+                    input.focus();
 
-                if (!grievanceNumber) {
-
-                    showMessage(
-                        "Please enter a grievance number.",
+                    showAlert(
+                        "Please enter a grievance reference number.",
                         "error"
                     );
 
@@ -1395,159 +1886,72 @@
                 }
 
 
-                resultSection.hidden =
-                    true;
-
-
-                searchButton.disabled =
-                    true;
-
-
-                searchButton.innerHTML =
-                    `
-                    <span>
-                        Checking...
-                    </span>
-                    `;
-
-
-                try {
-
-                    const token =
-                        localStorage.getItem(
-                            "rationPortalToken"
-                        );
-
-
-                    const headers = {};
-
-
-                    if (token) {
-
-                        headers.Authorization =
-                            "Bearer " +
-                            token;
-
-                    }
-
-
-                    const response =
-                        await fetch(
-                            `${API}/grievances/${encodeURIComponent(grievanceNumber)}`,
-                            {
-                                method: "GET",
-                                headers: headers
-                            }
-                        );
-
-
-                    let data = null;
-
-
-                    try {
-
-                        data =
-                            await response.json();
-
-                    } catch (error) {
-
-                        data =
-                            null;
-
-                    }
-
-
-                    if (!response.ok) {
-
-                        throw new Error(
-                            data?.message ||
-                            data?.error ||
-                            "Grievance not found."
-                        );
-
-                    }
-
-
-                    displayResult(
-                        data
-                    );
-
-
-                } catch (error) {
-
-                    console.error(
-                        "Grievance status error:",
-                        error
-                    );
-
-
-                    showMessage(
-                        error.message ||
-                        "Unable to retrieve grievance status. Please try again.",
-                        "error"
-                    );
-
-                } finally {
-
-                    searchButton.disabled =
-                        false;
-
-                    searchButton.innerHTML =
-                        `
-                        <span>
-                            Check Status
-                        </span>
-
-                        <span
-                            class="btn-arrow"
-                            aria-hidden="true"
-                        >
-                            →
-                        </span>
-                        `;
-
-                }
+                performSearch(
+                    number
+                );
 
             }
         );
 
 
-        /* =====================================================
-           RESET
-           ===================================================== */
-
-        form.addEventListener(
-            "reset",
+        document.getElementById(
+            "printButton"
+        ).addEventListener(
+            "click",
             function () {
 
-                hideMessage();
-
-                resultSection.hidden =
-                    true;
+                window.print();
 
             }
         );
 
 
-        /* =====================================================
-           CURRENT YEAR
-           ===================================================== */
-
-        document
-            .querySelectorAll(
-                "[data-current-year]"
-            )
-            .forEach(
-                function (element) {
-
-                    element.textContent =
-                        new Date()
-                            .getFullYear();
-
-                }
+        const params =
+            new URLSearchParams(
+                window.location.search
             );
 
-    </script>
+
+        const queryNumber =
+            params.get(
+                "grievance"
+            ) ||
+            params.get(
+                "number"
+            ) ||
+            params.get(
+                "reference"
+            );
+
+
+        if (queryNumber) {
+
+            input.value =
+                queryNumber;
+
+            performSearch(
+                queryNumber
+            );
+
+        }
+
+
+        const year =
+            document.getElementById(
+                "currentYear"
+            );
+
+        if (year) {
+
+            year.textContent =
+                new Date()
+                    .getFullYear();
+
+        }
+
+    }
+);
+</script>
 
 </body>
 </html>

@@ -1,621 +1,1341 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta
         name="description"
-        content="Grievance dashboard for the Ration Portal."
+        content="Ration Portal grievance administration dashboard."
     >
+
+    <meta name="theme-color" content="#06284a">
 
     <title>Grievance Dashboard | Ration Portal</title>
 
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/redesign.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
-        href="../css/style.css"
     >
 
-    <script src="../config.js"></script>
-    <script src="../js/auth-guard.js"></script>
+    <style>
+        .dashboard-page {
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 7% 8%,
+                    rgba(245,130,32,.06),
+                    transparent 27%
+                ),
+                radial-gradient(
+                    circle at 93% 52%,
+                    rgba(19,136,8,.06),
+                    transparent 30%
+                ),
+                #f4f8fb;
+        }
 
+        .dashboard-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 42px 20px 76px;
+            color: #fff;
+            background:
+                linear-gradient(
+                    135deg,
+                    #041d38,
+                    #073d68 55%,
+                    #0b4775
+                );
+        }
+
+        .dashboard-hero::before {
+            content: "";
+            position: absolute;
+            width: 440px;
+            height: 440px;
+            right: -205px;
+            top: -260px;
+            border: 2px solid rgba(255,255,255,.08);
+            border-radius: 50%;
+        }
+
+        .dashboard-hero::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 4px;
+            background:
+                linear-gradient(
+                    90deg,
+                    #f58220 0 33.33%,
+                    #fff 33.33% 66.66%,
+                    #138808 66.66%
+                );
+        }
+
+        .dashboard-hero-inner {
+            position: relative;
+            z-index: 2;
+            width: min(1180px, 100%);
+            margin: auto;
+        }
+
+        .breadcrumb {
+            margin-bottom: 14px;
+            color: rgba(255,255,255,.68);
+            font-size: 12px;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,.92);
+        }
+
+        .dashboard-hero h1 {
+            margin: 0 0 8px;
+            color: #fff;
+            font-size: clamp(30px, 4vw, 42px);
+            font-weight: 850;
+            letter-spacing: -.8px;
+        }
+
+        .dashboard-hero p {
+            max-width: 720px;
+            margin: 0;
+            color: rgba(255,255,255,.78);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .dashboard-content {
+            position: relative;
+            z-index: 3;
+            width: min(1200px, 100%);
+            margin: -42px auto 0;
+            padding: 0 20px 70px;
+        }
+
+        .dashboard-card {
+            border: 1px solid #dce6ee;
+            border-radius: 19px;
+            background: #fff;
+            box-shadow: 0 20px 55px rgba(6,40,74,.10);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .dashboard-stat {
+            position: relative;
+            overflow: hidden;
+            min-height: 122px;
+            padding: 19px;
+            border: 1px solid #dce6ee;
+            border-radius: 15px;
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(6,40,74,.06);
+        }
+
+        .dashboard-stat::after {
+            content: "";
+            position: absolute;
+            right: -24px;
+            bottom: -32px;
+            width: 92px;
+            height: 92px;
+            border-radius: 50%;
+            background: rgba(8,127,229,.05);
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            color: #0871c9;
+            background: #eaf5fd;
+            font-size: 15px;
+            font-weight: 850;
+        }
+
+        .stat-icon.orange {
+            color: #b55d00;
+            background: #fff2e5;
+        }
+
+        .stat-icon.green {
+            color: #08702d;
+            background: #e8f7ed;
+        }
+
+        .stat-icon.red {
+            color: #a71f1f;
+            background: #ffeaea;
+        }
+
+        .stat-label {
+            margin-bottom: 4px;
+            color: #8494a4;
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .45px;
+        }
+
+        .stat-value {
+            color: #062d56;
+            font-size: 24px;
+            font-weight: 850;
+            line-height: 1;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 20px 22px;
+            border-bottom: 1px solid #e4edf3;
+        }
+
+        .toolbar-title h2 {
+            margin: 0 0 4px;
+            color: #062d56;
+            font-size: 17px;
+            font-weight: 850;
+        }
+
+        .toolbar-title p {
+            margin: 0;
+            color: #8190a0;
+            font-size: 9px;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .toolbar-button {
+            min-height: 37px;
+            padding: 0 13px;
+            border: 1px solid #d4e0e9;
+            border-radius: 8px;
+            color: #526a80;
+            background: #fff;
+            font-family: inherit;
+            font-size: 9px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .toolbar-button.primary {
+            border-color: #0878d0;
+            color: #fff;
+            background: #0878d0;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr auto;
+            gap: 10px;
+            padding: 18px 22px;
+            border-bottom: 1px solid #e4edf3;
+            background: #fbfdff;
+        }
+
+        .filter-control {
+            width: 100%;
+            min-height: 39px;
+            padding: 0 11px;
+            border: 1px solid #d5e0e8;
+            border-radius: 8px;
+            outline: none;
+            color: #354d62;
+            background: #fff;
+            font-family: inherit;
+            font-size: 9px;
+        }
+
+        .filter-control:focus {
+            border-color: #087fe5;
+            box-shadow: 0 0 0 3px rgba(8,127,229,.07);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .grievance-table {
+            width: 100%;
+            min-width: 820px;
+            border-collapse: collapse;
+        }
+
+        .grievance-table th {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dfe8ef;
+            color: #718398;
+            background: #f8fbfd;
+            font-size: 8px;
+            font-weight: 850;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: .35px;
+        }
+
+        .grievance-table td {
+            padding: 14px 15px;
+            border-bottom: 1px solid #edf2f6;
+            color: #526a80;
+            font-size: 9px;
+            vertical-align: middle;
+        }
+
+        .grievance-table tbody tr:hover {
+            background: #fbfdff;
+        }
+
+        .reference {
+            color: #075d9d;
+            font-weight: 850;
+        }
+
+        .citizen-name {
+            color: #173954;
+            font-weight: 750;
+        }
+
+        .subject-cell {
+            max-width: 230px;
+            color: #354d62;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 25px;
+            padding: 0 9px;
+            border-radius: 999px;
+            font-size: 7px;
+            font-weight: 850;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+
+        .status-badge.pending {
+            color: #8a5600;
+            background: #fff4d6;
+        }
+
+        .status-badge.processing {
+            color: #07548b;
+            background: #e6f4ff;
+        }
+
+        .status-badge.resolved {
+            color: #075b2b;
+            background: #e5f7eb;
+        }
+
+        .status-badge.rejected {
+            color: #8f1c1c;
+            background: #ffe8e8;
+        }
+
+        .priority-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 23px;
+            padding: 0 8px;
+            border-radius: 999px;
+            color: #526a80;
+            background: #edf2f6;
+            font-size: 7px;
+            font-weight: 800;
+        }
+
+        .priority-badge.high {
+            color: #9a3500;
+            background: #fff0e6;
+        }
+
+        .row-action {
+            min-height: 29px;
+            padding: 0 9px;
+            border: 1px solid #d5e0e8;
+            border-radius: 6px;
+            color: #0871c9;
+            background: #fff;
+            font-family: inherit;
+            font-size: 8px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .loading-state,
+        .empty-state,
+        .error-state {
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        .loading-state {
+            display: none;
+        }
+
+        .loading-state.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 12px;
+            border: 3px solid #dceaf4;
+            border-top-color: #0789ef;
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        .state-icon {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 12px;
+            border-radius: 14px;
+            color: #0871c9;
+            background: #eaf5fd;
+            font-size: 19px;
+            font-weight: 850;
+        }
+
+        .empty-state h3,
+        .error-state h3 {
+            margin: 0 0 6px;
+            color: #173954;
+            font-size: 14px;
+            font-weight: 850;
+        }
+
+        .empty-state p,
+        .error-state p,
+        .loading-state p {
+            max-width: 470px;
+            margin: auto;
+            color: #8190a0;
+            font-size: 9px;
+            line-height: 1.6;
+        }
+
+        .error-state {
+            display: none;
+        }
+
+        .error-state.show {
+            display: block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filters button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .dashboard-content {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .dashboard-hero {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .toolbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .toolbar-actions {
+                width: 100%;
+            }
+
+            .toolbar-button {
+                flex: 1;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .spinner {
+                animation: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- =====================================================
-         TRICOLOUR LINE
-         ===================================================== -->
+<div class="tricolour-line" aria-hidden="true"></div>
 
-    <div
-        class="tricolour-line"
-        aria-hidden="true"
-    >
-        <span></span>
-        <span></span>
-        <span></span>
+
+<div class="gov-bar">
+
+    <div class="gov-bar-left">
+        <span>Government Service Portal</span>
+        <span aria-hidden="true">•</span>
+        <span>Digital Public Distribution System</span>
     </div>
 
-
-    <!-- =====================================================
-         GOVERNMENT BAR
-         ===================================================== -->
-
-    <div class="gov-bar">
-
-        <div class="container gov-bar-inner">
-
-            <div class="gov-bar-left">
-                <span>
-                    Government Service Portal
-                </span>
-            </div>
-
-            <div class="gov-bar-right">
-
-                <span>
-                    भारत सरकार
-                </span>
-
-                <span aria-hidden="true">
-                    |
-                </span>
-
-                <span>
-                    Government of India
-                </span>
-
-            </div>
-
-        </div>
-
+    <div class="gov-bar-right">
+        <a href="../index.html">Home</a>
+        <span aria-hidden="true">|</span>
+        <span>English</span>
     </div>
 
+</div>
 
-    <!-- =====================================================
-         BRAND HEADER
-         ===================================================== -->
 
-    <header class="brand-header">
+<header class="brand-header">
 
-        <div class="container brand-header-inner">
+    <div class="brand-header-inner">
 
-            <a
-                href="../index.html"
-                class="brand"
-            >
+        <a href="../index.html" class="brand">
 
-                <div
-                    class="brand-emblem"
-                    aria-hidden="true"
+            <div class="brand-emblem" aria-hidden="true">
+                <span
+                    style="
+                        font-size:31px;
+                        font-weight:800;
+                        line-height:1;
+                    "
                 >
-                    <div class="chakra">
-                        ☸
-                    </div>
+                    ✦
+                </span>
+            </div>
+
+            <div>
+                <div class="brand-title">
+                    Ration Portal
                 </div>
 
-                <div class="brand-text">
-
-                    <span class="brand-title">
-                        RATION PORTAL
-                    </span>
-
-                    <span class="brand-subtitle">
-                        Public Distribution System
-                    </span>
-
+                <div class="brand-subtitle">
+                    Public Distribution System
                 </div>
+            </div>
 
-            </a>
-
-            <div
-                id="authArea"
-                class="header-auth-area"
-            ></div>
-
-        </div>
-
-    </header>
+        </a>
 
 
-    <!-- =====================================================
-         NAVIGATION
-         ===================================================== -->
-
-    <nav
-        class="main-nav"
-        id="mainNavigation"
-        aria-label="Main navigation"
-    >
-
-        <div class="container main-nav-inner">
+        <nav class="main-nav" aria-label="Main navigation">
 
             <a href="../index.html">
                 Home
             </a>
 
             <a href="apply-ration-card.html">
-                Apply Ration Card
+                Apply Online
             </a>
 
             <a href="applications.html">
                 My Applications
             </a>
 
-            <a href="e-ration-card.html">
-                e-Ration Card
-            </a>
-
-            <a href="fair-price-shop.html">
-                Fair Price Shops
-            </a>
-
-            <a
-                href="grievance.html"
-                class="active"
-            >
+            <a href="grievance.html">
                 Grievance
-            </a>
-
-            <a href="grievance-status.html">
-                Grievance Status
             </a>
 
             <a href="transparency.html">
                 Transparency
             </a>
 
+        </nav>
+
+
+        <div class="header-actions">
+
+            <a
+                href="grievance.html"
+                class="btn btn-primary"
+            >
+                Lodge Grievance
+            </a>
+
         </div>
 
-    </nav>
+    </div>
+
+</header>
 
 
-    <!-- =====================================================
-         PAGE HERO
-         ===================================================== -->
+<main class="dashboard-page">
 
-    <section class="page-hero">
 
-        <div class="container page-hero-inner">
+    <section class="dashboard-hero">
 
-            <div>
+        <div class="dashboard-hero-inner">
 
-                <span class="section-kicker">
-                    ADMINISTRATION
-                </span>
+            <div class="breadcrumb">
 
-                <h1>
-                    Grievance Dashboard
-                </h1>
+                <a href="../index.html">
+                    Home
+                </a>
 
-                <p>
-                    Monitor submitted grievances and their
-                    current status.
-                </p>
+                &nbsp; / &nbsp;
+
+                Grievance Dashboard
 
             </div>
 
-            <div
-                class="page-hero-mark"
-                aria-hidden="true"
-            >
-                ▦
-            </div>
+
+            <h1>
+                Grievance Dashboard
+            </h1>
+
+
+            <p>
+                Monitor grievance records and their current
+                processing status through the Public Distribution
+                System.
+            </p>
 
         </div>
 
     </section>
 
 
-    <!-- =====================================================
-         MAIN
-         ===================================================== -->
-
-    <main class="page-main">
-
-        <div class="container">
+    <section class="dashboard-content">
 
 
-            <!-- =================================================
-                 ACCESS NOTICE
-                 ================================================= -->
+        <div class="stats-grid">
 
-            <div class="notice-card">
 
-                <div class="notice-icon">
-                    i
+            <div class="dashboard-stat">
+
+                <div class="stat-icon">
+                    #
                 </div>
 
-                <div>
+                <div class="stat-label">
+                    Total Grievances
+                </div>
 
-                    <strong>
-                        Authorized dashboard
-                    </strong>
+                <div
+                    id="totalCount"
+                    class="stat-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-stat">
+
+                <div class="stat-icon orange">
+                    ◷
+                </div>
+
+                <div class="stat-label">
+                    Pending
+                </div>
+
+                <div
+                    id="pendingCount"
+                    class="stat-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-stat">
+
+                <div class="stat-icon">
+                    ↻
+                </div>
+
+                <div class="stat-label">
+                    Processing
+                </div>
+
+                <div
+                    id="processingCount"
+                    class="stat-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-stat">
+
+                <div class="stat-icon green">
+                    ✓
+                </div>
+
+                <div class="stat-label">
+                    Resolved
+                </div>
+
+                <div
+                    id="resolvedCount"
+                    class="stat-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+
+            <div class="toolbar">
+
+                <div class="toolbar-title">
+
+                    <h2>
+                        Grievance Records
+                    </h2>
 
                     <p>
-                        This dashboard uses the authenticated
-                        grievance-management API and is intended
-                        for authorized users.
+                        Review submitted citizen grievances.
                     </p>
 
                 </div>
 
-            </div>
 
-
-            <!-- =================================================
-                 STATISTICS
-                 ================================================= -->
-
-            <section class="dashboard-stats">
-
-                <div class="dashboard-stat-card">
-
-                    <div class="dashboard-stat-icon">
-                        #
-                    </div>
-
-                    <div>
-
-                        <span>
-                            Total Grievances
-                        </span>
-
-                        <strong id="totalCount">
-                            —
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="dashboard-stat-card">
-
-                    <div class="dashboard-stat-icon">
-                        !
-                    </div>
-
-                    <div>
-
-                        <span>
-                            Submitted
-                        </span>
-
-                        <strong id="submittedCount">
-                            —
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="dashboard-stat-card">
-
-                    <div class="dashboard-stat-icon">
-                        ↻
-                    </div>
-
-                    <div>
-
-                        <span>
-                            In Progress
-                        </span>
-
-                        <strong id="progressCount">
-                            —
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="dashboard-stat-card">
-
-                    <div class="dashboard-stat-icon">
-                        ✓
-                    </div>
-
-                    <div>
-
-                        <span>
-                            Resolved
-                        </span>
-
-                        <strong id="resolvedCount">
-                            —
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 CONTROLS
-                 ================================================= -->
-
-            <section class="form-card">
-
-                <div class="form-card-header">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            GRIEVANCE RECORDS
-                        </span>
-
-                        <h2>
-                            Manage Grievances
-                        </h2>
-
-                        <p>
-                            Load the latest grievance records
-                            from the system.
-                        </p>
-
-                    </div>
+                <div class="toolbar-actions">
 
                     <button
                         type="button"
-                        class="btn btn-primary"
                         id="refreshButton"
+                        class="toolbar-button primary"
                     >
                         Refresh
                     </button>
 
-                </div>
-
-
-                <div
-                    id="dashboardMessage"
-                    class="form-message"
-                    role="alert"
-                    aria-live="polite"
-                    hidden
-                ></div>
-
-            </section>
-
-
-            <!-- =================================================
-                 TABLE
-                 ================================================= -->
-
-            <section class="table-card">
-
-                <div class="table-card-header">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            LIVE RECORDS
-                        </span>
-
-                        <h2>
-                            Grievance Register
-                        </h2>
-
-                    </div>
-
-                    <span
-                        id="recordCount"
-                        class="record-count"
+                    <a
+                        href="grievance.html"
+                        class="toolbar-button"
+                        style="
+                            display:inline-flex;
+                            align-items:center;
+                            justify-content:center;
+                            text-decoration:none;
+                        "
                     >
-                        0 records
-                    </span>
+                        New Grievance
+                    </a>
 
                 </div>
 
-
-                <div class="table-responsive">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-
-                                <th>
-                                    Grievance No.
-                                </th>
-
-                                <th>
-                                    Applicant
-                                </th>
-
-                                <th>
-                                    Category
-                                </th>
-
-                                <th>
-                                    District
-                                </th>
-
-                                <th>
-                                    Submitted
-                                </th>
-
-                                <th>
-                                    Status
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody id="grievanceTableBody">
-
-                            <tr>
-
-                                <td
-                                    colspan="6"
-                                    class="table-empty"
-                                >
-                                    Loading grievance records...
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </section>
+            </div>
 
 
-            <!-- =================================================
-                 PAGINATION / INFO
-                 ================================================= -->
+            <div class="filters">
 
-            <section class="dashboard-footer">
+                <input
+                    type="search"
+                    id="searchInput"
+                    class="filter-control"
+                    placeholder="Search reference, citizen or subject..."
+                >
 
-                <p id="lastUpdated">
-                    Last updated: —
+
+                <select
+                    id="statusFilter"
+                    class="filter-control"
+                >
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option value="PENDING">
+                        Pending
+                    </option>
+
+                    <option value="PROCESSING">
+                        Processing
+                    </option>
+
+                    <option value="RESOLVED">
+                        Resolved
+                    </option>
+
+                    <option value="REJECTED">
+                        Rejected
+                    </option>
+
+                </select>
+
+
+                <select
+                    id="categoryFilter"
+                    class="filter-control"
+                >
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    <option value="Ration Card">
+                        Ration Card
+                    </option>
+
+                    <option value="Fair Price Shop">
+                        Fair Price Shop
+                    </option>
+
+                    <option value="Food Distribution">
+                        Food Distribution
+                    </option>
+
+                    <option value="Rice Quota">
+                        Rice Quota
+                    </option>
+
+                    <option value="Application">
+                        Application
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+
+                <button
+                    type="button"
+                    id="clearFilters"
+                    class="toolbar-button"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+
+            <div
+                id="loadingState"
+                class="loading-state"
+            >
+
+                <div class="spinner"></div>
+
+                <p>
+                    Loading grievance records...
                 </p>
 
-                <a
-                    href="grievance.html"
-                    class="btn btn-secondary"
-                >
-                    Lodge New Grievance
-                </a>
-
-            </section>
+            </div>
 
 
-            <!-- =================================================
-                 DISCLAIMER
-                 ================================================= -->
+            <div
+                id="errorState"
+                class="error-state"
+            >
 
-            <div class="auth-disclaimer">
+                <div class="state-icon">
+                    !
+                </div>
 
-                <strong>
-                    Educational Project
-                </strong>
+                <h3>
+                    Unable to Load Records
+                </h3>
 
-                <span>
-                    This portal is a student-developed educational
-                    project inspired by Indian government service
-                    portal design. It is not an official Government
-                    of India website.
-                </span>
+                <p id="errorMessage">
+                    Please try again.
+                </p>
+
+            </div>
+
+
+            <div
+                id="emptyState"
+                class="empty-state"
+            >
+
+                <div class="state-icon">
+                    ✓
+                </div>
+
+                <h3>
+                    No Grievances Found
+                </h3>
+
+                <p>
+                    There are no grievance records matching
+                    the current filters.
+                </p>
+
+            </div>
+
+
+            <div
+                id="tableArea"
+                class="table-wrapper"
+                style="display:none;"
+            >
+
+                <table class="grievance-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Reference
+                            </th>
+
+                            <th>
+                                Citizen
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Subject
+                            </th>
+
+                            <th>
+                                District
+                            </th>
+
+                            <th>
+                                Priority
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="grievanceTableBody"></tbody>
+
+                </table>
 
             </div>
 
         </div>
 
-    </main>
+    </section>
+
+</main>
 
 
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
+<footer class="site-footer">
 
-    <footer class="site-footer">
+    <div class="footer-grid">
 
-        <div class="container footer-bottom">
+        <div class="footer-brand">
 
-            <p>
-                ©
-                <span data-current-year>
-                    2026
-                </span>
-                Ration Portal.
-                Educational project.
-            </p>
+            <div
+                class="footer-emblem"
+                aria-hidden="true"
+            >
+                ✦
+            </div>
 
-            <p>
-                Public Distribution System citizen services.
-            </p>
+            <div>
+
+                <h3>
+                    Ration Portal
+                </h3>
+
+                <p>
+                    Public Distribution System
+                </p>
+
+            </div>
 
         </div>
 
-    </footer>
+
+        <div class="footer-links">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="apply-ration-card.html">
+                Apply
+            </a>
+
+            <a href="applications.html">
+                Applications
+            </a>
+
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+        </div>
 
 
-    <!-- =====================================================
-         JAVASCRIPT
-         ===================================================== -->
+        <div class="footer-disclaimer">
 
-    <script src="../js/app.js"></script>
-    <script src="../js/script.js"></script>
+            <div>
+                ©
+                <span id="currentYear"></span>
+                Ration Portal
+            </div>
+
+            <div>
+                Educational demonstration project.
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
 
 
-    <script>
-
-        "use strict";
-
-
-        const API =
-            window.RATION_API_BASE ||
-            "https://ration-portal-backend.onrender.com/api";
+<script src="../config.js"></script>
+<script src="../js/auth-guard.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/script.js"></script>
 
 
-        const refreshButton =
+<script>
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const tableArea =
             document.getElementById(
-                "refreshButton"
+                "tableArea"
             );
-
-
-        const message =
-            document.getElementById(
-                "dashboardMessage"
-            );
-
 
         const tableBody =
             document.getElementById(
                 "grievanceTableBody"
             );
 
-
-        const recordCount =
+        const loadingState =
             document.getElementById(
-                "recordCount"
+                "loadingState"
+            );
+
+        const emptyState =
+            document.getElementById(
+                "emptyState"
+            );
+
+        const errorState =
+            document.getElementById(
+                "errorState"
+            );
+
+        const errorMessage =
+            document.getElementById(
+                "errorMessage"
+            );
+
+        const refreshButton =
+            document.getElementById(
+                "refreshButton"
+            );
+
+        const searchInput =
+            document.getElementById(
+                "searchInput"
+            );
+
+        const statusFilter =
+            document.getElementById(
+                "statusFilter"
+            );
+
+        const categoryFilter =
+            document.getElementById(
+                "categoryFilter"
+            );
+
+        const clearFilters =
+            document.getElementById(
+                "clearFilters"
             );
 
 
-        /* =====================================================
-           HELPERS
-           ===================================================== */
+        let grievances = [];
 
-        function showMessage(
-            text,
-            type
+
+        function getValue(
+            object,
+            keys,
+            fallback
         ) {
 
-            message.hidden =
-                false;
+            if (
+                !object ||
+                typeof object !== "object"
+            ) {
 
-            message.className =
-                "form-message form-message-" +
-                type;
+                return fallback || "";
 
-            message.textContent =
-                text;
+            }
+
+
+            for (
+                let i = 0;
+                i < keys.length;
+                i++
+            ) {
+
+                const value =
+                    object[keys[i]];
+
+
+                if (
+                    value !== undefined &&
+                    value !== null &&
+                    String(value).trim() !== ""
+                ) {
+
+                    return value;
+
+                }
+
+            }
+
+
+            return fallback || "";
 
         }
 
 
-        function hideMessage() {
+        function unwrapArray(
+            response
+        ) {
 
-            message.hidden =
-                true;
+            if (
+                Array.isArray(response)
+            ) {
 
-            message.textContent =
-                "";
+                return response;
+
+            }
+
+
+            if (
+                response &&
+                Array.isArray(
+                    response.content
+                )
+            ) {
+
+                return response.content;
+
+            }
+
+
+            if (
+                response &&
+                Array.isArray(
+                    response.grievances
+                )
+            ) {
+
+                return response.grievances;
+
+            }
+
+
+            if (
+                response &&
+                Array.isArray(
+                    response.data
+                )
+            ) {
+
+                return response.data;
+
+            }
+
+
+            if (
+                response &&
+                response.data &&
+                Array.isArray(
+                    response.data.content
+                )
+            ) {
+
+                return response.data.content;
+
+            }
+
+
+            if (
+                response &&
+                response.data &&
+                Array.isArray(
+                    response.data.grievances
+                )
+            ) {
+
+                return response.data.grievances;
+
+            }
+
+
+            return [];
+
+        }
+
+
+        function normalizeStatus(
+            value
+        ) {
+
+            const status =
+                String(
+                    value || "PENDING"
+                )
+                    .trim()
+                    .toUpperCase();
+
+
+            if (
+                status.includes("RESOLVED") ||
+                status.includes("CLOSED") ||
+                status.includes("COMPLETED")
+            ) {
+
+                return "RESOLVED";
+
+            }
+
+
+            if (
+                status.includes("REJECT")
+            ) {
+
+                return "REJECTED";
+
+            }
+
+
+            if (
+                status.includes("PROCESS") ||
+                status.includes("REVIEW")
+            ) {
+
+                return "PROCESSING";
+
+            }
+
+
+            return "PENDING";
+
+        }
+
+
+        function statusLabel(
+            status
+        ) {
+
+            const labels = {
+                PENDING: "Pending",
+                PROCESSING: "Processing",
+                RESOLVED: "Resolved",
+                REJECTED: "Rejected"
+            };
+
+
+            return (
+                labels[status] ||
+                "Pending"
+            );
+
+        }
+
+
+        function statusClass(
+            status
+        ) {
+
+            const classes = {
+                PENDING: "pending",
+                PROCESSING: "processing",
+                RESOLVED: "resolved",
+                REJECTED: "rejected"
+            };
+
+
+            return (
+                classes[status] ||
+                "pending"
+            );
 
         }
 
@@ -625,9 +1345,7 @@
         ) {
 
             if (!value) {
-
                 return "—";
-
             }
 
 
@@ -658,308 +1376,96 @@
         }
 
 
-        function formatCategory(
+        function escapeHtml(
             value
         ) {
 
-            if (!value) {
+            if (
+                typeof window.escapeHtml ===
+                "function"
+            ) {
 
-                return "—";
+                return window.escapeHtml(
+                    String(value || "")
+                );
 
             }
 
 
-            return String(value)
+            return String(
+                value || ""
+            )
                 .replace(
-                    /_/g,
-                    " "
+                    /&/g,
+                    "&amp;"
                 )
-                .toLowerCase()
                 .replace(
-                    /\b\w/g,
-                    function (letter) {
-
-                        return letter.toUpperCase();
-
-                    }
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
                 );
 
         }
 
 
-        function normalizeStatus(
-            value
+        function renderStats(
+            records
         ) {
 
-            if (!value) {
+            let pending = 0;
+            let processing = 0;
+            let resolved = 0;
 
-                return "SUBMITTED";
 
-            }
-
-
-            const status =
-                String(value)
-                    .toUpperCase()
-                    .replace(
-                        /[\s-]+/g,
-                        "_"
-                    );
-
-
-            if (
-                status.includes(
-                    "RESOLV"
-                ) ||
-                status === "CLOSED"
-            ) {
-
-                return "RESOLVED";
-
-            }
-
-
-            if (
-                status.includes(
-                    "PROGRESS"
-                )
-            ) {
-
-                return "IN_PROGRESS";
-
-            }
-
-
-            if (
-                status.includes(
-                    "REVIEW"
-                ) ||
-                status.includes(
-                    "PENDING"
-                )
-            ) {
-
-                return "UNDER_REVIEW";
-
-            }
-
-
-            return "SUBMITTED";
-
-        }
-
-
-        function getList(
-            data
-        ) {
-
-            if (
-                Array.isArray(
-                    data
-                )
-            ) {
-
-                return data;
-
-            }
-
-
-            if (
-                Array.isArray(
-                    data?.data
-                )
-            ) {
-
-                return data.data;
-
-            }
-
-
-            if (
-                Array.isArray(
-                    data?.content
-                )
-            ) {
-
-                return data.content;
-
-            }
-
-
-            if (
-                Array.isArray(
-                    data?.grievances
-                )
-            ) {
-
-                return data.grievances;
-
-            }
-
-
-            if (
-                Array.isArray(
-                    data?.data?.content
-                )
-            ) {
-
-                return data.data.content;
-
-            }
-
-
-            if (
-                Array.isArray(
-                    data?.data?.grievances
-                )
-            ) {
-
-                return data.data.grievances;
-
-            }
-
-
-            return [];
-
-        }
-
-
-        function getNumber(
-            grievance
-        ) {
-
-            return (
-                grievance?.grievanceNumber ||
-                grievance?.number ||
-                grievance?.grievanceNo ||
-                grievance?.id ||
-                "—"
-            );
-
-        }
-
-
-        function getName(
-            grievance
-        ) {
-
-            return (
-                grievance?.name ||
-                grievance?.applicantName ||
-                grievance?.userName ||
-                "—"
-            );
-
-        }
-
-
-        /* =====================================================
-           STATUS BADGE
-           ===================================================== */
-
-        function createStatusBadge(
-            status
-        ) {
-
-            const normalized =
-                normalizeStatus(
-                    status
-                );
-
-
-            const labels = {
-
-                SUBMITTED:
-                    "Submitted",
-
-                UNDER_REVIEW:
-                    "Under Review",
-
-                IN_PROGRESS:
-                    "In Progress",
-
-                RESOLVED:
-                    "Resolved"
-
-            };
-
-
-            const badge =
-                document.createElement(
-                    "span"
-                );
-
-
-            badge.className =
-                "status-badge status-" +
-                normalized.toLowerCase();
-
-
-            badge.textContent =
-                labels[normalized] ||
-                formatCategory(
-                    normalized
-                );
-
-
-            return badge;
-
-        }
-
-
-        /* =====================================================
-           STATISTICS
-           ===================================================== */
-
-        function updateStatistics(
-            grievances
-        ) {
-
-            let submitted =
-                0;
-
-            let progress =
-                0;
-
-            let resolved =
-                0;
-
-
-            grievances.forEach(
+            records.forEach(
                 function (
-                    grievance
+                    record
                 ) {
 
                     const status =
                         normalizeStatus(
-                            grievance?.status
+                            getValue(
+                                record,
+                                [
+                                    "status",
+                                    "grievanceStatus",
+                                    "state"
+                                ],
+                                "PENDING"
+                            )
                         );
 
 
                     if (
-                        status ===
-                        "RESOLVED"
+                        status === "PENDING"
+                    ) {
+
+                        pending++;
+
+                    }
+                    else if (
+                        status === "PROCESSING"
+                    ) {
+
+                        processing++;
+
+                    }
+                    else if (
+                        status === "RESOLVED"
                     ) {
 
                         resolved++;
-
-                    } else if (
-                        status ===
-                        "IN_PROGRESS"
-                    ) {
-
-                        progress++;
-
-                    } else if (
-                        status ===
-                        "UNDER_REVIEW"
-                    ) {
-
-                        progress++;
-
-                    } else {
-
-                        submitted++;
 
                     }
 
@@ -970,19 +1476,19 @@
             document.getElementById(
                 "totalCount"
             ).textContent =
-                grievances.length;
+                records.length;
 
 
             document.getElementById(
-                "submittedCount"
+                "pendingCount"
             ).textContent =
-                submitted;
+                pending;
 
 
             document.getElementById(
-                "progressCount"
+                "processingCount"
             ).textContent =
-                progress;
+                processing;
 
 
             document.getElementById(
@@ -993,67 +1499,274 @@
         }
 
 
-        /* =====================================================
-           TABLE
-           ===================================================== */
+        function getFilteredRecords() {
 
-        function renderTable(
-            grievances
-        ) {
+            const search =
+                searchInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const status =
+                statusFilter.value;
+
+
+            const category =
+                categoryFilter.value;
+
+
+            return grievances.filter(
+                function (
+                    record
+                ) {
+
+                    const reference =
+                        String(
+                            getValue(
+                                record,
+                                [
+                                    "grievanceNumber",
+                                    "referenceNumber",
+                                    "grievanceId",
+                                    "number",
+                                    "id"
+                                ],
+                                ""
+                            )
+                        ).toLowerCase();
+
+
+                    const citizen =
+                        String(
+                            getValue(
+                                record,
+                                [
+                                    "name",
+                                    "citizenName",
+                                    "applicantName"
+                                ],
+                                ""
+                            )
+                        ).toLowerCase();
+
+
+                    const subject =
+                        String(
+                            getValue(
+                                record,
+                                [
+                                    "subject",
+                                    "title"
+                                ],
+                                ""
+                            )
+                        ).toLowerCase();
+
+
+                    const recordStatus =
+                        normalizeStatus(
+                            getValue(
+                                record,
+                                [
+                                    "status",
+                                    "grievanceStatus",
+                                    "state"
+                                ],
+                                "PENDING"
+                            )
+                        );
+
+
+                    const recordCategory =
+                        String(
+                            getValue(
+                                record,
+                                [
+                                    "category",
+                                    "grievanceCategory",
+                                    "type"
+                                ],
+                                ""
+                            )
+                        );
+
+
+                    const searchMatch =
+                        !search ||
+                        reference.includes(
+                            search
+                        ) ||
+                        citizen.includes(
+                            search
+                        ) ||
+                        subject.includes(
+                            search
+                        );
+
+
+                    const statusMatch =
+                        !status ||
+                        recordStatus ===
+                            status;
+
+
+                    const categoryMatch =
+                        !category ||
+                        recordCategory
+                            .toLowerCase() ===
+                            category.toLowerCase();
+
+
+                    return (
+                        searchMatch &&
+                        statusMatch &&
+                        categoryMatch
+                    );
+
+                }
+            );
+
+        }
+
+
+        function renderTable() {
+
+            const records =
+                getFilteredRecords();
+
 
             tableBody.innerHTML =
                 "";
 
 
             if (
-                !grievances.length
+                records.length === 0
             ) {
 
-                const row =
-                    document.createElement(
-                        "tr"
-                    );
+                tableArea.style.display =
+                    "none";
 
-
-                const cell =
-                    document.createElement(
-                        "td"
-                    );
-
-
-                cell.colSpan =
-                    6;
-
-                cell.className =
-                    "table-empty";
-
-                cell.textContent =
-                    "No grievance records were found.";
-
-
-                row.appendChild(
-                    cell
-                );
-
-
-                tableBody.appendChild(
-                    row
-                );
-
-
-                recordCount.textContent =
-                    "0 records";
-
+                emptyState.style.display =
+                    "block";
 
                 return;
 
             }
 
 
-            grievances.forEach(
+            emptyState.style.display =
+                "none";
+
+            tableArea.style.display =
+                "block";
+
+
+            records.forEach(
                 function (
-                    grievance
+                    record
                 ) {
+
+                    const reference =
+                        getValue(
+                            record,
+                            [
+                                "grievanceNumber",
+                                "referenceNumber",
+                                "grievanceId",
+                                "number",
+                                "id"
+                            ],
+                            "—"
+                        );
+
+
+                    const citizen =
+                        getValue(
+                            record,
+                            [
+                                "name",
+                                "citizenName",
+                                "applicantName"
+                            ],
+                            "—"
+                        );
+
+
+                    const category =
+                        getValue(
+                            record,
+                            [
+                                "category",
+                                "grievanceCategory",
+                                "type"
+                            ],
+                            "—"
+                        );
+
+
+                    const subject =
+                        getValue(
+                            record,
+                            [
+                                "subject",
+                                "title"
+                            ],
+                            "—"
+                        );
+
+
+                    const district =
+                        getValue(
+                            record,
+                            [
+                                "district",
+                                "location"
+                            ],
+                            "—"
+                        );
+
+
+                    const priority =
+                        String(
+                            getValue(
+                                record,
+                                [
+                                    "priority",
+                                    "urgency"
+                                ],
+                                "NORMAL"
+                            )
+                        ).toUpperCase();
+
+
+                    const status =
+                        normalizeStatus(
+                            getValue(
+                                record,
+                                [
+                                    "status",
+                                    "grievanceStatus",
+                                    "state"
+                                ],
+                                "PENDING"
+                            )
+                        );
+
+
+                    const date =
+                        formatDate(
+                            getValue(
+                                record,
+                                [
+                                    "createdAt",
+                                    "submittedAt",
+                                    "createdDate",
+                                    "submissionDate"
+                                ],
+                                ""
+                            )
+                        );
+
 
                     const row =
                         document.createElement(
@@ -1061,125 +1774,63 @@
                         );
 
 
-                    const numberCell =
-                        document.createElement(
-                            "td"
-                        );
+                    row.innerHTML = `
+                        <td>
+                            <span class="reference">
+                                ${escapeHtml(reference)}
+                            </span>
+                        </td>
 
+                        <td>
+                            <span class="citizen-name">
+                                ${escapeHtml(citizen)}
+                            </span>
+                        </td>
 
-                    const number =
-                        getNumber(
-                            grievance
-                        );
+                        <td>
+                            ${escapeHtml(category)}
+                        </td>
 
+                        <td>
+                            <div class="subject-cell">
+                                ${escapeHtml(subject)}
+                            </div>
+                        </td>
 
-                    const link =
-                        document.createElement(
-                            "a"
-                        );
+                        <td>
+                            ${escapeHtml(district)}
+                        </td>
 
+                        <td>
+                            <span class="priority-badge ${
+                                priority === "HIGH"
+                                    ? "high"
+                                    : ""
+                            }">
+                                ${escapeHtml(priority)}
+                            </span>
+                        </td>
 
-                    link.href =
-                        `grievance-status.html?number=${encodeURIComponent(number)}`;
+                        <td>
+                            <span class="status-badge ${statusClass(status)}">
+                                ${statusLabel(status)}
+                            </span>
+                        </td>
 
-                    link.textContent =
-                        number;
+                        <td>
+                            ${escapeHtml(date)}
+                        </td>
 
-                    link.className =
-                        "table-link";
-
-
-                    numberCell.appendChild(
-                        link
-                    );
-
-
-                    const nameCell =
-                        document.createElement(
-                            "td"
-                        );
-
-
-                    nameCell.textContent =
-                        getName(
-                            grievance
-                        );
-
-
-                    const categoryCell =
-                        document.createElement(
-                            "td"
-                        );
-
-
-                    categoryCell.textContent =
-                        formatCategory(
-                            grievance?.category ||
-                            grievance?.grievanceCategory
-                        );
-
-
-                    const districtCell =
-                        document.createElement(
-                            "td"
-                        );
-
-
-                    districtCell.textContent =
-                        grievance?.district ||
-                        "—";
-
-
-                    const dateCell =
-                        document.createElement(
-                            "td"
-                        );
-
-
-                    dateCell.textContent =
-                        formatDate(
-                            grievance?.createdAt ||
-                            grievance?.submittedAt ||
-                            grievance?.createdDate
-                        );
-
-
-                    const statusCell =
-                        document.createElement(
-                            "td"
-                        );
-
-
-                    statusCell.appendChild(
-                        createStatusBadge(
-                            grievance?.status
-                        )
-                    );
-
-
-                    row.appendChild(
-                        numberCell
-                    );
-
-                    row.appendChild(
-                        nameCell
-                    );
-
-                    row.appendChild(
-                        categoryCell
-                    );
-
-                    row.appendChild(
-                        districtCell
-                    );
-
-                    row.appendChild(
-                        dateCell
-                    );
-
-                    row.appendChild(
-                        statusCell
-                    );
+                        <td>
+                            <button
+                                type="button"
+                                class="row-action"
+                                data-reference="${escapeHtml(reference)}"
+                            >
+                                View
+                            </button>
+                        </td>
+                    `;
 
 
                     tableBody.appendChild(
@@ -1190,78 +1841,145 @@
             );
 
 
-            recordCount.textContent =
-                `${grievances.length} ${
-                    grievances.length === 1
-                        ? "record"
-                        : "records"
-                }`;
+            tableBody
+                .querySelectorAll(
+                    ".row-action"
+                )
+                .forEach(
+                    function (
+                        button
+                    ) {
+
+                        button.addEventListener(
+                            "click",
+                            function () {
+
+                                const reference =
+                                    button.dataset.reference;
+
+
+                                if (
+                                    reference &&
+                                    reference !== "—"
+                                ) {
+
+                                    window.location.href =
+                                        "grievance-status.html?grievance=" +
+                                        encodeURIComponent(
+                                            reference
+                                        );
+
+                                }
+
+                            }
+                        );
+
+                    }
+                );
 
         }
 
 
-        /* =====================================================
-           LOAD DASHBOARD
-           ===================================================== */
+        async function loadGrievances() {
 
-        async function loadDashboard() {
+            const token =
+                localStorage.getItem(
+                    "rationPortalToken"
+                );
 
-            hideMessage();
+
+            if (!token) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            const apiBase =
+                window.RATION_API_BASE ||
+                "http://localhost:8080/api";
+
+
+            loadingState.classList.add(
+                "show"
+            );
+
+            errorState.classList.remove(
+                "show"
+            );
+
+            emptyState.style.display =
+                "none";
+
+            tableArea.style.display =
+                "none";
 
 
             refreshButton.disabled =
                 true;
 
 
-            refreshButton.textContent =
-                "Loading...";
-
-
-            tableBody.innerHTML =
-                `
-                <tr>
-                    <td
-                        colspan="6"
-                        class="table-empty"
-                    >
-                        Loading grievance records...
-                    </td>
-                </tr>
-                `;
-
-
             try {
 
-                const token =
-                    localStorage.getItem(
-                        "rationPortalToken"
+                /*
+                 * Confirmed backend route:
+                 *
+                 * GET /api/grievances
+                 *
+                 * This route is ADMIN-only in the
+                 * current backend SecurityConfig.
+                 */
+                const response =
+                    await fetch(
+                        apiBase +
+                        "/grievances",
+                        {
+                            method: "GET",
+
+                            headers: {
+                                "Authorization":
+                                    "Bearer " +
+                                    token,
+
+                                "Accept":
+                                    "application/json"
+                            }
+                        }
                     );
 
 
-                const headers = {};
+                if (
+                    response.status === 401
+                ) {
 
+                    localStorage.removeItem(
+                        "rationPortalToken"
+                    );
 
-                if (token) {
+                    localStorage.removeItem(
+                        "rationPortalUser"
+                    );
 
-                    headers.Authorization =
-                        "Bearer " +
-                        token;
+                    window.location.href =
+                        "login.html";
+
+                    return;
 
                 }
 
 
-                /*
-                 * GET /api/grievances
-                 */
+                if (
+                    response.status === 403
+                ) {
 
-                const response =
-                    await fetch(
-                        `${API}/grievances`,
-                        {
-                            method: "GET",
-                            headers: headers
-                        }
+                    throw new Error(
+                        "Administrator access is required to view the grievance dashboard."
                     );
+
+                }
 
 
                 let data = null;
@@ -1272,10 +1990,12 @@
                     data =
                         await response.json();
 
-                } catch (error) {
+                }
+                catch (
+                    jsonError
+                ) {
 
-                    data =
-                        null;
+                    data = null;
 
                 }
 
@@ -1283,178 +2003,137 @@
                 if (!response.ok) {
 
                     throw new Error(
-                        data?.message ||
-                        data?.error ||
-                        "Unable to load grievance records."
+                        data &&
+                        (
+                            data.message ||
+                            data.error
+                        )
+                            ? (
+                                data.message ||
+                                data.error
+                            )
+                            : "Unable to load grievance records."
                     );
 
                 }
 
 
-                const grievances =
-                    getList(
+                grievances =
+                    unwrapArray(
                         data
                     );
 
 
-                updateStatistics(
+                renderStats(
                     grievances
                 );
 
+                renderTable();
 
-                renderTable(
-                    grievances
-                );
-
-
-                document.getElementById(
-                    "lastUpdated"
-                ).textContent =
-                    `Last updated: ${new Date().toLocaleString(
-                        "en-IN"
-                    )}`;
-
-
-            } catch (error) {
+            }
+            catch (
+                error
+            ) {
 
                 console.error(
-                    "Dashboard error:",
+                    "Grievance dashboard error:",
                     error
                 );
 
 
-                tableBody.innerHTML =
-                    `
-                    <tr>
-                        <td
-                            colspan="6"
-                            class="table-empty"
-                        >
-                            Unable to load grievance records.
-                        </td>
-                    </tr>
-                    `;
-
-
-                recordCount.textContent =
-                    "0 records";
-
-
-                showMessage(
+                errorMessage.textContent =
                     error.message ||
-                    "Unable to load grievance records. Please try again.",
-                    "error"
+                    "Unable to load grievance records.";
+
+
+                errorState.classList.add(
+                    "show"
                 );
 
+            }
+            finally {
 
-                document.getElementById(
-                    "totalCount"
-                ).textContent =
-                    "—";
-
-
-                document.getElementById(
-                    "submittedCount"
-                ).textContent =
-                    "—";
-
-
-                document.getElementById(
-                    "progressCount"
-                ).textContent =
-                    "—";
-
-
-                document.getElementById(
-                    "resolvedCount"
-                ).textContent =
-                    "—";
-
-            } finally {
+                loadingState.classList.remove(
+                    "show"
+                );
 
                 refreshButton.disabled =
                     false;
 
-                refreshButton.textContent =
-                    "Refresh";
-
             }
 
         }
 
 
-        /* =====================================================
-           REFRESH
-           ===================================================== */
+        function applyFilters() {
 
-        refreshButton.addEventListener(
-            "click",
-            loadDashboard
+            renderTable();
+
+        }
+
+
+        searchInput.addEventListener(
+            "input",
+            applyFilters
         );
 
 
-        /* =====================================================
-           URL STATUS SEARCH
-           ===================================================== */
-
-        const queryParams =
-            new URLSearchParams(
-                window.location.search
-            );
+        statusFilter.addEventListener(
+            "change",
+            applyFilters
+        );
 
 
-        const requestedNumber =
-            queryParams.get(
-                "number"
-            );
+        categoryFilter.addEventListener(
+            "change",
+            applyFilters
+        );
 
 
-        if (requestedNumber) {
+        clearFilters.addEventListener(
+            "click",
+            function () {
 
-            const statusLink =
-                document.querySelector(
-                    'a[href="grievance-status.html"]'
-                );
+                searchInput.value =
+                    "";
 
+                statusFilter.value =
+                    "";
 
-            if (statusLink) {
+                categoryFilter.value =
+                    "";
 
-                statusLink.href =
-                    `grievance-status.html?number=${encodeURIComponent(
-                        requestedNumber
-                    )}`;
+                renderTable();
 
             }
+        );
+
+
+        refreshButton.addEventListener(
+            "click",
+            loadGrievances
+        );
+
+
+        const year =
+            document.getElementById(
+                "currentYear"
+            );
+
+        if (year) {
+
+            year.textContent =
+                new Date()
+                    .getFullYear();
 
         }
 
 
-        /* =====================================================
-           CURRENT YEAR
-           ===================================================== */
+        loadGrievances();
 
-        document
-            .querySelectorAll(
-                "[data-current-year]"
-            )
-            .forEach(
-                function (element) {
-
-                    element.textContent =
-                        new Date()
-                            .getFullYear();
-
-                }
-            );
-
-
-        /* =====================================================
-           INITIAL LOAD
-           ===================================================== */
-
-        loadDashboard();
-
-    </script>
+    }
+);
+</script>
 
 </body>
 </html>

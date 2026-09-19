@@ -1,259 +1,156 @@
 /* =========================================================
-   RATION PORTAL — GLOBAL FRONTEND SCRIPT
+   RATION PORTAL - GLOBAL UI SCRIPT
+   File: frontend/js/script.js
    ========================================================= */
 
 (function () {
     "use strict";
 
+    /* =====================================================
+       ACCESSIBILITY - FONT SIZE
+       ===================================================== */
 
-    /* ---------------------------------------------------------
-       ACCESSIBILITY
-       --------------------------------------------------------- */
+    const FONT_SIZE_KEY = "rationPortalFontSize";
 
-    function initializeAccessibility() {
+    const fontSizes = {
+        small: "14px",
+        normal: "16px",
+        large: "18px"
+    };
 
-        const decreaseButton =
-            document.getElementById("fontDecrease");
+    function applyFontSize(size) {
+        const selectedSize =
+            fontSizes[size] || fontSizes.normal;
 
-        const resetButton =
-            document.getElementById("fontReset");
+        document.documentElement.style.fontSize =
+            selectedSize;
 
-        const increaseButton =
-            document.getElementById("fontIncrease");
-
-
-        let fontScale =
-            Number(
-                localStorage.getItem("rationPortalFontScale")
-            ) || 1;
-
-
-        function applyFontScale() {
-
-            document.documentElement.style.setProperty(
-                "--font-scale",
-                fontScale
-            );
-
-            document.documentElement.style.fontSize =
-                `${fontScale}em`;
-
-            localStorage.setItem(
-                "rationPortalFontScale",
-                String(fontScale)
-            );
-
-        }
-
-
-        if (decreaseButton) {
-
-            decreaseButton.addEventListener(
-                "click",
-                function () {
-
-                    fontScale =
-                        Math.max(
-                            0.9,
-                            Number(
-                                (
-                                    fontScale - 0.05
-                                ).toFixed(2)
-                            )
-                        );
-
-                    applyFontScale();
-
-                }
-            );
-
-        }
-
-
-        if (resetButton) {
-
-            resetButton.addEventListener(
-                "click",
-                function () {
-
-                    fontScale = 1;
-
-                    applyFontScale();
-
-                }
-            );
-
-        }
-
-
-        if (increaseButton) {
-
-            increaseButton.addEventListener(
-                "click",
-                function () {
-
-                    fontScale =
-                        Math.min(
-                            1.15,
-                            Number(
-                                (
-                                    fontScale + 0.05
-                                ).toFixed(2)
-                            )
-                        );
-
-                    applyFontScale();
-
-                }
-            );
-
-        }
-
-
-        applyFontScale();
-
-    }
-
-
-    /* ---------------------------------------------------------
-       LANGUAGE SELECTOR
-       --------------------------------------------------------- */
-
-    function initializeLanguageSelector() {
-
-        const selector =
-            document.getElementById("languageSelector");
-
-        if (!selector) {
-            return;
-        }
-
-
-        const savedLanguage =
-            localStorage.getItem(
-                "rationPortalLanguage"
-            );
-
-
-        if (savedLanguage) {
-
-            selector.value =
-                savedLanguage;
-
-        }
-
-
-        selector.addEventListener(
-            "change",
-            function () {
-
-                localStorage.setItem(
-                    "rationPortalLanguage",
-                    selector.value
-                );
-
-
-                if (
-                    selector.value !== "English"
-                ) {
-
-                    showNotification(
-                        "Language support will be expanded in a future version.",
-                        "info"
-                    );
-
-                }
-
-            }
+        localStorage.setItem(
+            FONT_SIZE_KEY,
+            size
         );
 
+        document
+            .querySelectorAll("[data-font-size]")
+            .forEach(function (button) {
+                const isActive =
+                    button.getAttribute(
+                        "data-font-size"
+                    ) === size;
+
+                button.classList.toggle(
+                    "active",
+                    isActive
+                );
+            });
     }
 
+    function setupFontControls() {
+        const savedSize =
+            localStorage.getItem(FONT_SIZE_KEY) ||
+            "normal";
 
-    /* ---------------------------------------------------------
-       MOBILE MENU
-       --------------------------------------------------------- */
+        applyFontSize(savedSize);
 
-    function initializeMobileMenu() {
-
-        const button =
-            document.getElementById(
-                "mobileMenuButton"
-            );
-
-        const navigation =
-            document.getElementById(
-                "mainNavigation"
-            );
-
-
-        if (!button || !navigation) {
-            return;
-        }
-
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                const open =
-                    navigation.classList.toggle(
-                        "mobile-nav-open"
-                    );
-
-                button.setAttribute(
-                    "aria-expanded",
-                    String(open)
-                );
-
-            }
-        );
-
-
-        navigation
-            .querySelectorAll("a")
-            .forEach(function (link) {
-
-                link.addEventListener(
+        document
+            .querySelectorAll("[data-font-size]")
+            .forEach(function (button) {
+                button.addEventListener(
                     "click",
                     function () {
+                        const size =
+                            button.getAttribute(
+                                "data-font-size"
+                            );
 
-                        navigation.classList.remove(
-                            "mobile-nav-open"
+                        applyFontSize(size);
+
+                        showNotification(
+                            "Text size updated.",
+                            "success"
                         );
-
-                        button.setAttribute(
-                            "aria-expanded",
-                            "false"
-                        );
-
                     }
                 );
-
             });
-
     }
 
+    /* =====================================================
+       LANGUAGE SELECTOR
+       ===================================================== */
 
-    /* ---------------------------------------------------------
+    function setupLanguageSelector() {
+        const selectors =
+            document.querySelectorAll(
+                "[data-language-selector]"
+            );
+
+        selectors.forEach(function (selector) {
+            selector.addEventListener(
+                "change",
+                function () {
+                    const language =
+                        selector.value;
+
+                    localStorage.setItem(
+                        "rationPortalLanguage",
+                        language
+                    );
+
+                    /*
+                     * This project currently provides the
+                     * English interface. The selector is
+                     * prepared for future multilingual
+                     * content.
+                     */
+
+                    if (language === "en") {
+                        showNotification(
+                            "English language selected.",
+                            "success"
+                        );
+                    } else if (language === "hi") {
+                        showNotification(
+                            "Hindi interface support can be connected here.",
+                            "info"
+                        );
+                    } else {
+                        showNotification(
+                            "Selected language: " +
+                                language,
+                            "info"
+                        );
+                    }
+                }
+            );
+
+            const savedLanguage =
+                localStorage.getItem(
+                    "rationPortalLanguage"
+                );
+
+            if (savedLanguage) {
+                selector.value = savedLanguage;
+            }
+        });
+    }
+
+    /* =====================================================
        SMOOTH SCROLL
-       --------------------------------------------------------- */
+       ===================================================== */
 
-    function initializeSmoothScroll() {
-
+    function setupSmoothScroll() {
         document
             .querySelectorAll(
                 'a[href^="#"]'
             )
             .forEach(function (link) {
-
                 link.addEventListener(
                     "click",
                     function (event) {
-
                         const targetId =
-                            link.getAttribute("href");
-
+                            link.getAttribute(
+                                "href"
+                            );
 
                         if (
                             !targetId ||
@@ -262,546 +159,558 @@
                             return;
                         }
 
-
                         const target =
                             document.querySelector(
                                 targetId
                             );
 
-
                         if (!target) {
                             return;
                         }
 
-
                         event.preventDefault();
-
 
                         target.scrollIntoView({
                             behavior: "smooth",
                             block: "start"
                         });
-
                     }
                 );
-
             });
-
     }
 
+    /* =====================================================
+       SCROLL TO TOP BUTTON
+       ===================================================== */
 
-    /* ---------------------------------------------------------
-       SCROLL TO TOP
-       --------------------------------------------------------- */
-
-    function initializeScrollTop() {
-
-        const button =
-            document.getElementById(
-                "scrollTopButton"
+    function setupScrollTop() {
+        const scrollButton =
+            document.querySelector(
+                "[data-scroll-top]"
             );
 
-
-        if (!button) {
+        if (!scrollButton) {
             return;
         }
 
-
         function updateButton() {
-
-            if (
-                window.scrollY > 500
-            ) {
-
-                button.classList.add(
+            if (window.scrollY > 400) {
+                scrollButton.classList.add(
                     "visible"
                 );
-
             } else {
-
-                button.classList.remove(
+                scrollButton.classList.remove(
                     "visible"
                 );
-
             }
-
         }
-
 
         window.addEventListener(
             "scroll",
             updateButton,
-            {
-                passive: true
-            }
+            { passive: true }
         );
 
-
-        button.addEventListener(
+        scrollButton.addEventListener(
             "click",
             function () {
-
                 window.scrollTo({
                     top: 0,
                     behavior: "smooth"
                 });
-
             }
         );
 
-
         updateButton();
-
     }
 
-
-    /* ---------------------------------------------------------
+    /* =====================================================
        CURRENT YEAR
-       --------------------------------------------------------- */
+       ===================================================== */
 
-    function initializeCurrentYear() {
-
-        const yearElements =
-            document.querySelectorAll(
-                "[data-current-year]"
-            );
-
-
+    function setupCurrentYear() {
         const currentYear =
             new Date().getFullYear();
 
-
-        yearElements.forEach(
-            function (element) {
-
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(function (element) {
                 element.textContent =
                     currentYear;
-
-            }
-        );
-
-    }
-
-
-    /* ---------------------------------------------------------
-       EXTERNAL LINK SAFETY
-       --------------------------------------------------------- */
-
-    function initializeExternalLinks() {
-
-        document
-            .querySelectorAll(
-                'a[target="_blank"]'
-            )
-            .forEach(function (link) {
-
-                const rel =
-                    link.getAttribute("rel") || "";
-
-
-                if (
-                    !rel.includes("noopener")
-                ) {
-
-                    link.setAttribute(
-                        "rel",
-                        `${rel} noopener noreferrer`.trim()
-                    );
-
-                }
-
             });
-
     }
 
-
-    /* ---------------------------------------------------------
-       BUTTON LOADING STATE
-       --------------------------------------------------------- */
-
-    function initializeButtonLoading() {
-
-        document
-            .querySelectorAll(
-                "form"
-            )
-            .forEach(function (form) {
-
-                form.addEventListener(
-                    "submit",
-                    function () {
-
-                        const submitButton =
-                            form.querySelector(
-                                'button[type="submit"], input[type="submit"]'
-                            );
-
-
-                        if (!submitButton) {
-                            return;
-                        }
-
-
-                        if (
-                            submitButton.dataset.noLoading ===
-                            "true"
-                        ) {
-                            return;
-                        }
-
-
-                        submitButton.classList.add(
-                            "is-loading"
-                        );
-
-
-                        submitButton.dataset.originalText =
-                            submitButton.textContent;
-
-
-                        if (
-                            submitButton.tagName ===
-                            "BUTTON"
-                        ) {
-
-                            submitButton.textContent =
-                                "Processing...";
-
-                        }
-
-                    }
-                );
-
-            });
-
-    }
-
-
-    /* ---------------------------------------------------------
-       NOTIFICATION SYSTEM
-       --------------------------------------------------------- */
-
-    function showNotification(
-        message,
-        type
-    ) {
-
-        type =
-            type || "info";
-
-
-        let container =
-            document.getElementById(
-                "notificationContainer"
-            );
-
-
-        if (!container) {
-
-            container =
-                document.createElement(
-                    "div"
-                );
-
-            container.id =
-                "notificationContainer";
-
-            container.className =
-                "notification-container";
-
-            document.body.appendChild(
-                container
-            );
-
-        }
-
-
-        const notification =
-            document.createElement(
-                "div"
-            );
-
-
-        notification.className =
-            `notification notification-${type}`;
-
-
-        notification.innerHTML = `
-            <span class="notification-icon">
-                ${getNotificationIcon(type)}
-            </span>
-
-            <span class="notification-text">
-                ${escapeHtml(message)}
-            </span>
-
-            <button
-                type="button"
-                class="notification-close"
-                aria-label="Close notification"
-            >
-                ×
-            </button>
-        `;
-
-
-        container.appendChild(
-            notification
-        );
-
-
-        requestAnimationFrame(
-            function () {
-
-                notification.classList.add(
-                    "notification-visible"
-                );
-
-            }
-        );
-
-
-        const closeButton =
-            notification.querySelector(
-                ".notification-close"
-            );
-
-
-        function removeNotification() {
-
-            notification.classList.remove(
-                "notification-visible"
-            );
-
-
-            setTimeout(
-                function () {
-
-                    notification.remove();
-
-                },
-                250
-            );
-
-        }
-
-
-        if (closeButton) {
-
-            closeButton.addEventListener(
-                "click",
-                removeNotification
-            );
-
-        }
-
-
-        setTimeout(
-            removeNotification,
-            5000
-        );
-
-    }
-
-
-    function getNotificationIcon(type) {
-
-        switch (type) {
-
-            case "success":
-                return "✓";
-
-            case "error":
-                return "!";
-
-            case "warning":
-                return "⚠";
-
-            default:
-                return "i";
-
-        }
-
-    }
-
-
-    /* ---------------------------------------------------------
-       HTML ESCAPE
-       --------------------------------------------------------- */
-
-    function escapeHtml(value) {
-
-        return String(value)
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-            .replace(
-                /</g,
-                "&lt;"
-            )
-            .replace(
-                />/g,
-                "&gt;"
-            )
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-            .replace(
-                /'/g,
-                "&#039;"
-            );
-
-    }
-
-
-    /* ---------------------------------------------------------
+    /* =====================================================
        ACTIVE NAVIGATION
-       --------------------------------------------------------- */
+       ===================================================== */
 
-    function initializeActiveNavigation() {
-
+    function setupActiveNavigation() {
         const currentPath =
             window.location.pathname
+                .split("/")
+                .pop()
                 .toLowerCase();
-
 
         document
             .querySelectorAll(
                 ".main-nav a"
             )
             .forEach(function (link) {
-
                 const href =
                     link.getAttribute("href");
-
 
                 if (!href) {
                     return;
                 }
 
-
-                if (
-                    href.startsWith("#") ||
-                    href.startsWith("http")
-                ) {
-                    return;
-                }
-
-
-                const linkPath =
+                const cleanHref =
                     href
                         .split("?")[0]
                         .split("#")[0]
+                        .split("/")
+                        .pop()
                         .toLowerCase();
 
-
-                const normalizedCurrent =
-                    currentPath.endsWith("/")
-                        ? currentPath + "index.html"
-                        : currentPath;
-
-
-                const normalizedLink =
-                    linkPath.startsWith("/")
-                        ? linkPath
-                        : "/" + linkPath;
-
-
                 if (
-                    normalizedCurrent.endsWith(
-                        normalizedLink
-                    )
+                    cleanHref &&
+                    cleanHref === currentPath
                 ) {
-
                     link.classList.add(
                         "active"
                     );
-
                 }
-
             });
-
     }
 
+    /* =====================================================
+       GLOBAL NOTIFICATION SYSTEM
+       ===================================================== */
 
-    /* ---------------------------------------------------------
-       ACCESSIBLE FOCUS
-       --------------------------------------------------------- */
+    function showNotification(
+        message,
+        type,
+        duration
+    ) {
+        const notificationType =
+            type || "info";
 
-    function initializeKeyboardFocus() {
+        const timeout =
+            Number(duration) || 4000;
 
-        document.addEventListener(
-            "keydown",
-            function (event) {
+        let container =
+            document.querySelector(
+                ".notification-container"
+            );
 
-                if (
-                    event.key === "Tab"
-                ) {
+        if (!container) {
+            container =
+                document.createElement("div");
 
-                    document.body.classList.add(
-                        "keyboard-navigation"
-                    );
+            container.className =
+                "notification-container";
 
-                }
+            container.setAttribute(
+                "aria-live",
+                "polite"
+            );
 
-            }
-        );
+            container.setAttribute(
+                "aria-atomic",
+                "true"
+            );
 
-
-        document.addEventListener(
-            "mousedown",
-            function () {
-
-                document.body.classList.remove(
-                    "keyboard-navigation"
-                );
-
-            }
-        );
-
-    }
-
-
-    /* ---------------------------------------------------------
-       INITIALIZATION
-       --------------------------------------------------------- */
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            initializeAccessibility();
-
-            initializeLanguageSelector();
-
-            initializeMobileMenu();
-
-            initializeSmoothScroll();
-
-            initializeScrollTop();
-
-            initializeCurrentYear();
-
-            initializeExternalLinks();
-
-            initializeButtonLoading();
-
-            initializeActiveNavigation();
-
-            initializeKeyboardFocus();
-
+            document.body.appendChild(
+                container
+            );
         }
-    );
 
+        const notification =
+            document.createElement("div");
 
-    /* ---------------------------------------------------------
-       GLOBAL API
-       --------------------------------------------------------- */
+        notification.className =
+            "notification notification-" +
+            notificationType;
+
+        notification.setAttribute(
+            "role",
+            "status"
+        );
+
+        const content =
+            document.createElement("span");
+
+        content.className =
+            "notification-message";
+
+        content.textContent =
+            message;
+
+        const closeButton =
+            document.createElement("button");
+
+        closeButton.type = "button";
+        closeButton.className =
+            "notification-close";
+        closeButton.setAttribute(
+            "aria-label",
+            "Close notification"
+        );
+        closeButton.textContent = "×";
+
+        closeButton.addEventListener(
+            "click",
+            function () {
+                removeNotification(
+                    notification
+                );
+            }
+        );
+
+        notification.appendChild(
+            content
+        );
+
+        notification.appendChild(
+            closeButton
+        );
+
+        container.appendChild(
+            notification
+        );
+
+        requestAnimationFrame(
+            function () {
+                notification.classList.add(
+                    "show"
+                );
+            }
+        );
+
+        window.setTimeout(
+            function () {
+                removeNotification(
+                    notification
+                );
+            },
+            timeout
+        );
+    }
+
+    function removeNotification(
+        notification
+    ) {
+        if (!notification) {
+            return;
+        }
+
+        notification.classList.remove(
+            "show"
+        );
+
+        window.setTimeout(
+            function () {
+                if (
+                    notification.parentNode
+                ) {
+                    notification.parentNode.removeChild(
+                        notification
+                    );
+                }
+            },
+            250
+        );
+    }
 
     window.showNotification =
         showNotification;
 
+    /* =====================================================
+       BUTTON LOADING STATE
+       ===================================================== */
+
+    function setupButtonLoading() {
+        document
+            .querySelectorAll(
+                "[data-loading-button]"
+            )
+            .forEach(function (button) {
+                button.addEventListener(
+                    "click",
+                    function () {
+                        if (
+                            button.dataset.loadingActive ===
+                            "true"
+                        ) {
+                            return;
+                        }
+
+                        button.dataset.loadingActive =
+                            "true";
+
+                        button.dataset.originalText =
+                            button.innerHTML;
+
+                        button.disabled = true;
+
+                        button.innerHTML =
+                            '<span class="loading-spinner"></span> Loading...';
+
+                        window.setTimeout(
+                            function () {
+                                if (
+                                    button.dataset
+                                        .restoreAfterLoading !==
+                                    "false"
+                                ) {
+                                    button.disabled =
+                                        false;
+
+                                    button.innerHTML =
+                                        button.dataset
+                                            .originalText;
+
+                                    button.dataset
+                                        .loadingActive =
+                                        "false";
+                                }
+                            },
+                            800
+                        );
+                    }
+                );
+            });
+    }
+
+    /* =====================================================
+       EXTERNAL LINK SAFETY
+       ===================================================== */
+
+    function setupExternalLinks() {
+        document
+            .querySelectorAll(
+                'a[target="_blank"]'
+            )
+            .forEach(function (link) {
+                const currentRel =
+                    link.getAttribute("rel") ||
+                    "";
+
+                const values =
+                    currentRel
+                        .split(/\s+/)
+                        .filter(Boolean);
+
+                if (
+                    !values.includes(
+                        "noopener"
+                    )
+                ) {
+                    values.push("noopener");
+                }
+
+                if (
+                    !values.includes(
+                        "noreferrer"
+                    )
+                ) {
+                    values.push("noreferrer");
+                }
+
+                link.setAttribute(
+                    "rel",
+                    values.join(" ")
+                );
+            });
+    }
+
+    /* =====================================================
+       KEYBOARD ACCESSIBILITY
+       ===================================================== */
+
+    function setupKeyboardAccessibility() {
+        document.addEventListener(
+            "keydown",
+            function (event) {
+                if (
+                    event.key === "Escape"
+                ) {
+                    document
+                        .querySelectorAll(
+                            ".profile-dropdown.open"
+                        )
+                        .forEach(function (
+                            dropdown
+                        ) {
+                            dropdown.classList.remove(
+                                "open"
+                            );
+                        });
+
+                    document
+                        .querySelectorAll(
+                            ".main-nav.open"
+                        )
+                        .forEach(function (
+                            navigation
+                        ) {
+                            navigation.classList.remove(
+                                "open"
+                            );
+                        });
+                }
+            }
+        );
+    }
+
+    /* =====================================================
+       FOCUS VISIBILITY
+       ===================================================== */
+
+    function setupFocusVisibility() {
+        document.addEventListener(
+            "keydown",
+            function (event) {
+                if (
+                    event.key === "Tab"
+                ) {
+                    document.body.classList.add(
+                        "keyboard-navigation"
+                    );
+                }
+            }
+        );
+
+        document.addEventListener(
+            "mousedown",
+            function () {
+                document.body.classList.remove(
+                    "keyboard-navigation"
+                );
+            }
+        );
+    }
+
+    /* =====================================================
+       DISABLE DOUBLE SUBMISSION
+       ===================================================== */
+
+    function setupFormProtection() {
+        document
+            .querySelectorAll("form")
+            .forEach(function (form) {
+                form.addEventListener(
+                    "submit",
+                    function () {
+                        if (
+                            form.dataset
+                                .submitted ===
+                            "true"
+                        ) {
+                            return;
+                        }
+
+                        form.dataset.submitted =
+                            "true";
+
+                        window.setTimeout(
+                            function () {
+                                form.dataset
+                                    .submitted =
+                                    "false";
+                            },
+                            1500
+                        );
+                    }
+                );
+            });
+    }
+
+    /* =====================================================
+       REDUCE MOTION SUPPORT
+       ===================================================== */
+
+    function setupReducedMotion() {
+        const mediaQuery =
+            window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            );
+
+        function updateReducedMotion() {
+            document.documentElement.classList.toggle(
+                "reduced-motion",
+                mediaQuery.matches
+            );
+        }
+
+        updateReducedMotion();
+
+        if (
+            typeof mediaQuery.addEventListener ===
+            "function"
+        ) {
+            mediaQuery.addEventListener(
+                "change",
+                updateReducedMotion
+            );
+        }
+    }
+
+    /* =====================================================
+       PRINT HANDLING
+       ===================================================== */
+
+    function setupPrintSupport() {
+        window.addEventListener(
+            "beforeprint",
+            function () {
+                document.body.classList.add(
+                    "printing"
+                );
+            }
+        );
+
+        window.addEventListener(
+            "afterprint",
+            function () {
+                document.body.classList.remove(
+                    "printing"
+                );
+            }
+        );
+    }
+
+    /* =====================================================
+       INITIALIZATION
+       ===================================================== */
+
+    function initializeGlobalScript() {
+        setupFontControls();
+        setupLanguageSelector();
+        setupSmoothScroll();
+        setupScrollTop();
+        setupCurrentYear();
+        setupActiveNavigation();
+        setupButtonLoading();
+        setupExternalLinks();
+        setupKeyboardAccessibility();
+        setupFocusVisibility();
+        setupFormProtection();
+        setupReducedMotion();
+        setupPrintSupport();
+    }
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeGlobalScript
+        );
+    } else {
+        initializeGlobalScript();
+    }
 
 })();

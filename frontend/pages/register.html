@@ -1,919 +1,1105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta
         name="description"
-        content="Citizen Registration — Ration Portal"
+        content="Create a citizen account on the Ration Portal."
     >
 
-    <title>Create Citizen Account | Ration Portal</title>
+    <meta name="theme-color" content="#06284a">
+
+    <title>Citizen Registration | Ration Portal</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/redesign.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
-        href="../css/style.css"
     >
-
-    <script src="../config.js"></script>
-
 </head>
 
+<body>
 
-<body class="auth-page">
+<div class="tricolour-line" aria-hidden="true"></div>
 
-    <!-- =====================================================
-         TRICOLOUR TOP LINE
-         ===================================================== -->
 
-    <div class="tricolour-line" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
+<div class="gov-bar">
+
+    <div class="gov-bar-left">
+        <span>Government Service Portal</span>
+        <span aria-hidden="true">•</span>
+        <span>Digital Public Distribution System</span>
     </div>
 
+    <div class="gov-bar-right">
+        <a href="../index.html">Home</a>
+        <span aria-hidden="true">|</span>
+        <span>English</span>
+    </div>
 
-    <!-- =====================================================
-         GOVERNMENT TOP BAR
-         ===================================================== -->
+</div>
 
-    <div class="gov-bar">
 
-        <div class="container gov-bar-inner">
+<header class="brand-header">
 
-            <div class="gov-bar-left">
-                <span>Government Service Portal</span>
+    <div class="brand-header-inner">
+
+        <a href="../index.html" class="brand">
+
+            <div class="brand-emblem" aria-hidden="true">
+                <span
+                    style="
+                        font-size:31px;
+                        font-weight:800;
+                        line-height:1;
+                    "
+                >
+                    ✦
+                </span>
             </div>
 
-            <div class="gov-bar-right">
-                <span>भारत सरकार</span>
-                <span aria-hidden="true">|</span>
-                <span>Government of India</span>
+            <div>
+                <div class="brand-title">
+                    Ration Portal
+                </div>
+
+                <div class="brand-subtitle">
+                    Public Distribution System
+                </div>
             </div>
+
+        </a>
+
+
+        <nav class="main-nav" aria-label="Main navigation">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="apply-ration-card.html">
+                Apply Online
+            </a>
+
+            <a href="applications.html">
+                My Applications
+            </a>
+
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+            <a href="transparency.html">
+                Transparency
+            </a>
+
+        </nav>
+
+
+        <div class="header-actions">
+
+            <a
+                href="login.html"
+                class="btn btn-primary"
+            >
+                Login
+            </a>
 
         </div>
 
     </div>
 
+</header>
 
-    <!-- =====================================================
-         BRAND HEADER
-         ===================================================== -->
 
-    <header class="brand-header">
+<main class="auth-page">
 
-        <div class="container brand-header-inner">
+    <div
+        class="auth-card"
+        style="max-width:540px;"
+    >
+
+        <div class="auth-header">
+
+            <div
+                class="auth-logo"
+                aria-hidden="true"
+            >
+                ✦
+            </div>
+
+            <h1 class="auth-title">
+                Create Citizen Account
+            </h1>
+
+            <p class="auth-subtitle">
+                Register to access online ration services
+            </p>
+
+        </div>
+
+
+        <div
+            id="registerAlert"
+            class="alert"
+            style="display:none;"
+            role="alert"
+            aria-live="polite"
+        ></div>
+
+
+        <form
+            id="registerForm"
+            novalidate
+        >
+
+            <div class="form-group">
+
+                <label
+                    for="name"
+                    class="form-label"
+                >
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-control"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                    maxlength="100"
+                    required
+                >
+
+                <div
+                    id="nameError"
+                    class="form-help"
+                    style="
+                        display:none;
+                        color:#b42318;
+                    "
+                ></div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label
+                    for="email"
+                    class="form-label"
+                >
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email address"
+                    autocomplete="email"
+                    maxlength="150"
+                    required
+                >
+
+                <div
+                    id="emailError"
+                    class="form-help"
+                    style="
+                        display:none;
+                        color:#b42318;
+                    "
+                ></div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label
+                    for="password"
+                    class="form-label"
+                >
+                    Password
+                </label>
+
+                <div class="password-wrapper">
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        minlength="6"
+                        maxlength="100"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        id="togglePassword"
+                        class="password-toggle"
+                        aria-label="Show password"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+                <div
+                    id="passwordError"
+                    class="form-help"
+                    style="
+                        display:none;
+                        color:#b42318;
+                    "
+                ></div>
+
+                <div
+                    style="
+                        margin-top:6px;
+                        color:#8a99a8;
+                        font-size:8px;
+                        line-height:1.5;
+                    "
+                >
+                    Use at least 6 characters.
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label
+                    for="confirmPassword"
+                    class="form-label"
+                >
+                    Confirm Password
+                </label>
+
+                <div class="password-wrapper">
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        class="form-control"
+                        placeholder="Re-enter your password"
+                        autocomplete="new-password"
+                        minlength="6"
+                        maxlength="100"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        id="toggleConfirmPassword"
+                        class="password-toggle"
+                        aria-label="Show confirmation password"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+                <div
+                    id="confirmPasswordError"
+                    class="form-help"
+                    style="
+                        display:none;
+                        color:#b42318;
+                    "
+                ></div>
+
+            </div>
+
+
+            <div
+                style="
+                    display:flex;
+                    align-items:flex-start;
+                    gap:9px;
+                    margin:8px 0 19px;
+                    padding:12px;
+                    border:1px solid #dfe9f0;
+                    border-radius:10px;
+                    background:#f8fbfd;
+                "
+            >
+
+                <input
+                    type="checkbox"
+                    id="terms"
+                    name="terms"
+                    style="margin-top:2px;"
+                >
+
+                <label
+                    for="terms"
+                    style="
+                        color:#718398;
+                        font-size:8px;
+                        line-height:1.6;
+                        cursor:pointer;
+                    "
+                >
+                    I understand that the information provided
+                    during registration will be used to create
+                    my citizen account and access portal services.
+                </label>
+
+            </div>
+
+            <div
+                id="termsError"
+                class="form-help"
+                style="
+                    display:none;
+                    margin-top:-13px;
+                    margin-bottom:14px;
+                    color:#b42318;
+                "
+            ></div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    id="registerButton"
+                    class="btn btn-primary"
+                    style="
+                        width:100%;
+                        justify-content:center;
+                    "
+                >
+                    Create Account
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <div
+            style="
+                margin-top:22px;
+                padding-top:18px;
+                border-top:1px solid #e5edf3;
+                text-align:center;
+            "
+        >
+
+            <p
+                style="
+                    margin:0 0 8px;
+                    color:#8190a0;
+                    font-size:9px;
+                "
+            >
+                Already have an account?
+            </p>
 
             <a
-                href="../index.html"
-                class="brand"
-                aria-label="Ration Portal home"
+                href="login.html"
+                style="
+                    color:#0871c9;
+                    font-size:10px;
+                    font-weight:800;
+                    text-decoration:none;
+                "
+            >
+                Login to Citizen Portal
+            </a>
+
+        </div>
+
+
+        <div
+            style="
+                display:grid;
+                grid-template-columns:repeat(3,1fr);
+                gap:8px;
+                margin-top:20px;
+            "
+        >
+
+            <div
+                style="
+                    padding:10px 7px;
+                    border-radius:9px;
+                    background:#f8fbfd;
+                    text-align:center;
+                "
+            >
+                <div
+                    style="
+                        margin-bottom:4px;
+                        color:#0871c9;
+                        font-size:15px;
+                        font-weight:800;
+                    "
+                >
+                    ✓
+                </div>
+
+                <div
+                    style="
+                        color:#718398;
+                        font-size:7px;
+                        font-weight:700;
+                    "
+                >
+                    Secure Access
+                </div>
+
+            </div>
+
+
+            <div
+                style="
+                    padding:10px 7px;
+                    border-radius:9px;
+                    background:#f8fbfd;
+                    text-align:center;
+                "
             >
 
                 <div
-                    class="brand-emblem"
-                    aria-hidden="true"
+                    style="
+                        margin-bottom:4px;
+                        color:#138808;
+                        font-size:15px;
+                        font-weight:800;
+                    "
                 >
-                    <div class="chakra">☸</div>
+                    ◈
                 </div>
 
-                <div class="brand-text">
-
-                    <span class="brand-title">
-                        RATION PORTAL
-                    </span>
-
-                    <span class="brand-subtitle">
-                        Public Distribution System
-                    </span>
-
+                <div
+                    style="
+                        color:#718398;
+                        font-size:7px;
+                        font-weight:700;
+                    "
+                >
+                    Digital Services
                 </div>
 
+            </div>
+
+
+            <div
+                style="
+                    padding:10px 7px;
+                    border-radius:9px;
+                    background:#f8fbfd;
+                    text-align:center;
+                "
+            >
+
+                <div
+                    style="
+                        margin-bottom:4px;
+                        color:#f58220;
+                        font-size:15px;
+                        font-weight:800;
+                    "
+                >
+                    ★
+                </div>
+
+                <div
+                    style="
+                        color:#718398;
+                        font-size:7px;
+                        font-weight:700;
+                    "
+                >
+                    Citizen First
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="footer-grid">
+
+        <div class="footer-brand">
+
+            <div
+                class="footer-emblem"
+                aria-hidden="true"
+            >
+                ✦
+            </div>
+
+            <div>
+
+                <h3>
+                    Ration Portal
+                </h3>
+
+                <p>
+                    Public Distribution System
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="../index.html">
+                Home
             </a>
 
+            <a href="login.html">
+                Login
+            </a>
 
-            <div class="header-utility">
-                <span>Citizen Services</span>
-            </div>
+            <a href="grievance.html">
+                Grievance
+            </a>
+
+            <a href="transparency.html">
+                Transparency
+            </a>
 
         </div>
 
-    </header>
 
+        <div class="footer-disclaimer">
 
-    <!-- =====================================================
-         REGISTRATION MAIN
-         ===================================================== -->
-
-    <main class="auth-main">
-
-        <div class="container auth-container">
-
-            <section class="login-card">
-
-                <!-- =================================================
-                     LEFT INFORMATION PANEL
-                     ================================================= -->
-
-                <div class="login-info">
-
-                    <span class="section-kicker">
-                        CITIZEN REGISTRATION
-                    </span>
-
-                    <h1>
-                        Create your
-                        <span>Citizen Account</span>
-                    </h1>
-
-                    <p class="login-info-text">
-                        Register once to access ration card services,
-                        applications, grievance services and other
-                        digital citizen facilities.
-                    </p>
-
-
-                    <div class="login-benefits">
-
-                        <div class="login-benefit">
-
-                            <span class="benefit-icon">
-                                01
-                            </span>
-
-                            <div>
-
-                                <strong>
-                                    Simple Registration
-                                </strong>
-
-                                <p>
-                                    Create your account using your
-                                    basic citizen information.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="login-benefit">
-
-                            <span class="benefit-icon">
-                                02
-                            </span>
-
-                            <div>
-
-                                <strong>
-                                    Secure Account
-                                </strong>
-
-                                <p>
-                                    Your account is protected using
-                                    secure authentication.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="login-benefit">
-
-                            <span class="benefit-icon">
-                                03
-                            </span>
-
-                            <div>
-
-                                <strong>
-                                    One Portal
-                                </strong>
-
-                                <p>
-                                    Access multiple ration-related
-                                    citizen services from one place.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =================================================
-                     REGISTRATION PANEL
-                     ================================================= -->
-
-                <div class="login-panel">
-
-                    <div class="login-panel-header">
-
-                        <div class="login-icon">
-                            <span>+</span>
-                        </div>
-
-                        <div>
-
-                            <span class="section-kicker">
-                                NEW CITIZEN
-                            </span>
-
-                            <h2>
-                                Create an account
-                            </h2>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- =================================================
-                         REGISTRATION FORM
-                         ================================================= -->
-
-                    <form
-                        id="registerForm"
-                        class="login-form"
-                        novalidate
-                    >
-
-                        <div
-                            id="registerMessage"
-                            class="form-message"
-                            role="alert"
-                            aria-live="polite"
-                            hidden
-                        ></div>
-
-
-                        <!-- NAME -->
-
-                        <div class="form-group">
-
-                            <label for="name">
-                                Full Name
-                            </label>
-
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                placeholder="Enter your full name"
-                                autocomplete="name"
-                                required
-                                minlength="2"
-                            >
-
-                        </div>
-
-
-                        <!-- EMAIL -->
-
-                        <div class="form-group">
-
-                            <label for="email">
-                                Email Address
-                            </label>
-
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                placeholder="Enter your email address"
-                                autocomplete="email"
-                                required
-                            >
-
-                        </div>
-
-
-                        <!-- PASSWORD -->
-
-                        <div class="form-group">
-
-                            <label for="password">
-                                Password
-                            </label>
-
-                            <div class="password-field">
-
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    placeholder="Create a password"
-                                    autocomplete="new-password"
-                                    required
-                                    minlength="6"
-                                >
-
-                                <button
-                                    type="button"
-                                    id="togglePassword"
-                                    class="password-toggle"
-                                    aria-label="Show password"
-                                >
-                                    Show
-                                </button>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- CONFIRM PASSWORD -->
-
-                        <div class="form-group">
-
-                            <label for="confirmPassword">
-                                Confirm Password
-                            </label>
-
-                            <div class="password-field">
-
-                                <input
-                                    type="password"
-                                    id="confirmPassword"
-                                    name="confirmPassword"
-                                    placeholder="Re-enter your password"
-                                    autocomplete="new-password"
-                                    required
-                                    minlength="6"
-                                >
-
-                                <button
-                                    type="button"
-                                    id="toggleConfirmPassword"
-                                    class="password-toggle"
-                                    aria-label="Show confirmation password"
-                                >
-                                    Show
-                                </button>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- TERMS -->
-
-                        <div class="form-checkbox">
-
-                            <input
-                                type="checkbox"
-                                id="terms"
-                                name="terms"
-                                required
-                            >
-
-                            <label for="terms">
-                                I understand that this is an
-                                educational project portal and agree
-                                to use the services responsibly.
-                            </label>
-
-                        </div>
-
-
-                        <!-- REGISTER BUTTON -->
-
-                        <button
-                            type="submit"
-                            id="registerButton"
-                            class="btn btn-primary btn-full"
-                        >
-
-                            <span>
-                                Create Citizen Account
-                            </span>
-
-                            <span
-                                class="btn-arrow"
-                                aria-hidden="true"
-                            >
-                                →
-                            </span>
-
-                        </button>
-
-                    </form>
-
-
-                    <!-- =================================================
-                         LOGIN LINK
-                         ================================================= -->
-
-                    <div class="login-divider">
-
-                        <span>
-                            Already registered?
-                        </span>
-
-                    </div>
-
-
-                    <a
-                        href="login.html"
-                        class="btn btn-secondary btn-full"
-                    >
-                        Sign In to Existing Account
-                    </a>
-
-
-                    <!-- BACK HOME -->
-
-                    <a
-                        href="../index.html"
-                        class="back-home-link"
-                    >
-                        ← Back to Ration Portal
-                    </a>
-
-
-                    <!-- SECURITY NOTICE -->
-
-                    <div class="login-security">
-
-                        <span
-                            class="security-icon"
-                            aria-hidden="true"
-                        >
-                            🔒
-                        </span>
-
-                        <p>
-                            Keep your login credentials private and
-                            do not share your password with anyone.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 EDUCATIONAL DISCLAIMER
-                 ================================================= -->
-
-            <div class="auth-disclaimer">
-
-                <strong>
-                    Educational Project
-                </strong>
-
-                <span>
-                    This portal is a student-developed educational
-                    project inspired by Indian government service
-                    portal design. It is not an official Government
-                    of India website.
-                </span>
-
-            </div>
-
-        </div>
-
-    </main>
-
-
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
-
-    <footer class="site-footer">
-
-        <div class="container footer-bottom">
-
-            <p>
+            <div>
                 ©
-                <span data-current-year>
-                    2026
-                </span>
-                Ration Portal.
-                Educational project.
-            </p>
+                <span id="currentYear"></span>
+                Ration Portal
+            </div>
 
-            <p>
-                Designed for citizen-focused digital services.
-            </p>
+            <div>
+                Educational demonstration project.
+            </div>
 
         </div>
 
-    </footer>
+    </div>
+
+</footer>
 
 
-    <!-- =====================================================
-         REGISTRATION JAVASCRIPT
-         ===================================================== -->
-
-    <script>
-
-        "use strict";
+<script src="../config.js"></script>
+<script src="../js/auth-guard.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/script.js"></script>
 
 
-        /* -----------------------------------------------------
-           API
-           ----------------------------------------------------- */
+<script>
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-        const API =
-            window.RATION_API_BASE ||
-            "https://ration-portal-backend.onrender.com/api";
-
-
-        /* -----------------------------------------------------
-           ELEMENTS
-           ----------------------------------------------------- */
-
-        const registerForm =
+        const form =
             document.getElementById(
                 "registerForm"
             );
 
-
-        const registerMessage =
+        const nameInput =
             document.getElementById(
-                "registerMessage"
+                "name"
             );
 
-
-        const registerButton =
+        const emailInput =
             document.getElementById(
-                "registerButton"
+                "email"
             );
-
 
         const passwordInput =
             document.getElementById(
                 "password"
             );
 
-
         const confirmPasswordInput =
             document.getElementById(
                 "confirmPassword"
             );
 
-
-        const togglePassword =
+        const termsInput =
             document.getElementById(
-                "togglePassword"
+                "terms"
+            );
+
+        const registerButton =
+            document.getElementById(
+                "registerButton"
+            );
+
+        const alertBox =
+            document.getElementById(
+                "registerAlert"
             );
 
 
-        const toggleConfirmPassword =
-            document.getElementById(
-                "toggleConfirmPassword"
-            );
+        const apiBase =
+            window.RATION_API_BASE ||
+            "http://localhost:8080/api";
 
 
-        /* -----------------------------------------------------
-           MESSAGE
-           ----------------------------------------------------- */
-
-        function showMessage(
+        function showAlert(
             message,
             type
         ) {
 
-            registerMessage.hidden =
-                false;
-
-            registerMessage.className =
-                "form-message form-message-" +
-                type;
-
-            registerMessage.textContent =
+            alertBox.textContent =
                 message;
 
+            alertBox.className =
+                "alert alert-" +
+                type;
+
+            alertBox.style.display =
+                "block";
+
         }
 
 
-        function hideMessage() {
+        function hideAlert() {
 
-            registerMessage.hidden =
-                true;
-
-            registerMessage.textContent =
+            alertBox.textContent =
                 "";
 
-        }
-
-
-        /* -----------------------------------------------------
-           PASSWORD TOGGLE
-           ----------------------------------------------------- */
-
-        if (togglePassword) {
-
-            togglePassword.addEventListener(
-                "click",
-                function () {
-
-                    const visible =
-                        passwordInput.type === "text";
-
-
-                    passwordInput.type =
-                        visible
-                            ? "password"
-                            : "text";
-
-
-                    togglePassword.textContent =
-                        visible
-                            ? "Show"
-                            : "Hide";
-
-
-                    togglePassword.setAttribute(
-                        "aria-label",
-                        visible
-                            ? "Show password"
-                            : "Hide password"
-                    );
-
-                }
-            );
+            alertBox.style.display =
+                "none";
 
         }
 
 
-        /* -----------------------------------------------------
-           CONFIRM PASSWORD TOGGLE
-           ----------------------------------------------------- */
+        function showFieldError(
+            elementId,
+            message
+        ) {
 
-        if (toggleConfirmPassword) {
-
-            toggleConfirmPassword.addEventListener(
-                "click",
-                function () {
-
-                    const visible =
-                        confirmPasswordInput.type === "text";
-
-
-                    confirmPasswordInput.type =
-                        visible
-                            ? "password"
-                            : "text";
-
-
-                    toggleConfirmPassword.textContent =
-                        visible
-                            ? "Show"
-                            : "Hide";
-
-
-                    toggleConfirmPassword.setAttribute(
-                        "aria-label",
-                        visible
-                            ? "Show confirmation password"
-                            : "Hide confirmation password"
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* -----------------------------------------------------
-           PASSWORD MATCH CHECK
-           ----------------------------------------------------- */
-
-        function validatePasswordMatch() {
-
-            if (
-                passwordInput.value &&
-                confirmPasswordInput.value &&
-                passwordInput.value !==
-                confirmPasswordInput.value
-            ) {
-
-                confirmPasswordInput.setCustomValidity(
-                    "Passwords do not match."
+            const element =
+                document.getElementById(
+                    elementId
                 );
 
-                return false;
 
+            if (!element) {
+                return;
             }
 
 
-            confirmPasswordInput.setCustomValidity(
-                ""
-            );
+            element.textContent =
+                message;
 
-            return true;
+            element.style.display =
+                "block";
 
         }
+
+
+        function hideFieldError(
+            elementId
+        ) {
+
+            const element =
+                document.getElementById(
+                    elementId
+                );
+
+
+            if (!element) {
+                return;
+            }
+
+
+            element.textContent =
+                "";
+
+            element.style.display =
+                "none";
+
+        }
+
+
+        function validateEmail(
+            email
+        ) {
+
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                .test(email);
+
+        }
+
+
+        function togglePasswordField(
+            input,
+            button
+        ) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const isPassword =
+                        input.type ===
+                        "password";
+
+
+                    input.type =
+                        isPassword
+                            ? "text"
+                            : "password";
+
+
+                    button.textContent =
+                        isPassword
+                            ? "Hide"
+                            : "Show";
+
+
+                    button.setAttribute(
+                        "aria-label",
+                        isPassword
+                            ? "Hide password"
+                            : "Show password"
+                    );
+
+                }
+            );
+
+        }
+
+
+        togglePasswordField(
+            passwordInput,
+            document.getElementById(
+                "togglePassword"
+            )
+        );
+
+
+        togglePasswordField(
+            confirmPasswordInput,
+            document.getElementById(
+                "toggleConfirmPassword"
+            )
+        );
+
+
+        nameInput.addEventListener(
+            "input",
+            function () {
+
+                hideFieldError(
+                    "nameError"
+                );
+
+                hideAlert();
+
+            }
+        );
+
+
+        emailInput.addEventListener(
+            "input",
+            function () {
+
+                hideFieldError(
+                    "emailError"
+                );
+
+                hideAlert();
+
+            }
+        );
 
 
         passwordInput.addEventListener(
             "input",
-            validatePasswordMatch
+            function () {
+
+                hideFieldError(
+                    "passwordError"
+                );
+
+                hideFieldError(
+                    "confirmPasswordError"
+                );
+
+                hideAlert();
+
+            }
         );
 
 
         confirmPasswordInput.addEventListener(
             "input",
-            validatePasswordMatch
+            function () {
+
+                hideFieldError(
+                    "confirmPasswordError"
+                );
+
+                hideAlert();
+
+            }
         );
 
 
-        /* -----------------------------------------------------
-           REGISTRATION
-           ----------------------------------------------------- */
+        termsInput.addEventListener(
+            "change",
+            function () {
 
-        registerForm.addEventListener(
+                hideFieldError(
+                    "termsError"
+                );
+
+            }
+        );
+
+
+        form.addEventListener(
             "submit",
-            async function (event) {
+            async function (
+                event
+            ) {
 
                 event.preventDefault();
 
 
-                hideMessage();
+                hideAlert();
+
+                hideFieldError(
+                    "nameError"
+                );
+
+                hideFieldError(
+                    "emailError"
+                );
+
+                hideFieldError(
+                    "passwordError"
+                );
+
+                hideFieldError(
+                    "confirmPasswordError"
+                );
+
+                hideFieldError(
+                    "termsError"
+                );
 
 
                 const name =
-                    document
-                        .getElementById("name")
-                        .value
+                    nameInput.value
                         .trim();
-
 
                 const email =
-                    document
-                        .getElementById("email")
-                        .value
+                    emailInput.value
                         .trim();
-
 
                 const password =
                     passwordInput.value;
-
 
                 const confirmPassword =
                     confirmPasswordInput.value;
 
 
-                const terms =
-                    document
-                        .getElementById("terms")
-                        .checked;
+                let valid =
+                    true;
 
-
-                /* ---------------------------------------------
-                   VALIDATION
-                   --------------------------------------------- */
 
                 if (!name) {
 
-                    showMessage(
-                        "Please enter your full name.",
-                        "error"
+                    showFieldError(
+                        "nameError",
+                        "Please enter your full name."
                     );
 
-                    return;
+                    valid = false;
 
                 }
+                else if (
+                    name.length < 2
+                ) {
 
-
-                if (name.length < 2) {
-
-                    showMessage(
-                        "Please enter a valid full name.",
-                        "error"
+                    showFieldError(
+                        "nameError",
+                        "Please enter a valid name."
                     );
 
-                    return;
+                    valid = false;
 
                 }
 
 
                 if (!email) {
 
-                    showMessage(
-                        "Please enter your email address.",
-                        "error"
+                    showFieldError(
+                        "emailError",
+                        "Please enter your email address."
                     );
 
-                    return;
+                    valid = false;
+
+                }
+                else if (
+                    !validateEmail(
+                        email
+                    )
+                ) {
+
+                    showFieldError(
+                        "emailError",
+                        "Please enter a valid email address."
+                    );
+
+                    valid = false;
 
                 }
 
 
                 if (!password) {
 
-                    showMessage(
-                        "Please create a password.",
-                        "error"
+                    showFieldError(
+                        "passwordError",
+                        "Please create a password."
                     );
 
-                    return;
+                    valid = false;
 
                 }
+                else if (
+                    password.length < 6
+                ) {
 
-
-                if (password.length < 6) {
-
-                    showMessage(
-                        "Password must contain at least 6 characters.",
-                        "error"
+                    showFieldError(
+                        "passwordError",
+                        "Password must contain at least 6 characters."
                     );
 
-                    return;
+                    valid = false;
 
                 }
 
 
                 if (
+                    !confirmPassword
+                ) {
+
+                    showFieldError(
+                        "confirmPasswordError",
+                        "Please confirm your password."
+                    );
+
+                    valid = false;
+
+                }
+                else if (
                     password !==
                     confirmPassword
                 ) {
 
-                    showMessage(
-                        "Passwords do not match.",
-                        "error"
+                    showFieldError(
+                        "confirmPasswordError",
+                        "Passwords do not match."
                     );
 
-                    return;
+                    valid = false;
 
                 }
 
 
-                if (!terms) {
+                if (
+                    !termsInput.checked
+                ) {
 
-                    showMessage(
-                        "Please accept the project usage statement to continue.",
-                        "error"
+                    showFieldError(
+                        "termsError",
+                        "Please accept the registration declaration."
                     );
 
-                    return;
+                    valid = false;
 
                 }
 
 
-                /* ---------------------------------------------
-                   LOADING
-                   --------------------------------------------- */
+                if (!valid) {
+                    return;
+                }
+
+
+                const originalText =
+                    registerButton.textContent;
+
 
                 registerButton.disabled =
                     true;
 
-
-                registerButton.innerHTML =
-                    `
-                    <span>
-                        Creating Account...
-                    </span>
-                    `;
+                registerButton.textContent =
+                    "Creating account...";
 
 
                 try {
 
-                    /* -----------------------------------------
-                       REGISTER REQUEST
-                       ----------------------------------------- */
-
                     const response =
                         await fetch(
-                            `${API}/auth/register`,
+                            apiBase +
+                            "/auth/register",
                             {
                                 method: "POST",
 
                                 headers: {
                                     "Content-Type":
+                                        "application/json",
+
+                                    "Accept":
                                         "application/json"
                                 },
 
                                 body:
-                                    JSON.stringify({
-                                        name:
-                                            name,
+                                    JSON.stringify(
+                                        {
+                                            name:
+                                                name,
 
-                                        email:
-                                            email,
+                                            email:
+                                                email,
 
-                                        password:
-                                            password
-                                    })
+                                            password:
+                                                password
+                                        }
+                                    )
                             }
                         );
 
 
-                    let data = null;
+                    let data =
+                        null;
 
 
                     try {
@@ -921,43 +1107,48 @@
                         data =
                             await response.json();
 
-                    } catch (error) {
+                    }
+                    catch (
+                        jsonError
+                    ) {
 
-                        data = null;
+                        data =
+                            null;
 
                     }
 
 
-                    /* -----------------------------------------
-                       ERROR
-                       ----------------------------------------- */
-
                     if (!response.ok) {
 
-                        const errorMessage =
-                            data?.message ||
-                            data?.error ||
-                            "Registration failed. Please try again.";
-
+                        const message =
+                            data &&
+                            (
+                                data.message ||
+                                data.error
+                            )
+                                ? (
+                                    data.message ||
+                                    data.error
+                                )
+                                : response.status === 409
+                                    ? "An account with this email already exists."
+                                    : "Registration failed. Please try again.";
 
                         throw new Error(
-                            errorMessage
+                            message
                         );
 
                     }
 
 
-                    /* -----------------------------------------
-                       SUCCESS
-                       ----------------------------------------- */
-
-                    showMessage(
-                        "Your account has been created successfully. Redirecting to login...",
+                    showAlert(
+                        "Account created successfully. Redirecting to login...",
                         "success"
                     );
 
 
-                    registerForm.reset();
+                    registerButton.textContent =
+                        "Account created";
 
 
                     setTimeout(
@@ -967,11 +1158,13 @@
                                 "login.html";
 
                         },
-                        1500
+                        900
                     );
 
-
-                } catch (error) {
+                }
+                catch (
+                    error
+                ) {
 
                     console.error(
                         "Registration error:",
@@ -979,30 +1172,18 @@
                     );
 
 
-                    showMessage(
+                    showAlert(
                         error.message ||
-                        "Unable to create your account. Please try again.",
-                        "error"
+                        "Unable to connect to the registration service.",
+                        "danger"
                     );
 
 
                     registerButton.disabled =
                         false;
 
-
-                    registerButton.innerHTML =
-                        `
-                        <span>
-                            Create Citizen Account
-                        </span>
-
-                        <span
-                            class="btn-arrow"
-                            aria-hidden="true"
-                        >
-                            →
-                        </span>
-                        `;
+                    registerButton.textContent =
+                        originalText;
 
                 }
 
@@ -1010,25 +1191,43 @@
         );
 
 
-        /* -----------------------------------------------------
-           CURRENT YEAR
-           ----------------------------------------------------- */
-
-        document
-            .querySelectorAll(
-                "[data-current-year]"
-            )
-            .forEach(
-                function (element) {
-
-                    element.textContent =
-                        new Date()
-                            .getFullYear();
-
-                }
+        const currentYear =
+            document.getElementById(
+                "currentYear"
             );
 
-    </script>
+
+        if (currentYear) {
+
+            currentYear.textContent =
+                new Date()
+                    .getFullYear();
+
+        }
+
+
+        /*
+         * If the citizen already has an active session,
+         * take them back to the portal instead of showing
+         * the registration screen.
+         */
+
+        const existingToken =
+            localStorage.getItem(
+                "rationPortalToken"
+            );
+
+
+        if (existingToken) {
+
+            window.location.href =
+                "../index.html";
+
+        }
+
+    }
+);
+</script>
 
 </body>
 </html>

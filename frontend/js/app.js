@@ -1,848 +1,68 @@
 /* =========================================================
-   RATION PORTAL — MAIN APPLICATION JAVASCRIPT
+   RATION PORTAL - MAIN APPLICATION JAVASCRIPT
+   File: frontend/js/app.js
+   Purpose:
+   - Authentication UI
+   - Profile menu
+   - Logout
+   - Theme handling
+   - Ration card search
+   - Home-page search
+   - Mobile navigation
+   - Common API helpers
    ========================================================= */
 
 (function () {
     "use strict";
 
-    /* ---------------------------------------------------------
-       API CONFIGURATION
-       --------------------------------------------------------- */
+    /* =====================================================
+       CONFIGURATION
+       ===================================================== */
 
-    const API =
+    const API_BASE =
         window.RATION_API_BASE ||
         "https://ration-portal-backend.onrender.com/api";
 
     const TOKEN_KEY = "rationPortalToken";
     const USER_KEY = "rationPortalUser";
 
+    /* =====================================================
+       COMMON HELPERS
+       ===================================================== */
 
-    /* ---------------------------------------------------------
-       AUTHENTICATION UI
-       --------------------------------------------------------- */
-
-    function initializeAuthUI() {
-
-        const authArea = document.getElementById("authArea");
-
-        if (!authArea) {
-            return;
-        }
-
-        const token = sessionStorage.getItem(TOKEN_KEY);
-        const storedUser = sessionStorage.getItem(USER_KEY);
-
-        let user = null;
-
-        if (storedUser) {
-            try {
-                user = JSON.parse(storedUser);
-            } catch (error) {
-                console.warn("Unable to read stored user information.");
-            }
-        }
-
-        /* ---------------------------------------------
-           NOT LOGGED IN
-           --------------------------------------------- */
-
-        if (!token) {
-
-            authArea.innerHTML = `
-                <a href="pages/login.html" class="nav-login-btn">
-                    <span class="nav-login-icon">↪</span>
-                    <span>Citizen Login</span>
-                </a>
-            `;
-
-            return;
-        }
-
-
-        /* ---------------------------------------------
-           LOGGED IN
-           --------------------------------------------- */
-
-        const name =
-            user?.name ||
-            user?.fullName ||
-            user?.username ||
-            user?.email ||
-            "Citizen";
-
-        const role =
-            user?.role ||
-            "CITIZEN";
-
-        const initials = getInitials(name);
-
-        authArea.innerHTML = `
-            <div class="profile-menu-wrapper">
-
-                <button
-                    type="button"
-                    class="profile-trigger"
-                    id="profileTrigger"
-                    aria-expanded="false"
-                    aria-haspopup="true"
-                >
-
-                    <span class="profile-avatar">
-                        ${escapeHtml(initials)}
-                    </span>
-
-                    <span class="profile-trigger-text">
-                        <strong>${escapeHtml(name)}</strong>
-                        <small>${escapeHtml(role)}</small>
-                    </span>
-
-                    <span class="profile-arrow">⌄</span>
-
-                </button>
-
-
-                <div
-                    class="profile-dropdown"
-                    id="profileDropdown"
-                    hidden
-                >
-
-                    <div class="profile-dropdown-header">
-
-                        <span class="profile-avatar profile-avatar-large">
-                            ${escapeHtml(initials)}
-                        </span>
-
-                        <div>
-                            <strong>${escapeHtml(name)}</strong>
-                            <small>${escapeHtml(role)}</small>
-                        </div>
-
-                    </div>
-
-
-                    <div class="profile-dropdown-divider"></div>
-
-
-                    <a href="#" class="profile-menu-item" data-profile-action="account">
-                        <span class="profile-menu-icon">◉</span>
-                        <span>Account</span>
-                    </a>
-
-
-                    <button
-                        type="button"
-                        class="profile-menu-item"
-                        data-profile-action="theme"
-                    >
-                        <span class="profile-menu-icon">◐</span>
-                        <span>Theme</span>
-                    </button>
-
-
-                    <div class="profile-dropdown-divider"></div>
-
-
-                    <button
-                        type="button"
-                        class="profile-menu-item profile-logout"
-                        data-profile-action="logout"
-                    >
-                        <span class="profile-menu-icon">↪</span>
-                        <span>Log out</span>
-                    </button>
-
-                </div>
-
-            </div>
-        `;
-
-
-        setupProfileMenu();
+    function getToken() {
+        return localStorage.getItem(TOKEN_KEY);
     }
-
-
-    /* ---------------------------------------------------------
-       PROFILE MENU
-       --------------------------------------------------------- */
-
-    function setupProfileMenu() {
-
-        const trigger = document.getElementById("profileTrigger");
-        const dropdown = document.getElementById("profileDropdown");
-
-        if (!trigger || !dropdown) {
-            return;
-        }
-
-
-        trigger.addEventListener("click", function (event) {
-
-            event.stopPropagation();
-
-            const isOpen =
-                trigger.getAttribute("aria-expanded") === "true";
-
-            trigger.setAttribute(
-                "aria-expanded",
-                String(!isOpen)
-            );
-
-            dropdown.hidden = isOpen;
-
-        });
-
-
-        document.addEventListener("click", function (event) {
-
-            if (
-                !dropdown.contains(event.target) &&
-                !trigger.contains(event.target)
-            ) {
-                closeProfileMenu();
-            }
-
-        });
-
-
-        document.addEventListener("keydown", function (event) {
-
-            if (event.key === "Escape") {
-                closeProfileMenu();
-            }
-
-        });
-
-
-        dropdown.addEventListener("click", function (event) {
-
-            const actionElement =
-                event.target.closest("[data-profile-action]");
-
-            if (!actionElement) {
-                return;
-            }
-
-            const action =
-                actionElement.getAttribute("data-profile-action");
-
-            if (action === "logout") {
-
-                event.preventDefault();
-
-                logout();
-
-            } else if (action === "theme") {
-
-                event.preventDefault();
-
-                toggleTheme();
-
-            } else if (action === "account") {
-
-                event.preventDefault();
-
-                closeProfileMenu();
-
-                showAccountMessage();
-
-            }
-
-        });
-
-    }
-
-
-    function closeProfileMenu() {
-
-        const trigger = document.getElementById("profileTrigger");
-        const dropdown = document.getElementById("profileDropdown");
-
-        if (!trigger || !dropdown) {
-            return;
-        }
-
-        trigger.setAttribute("aria-expanded", "false");
-        dropdown.hidden = true;
-
-    }
-
-
-    /* ---------------------------------------------------------
-       LOGOUT
-       --------------------------------------------------------- */
-
-    function logout() {
-
-        sessionStorage.removeItem(TOKEN_KEY);
-        sessionStorage.removeItem(USER_KEY);
-
-        window.location.href = "index.html";
-
-    }
-
-
-    /* ---------------------------------------------------------
-       THEME
-       --------------------------------------------------------- */
-
-    function toggleTheme() {
-
-        const currentTheme =
-            document.documentElement.getAttribute("data-theme");
-
-        const newTheme =
-            currentTheme === "dark" ? "light" : "dark";
-
-        document.documentElement.setAttribute(
-            "data-theme",
-            newTheme
-        );
-
-        localStorage.setItem(
-            "rationPortalTheme",
-            newTheme
-        );
-
-        closeProfileMenu();
-
-    }
-
-
-    function loadSavedTheme() {
-
-        const savedTheme =
-            localStorage.getItem("rationPortalTheme");
-
-        if (savedTheme === "dark" || savedTheme === "light") {
-
-            document.documentElement.setAttribute(
-                "data-theme",
-                savedTheme
-            );
-
-        }
-
-    }
-
-
-    /* ---------------------------------------------------------
-       ACCOUNT MESSAGE
-       --------------------------------------------------------- */
-
-    function showAccountMessage() {
-
-        const user =
-            getStoredUser();
-
-        const name =
-            user?.name ||
-            user?.fullName ||
-            user?.username ||
-            "Citizen";
-
-        const role =
-            user?.role ||
-            "CITIZEN";
-
-        alert(
-            "Citizen Account\n\n" +
-            "Name: " + name + "\n" +
-            "Role: " + role
-        );
-
-    }
-
-
-    /* ---------------------------------------------------------
-       RATION CARD SEARCH
-       --------------------------------------------------------- */
-
-    async function trackCard() {
-
-        const input =
-            document.getElementById("rationNumber");
-
-        const result =
-            document.getElementById("result");
-
-        if (!input || !result) {
-            return;
-        }
-
-
-        const rationNumber =
-            input.value.trim();
-
-
-        /* ---------------------------------------------
-           EMPTY INPUT
-           --------------------------------------------- */
-
-        if (!rationNumber) {
-
-            result.innerHTML = `
-                <div class="search-message search-warning">
-                    <strong>Ration Card Number Required</strong>
-                    <p>
-                        Please enter a valid ration card number
-                        to continue.
-                    </p>
-                </div>
-            `;
-
-            return;
-        }
-
-
-        /* ---------------------------------------------
-           LOADING
-           --------------------------------------------- */
-
-        result.innerHTML = `
-            <div class="search-message search-loading">
-                <div class="loading-spinner"></div>
-                <strong>Searching ration card...</strong>
-                <p>Please wait while we retrieve the details.</p>
-            </div>
-        `;
-
-
-        try {
-
-            const response = await fetch(
-                `${API}/ration-cards/${encodeURIComponent(rationNumber)}`
-            );
-
-
-            /* -----------------------------------------
-               UNAUTHORIZED
-               ----------------------------------------- */
-
-            if (response.status === 401) {
-
-                sessionStorage.removeItem(TOKEN_KEY);
-                sessionStorage.removeItem(USER_KEY);
-
-                window.location.href =
-                    "pages/login.html?redirect=" +
-                    encodeURIComponent(
-                        window.location.pathname +
-                        window.location.search
-                    );
-
-                return;
-            }
-
-
-            /* -----------------------------------------
-               NOT FOUND
-               ----------------------------------------- */
-
-            if (response.status === 404) {
-
-                result.innerHTML = `
-                    <div class="search-message search-error">
-                        <strong>Ration Card Not Found</strong>
-                        <p>
-                            No ration card was found for
-                            <strong>${escapeHtml(rationNumber)}</strong>.
-                        </p>
-                    </div>
-                `;
-
-                return;
-            }
-
-
-            /* -----------------------------------------
-               OTHER SERVER ERROR
-               ----------------------------------------- */
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Server returned status " +
-                    response.status
-                );
-
-            }
-
-
-            const data =
-                await response.json();
-
-
-            /* -----------------------------------------
-               DISPLAY RESULT
-               ----------------------------------------- */
-
-            displayRationCard(data);
-
-        } catch (error) {
-
-            console.error(
-                "Ration card search error:",
-                error
-            );
-
-
-            result.innerHTML = `
-                <div class="search-message search-error">
-                    <strong>Unable to Retrieve Details</strong>
-                    <p>
-                        The ration service could not be reached.
-                        Please try again after some time.
-                    </p>
-                </div>
-            `;
-
-        }
-
-    }
-
-
-    /* ---------------------------------------------------------
-       DISPLAY RATION CARD
-       --------------------------------------------------------- */
-
-    function displayRationCard(data) {
-
-        const result =
-            document.getElementById("result");
-
-        if (!result) {
-            return;
-        }
-
-
-        const rationCardNumber =
-            data.rationCardNumber ??
-            data.Ration_id ??
-            data.ration_id ??
-            "—";
-
-
-        const cardType =
-            data.cardType ??
-            data.type ??
-            "—";
-
-
-        const headOfFamily =
-            data.headOfFamily ??
-            data.Name ??
-            data.name ??
-            "—";
-
-
-        const district =
-            data.district ??
-            "—";
-
-
-        const state =
-            data.state ??
-            "Telangana";
-
-
-        const status =
-            data.status ??
-            "ACTIVE";
-
-
-        const statusClass =
-            String(status).toUpperCase() === "ACTIVE"
-                ? "status-active"
-                : "status-default";
-
-
-        result.innerHTML = `
-
-            <div class="ration-result-card">
-
-                <div class="ration-result-header">
-
-                    <div>
-                        <span class="result-eyebrow">
-                            RATION CARD DETAILS
-                        </span>
-
-                        <h3>
-                            ${escapeHtml(String(rationCardNumber))}
-                        </h3>
-                    </div>
-
-                    <span class="ration-status ${statusClass}">
-                        ${escapeHtml(String(status))}
-                    </span>
-
-                </div>
-
-
-                <div class="ration-result-grid">
-
-                    <div class="result-field">
-
-                        <span class="result-field-label">
-                            Ration Card Number
-                        </span>
-
-                        <strong>
-                            ${escapeHtml(String(rationCardNumber))}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="result-field">
-
-                        <span class="result-field-label">
-                            Card Type
-                        </span>
-
-                        <strong>
-                            ${escapeHtml(String(cardType))}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="result-field">
-
-                        <span class="result-field-label">
-                            Head of Family
-                        </span>
-
-                        <strong>
-                            ${escapeHtml(String(headOfFamily))}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="result-field">
-
-                        <span class="result-field-label">
-                            District
-                        </span>
-
-                        <strong>
-                            ${escapeHtml(String(district))}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="result-field">
-
-                        <span class="result-field-label">
-                            State
-                        </span>
-
-                        <strong>
-                            ${escapeHtml(String(state))}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="result-field">
-
-                        <span class="result-field-label">
-                            Status
-                        </span>
-
-                        <strong class="${statusClass}">
-                            ${escapeHtml(String(status))}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </div>
-        `;
-
-    }
-
-
-    /* ---------------------------------------------------------
-       SEARCH FORM EVENT
-       --------------------------------------------------------- */
-
-    function initializeSearchForm() {
-
-        const form =
-            document.getElementById("rationSearchForm");
-
-        if (form) {
-
-            form.addEventListener(
-                "submit",
-                function (event) {
-
-                    event.preventDefault();
-
-                    trackCard();
-
-                }
-            );
-
-        }
-
-
-        const searchButton =
-            document.getElementById("searchButton");
-
-        if (
-            searchButton &&
-            !form
-        ) {
-
-            searchButton.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-                    trackCard();
-
-                }
-            );
-
-        }
-
-
-        const input =
-            document.getElementById("rationNumber");
-
-        if (input) {
-
-            input.addEventListener(
-                "keydown",
-                function (event) {
-
-                    if (event.key === "Enter") {
-
-                        event.preventDefault();
-
-                        trackCard();
-
-                    }
-
-                }
-            );
-
-        }
-
-    }
-
-
-    /* ---------------------------------------------------------
-       MOBILE NAVIGATION
-       --------------------------------------------------------- */
-
-    function initializeMobileNavigation() {
-
-        const menuButton =
-            document.getElementById("mobileMenuButton");
-
-        const navigation =
-            document.getElementById("mainNavigation");
-
-        if (!menuButton || !navigation) {
-            return;
-        }
-
-
-        menuButton.addEventListener(
-            "click",
-            function () {
-
-                const expanded =
-                    menuButton.getAttribute("aria-expanded") === "true";
-
-                menuButton.setAttribute(
-                    "aria-expanded",
-                    String(!expanded)
-                );
-
-                navigation.classList.toggle(
-                    "mobile-nav-open"
-                );
-
-            }
-        );
-
-    }
-
-
-    /* ---------------------------------------------------------
-       STORED USER
-       --------------------------------------------------------- */
 
     function getStoredUser() {
-
-        const stored =
-            sessionStorage.getItem(USER_KEY);
-
-        if (!stored) {
-            return null;
-        }
-
         try {
-
-            return JSON.parse(stored);
-
+            const rawUser = localStorage.getItem(USER_KEY);
+            return rawUser ? JSON.parse(rawUser) : null;
         } catch (error) {
-
+            console.error("Unable to read stored user:", error);
             return null;
-
         }
-
     }
 
-
-    /* ---------------------------------------------------------
-       INITIALS
-       --------------------------------------------------------- */
-
-    function getInitials(name) {
-
-        if (!name) {
-            return "C";
+    function setStoredUser(user) {
+        if (!user) {
+            localStorage.removeItem(USER_KEY);
+            return;
         }
 
-        const words =
-            String(name)
-                .trim()
-                .split(/\s+/)
-                .filter(Boolean);
-
-
-        if (words.length === 1) {
-
-            return words[0]
-                .substring(0, 2)
-                .toUpperCase();
-
-        }
-
-
-        return (
-            words[0].charAt(0) +
-            words[words.length - 1].charAt(0)
-        ).toUpperCase();
-
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
     }
 
-
-    /* ---------------------------------------------------------
-       HTML ESCAPING
-       --------------------------------------------------------- */
+    function clearAuthentication() {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
+        sessionStorage.removeItem("rationPortalRedirect");
+    }
 
     function escapeHtml(value) {
+        if (value === null || value === undefined) {
+            return "";
+        }
 
         return String(value)
             .replace(/&/g, "&amp;")
@@ -850,35 +70,675 @@
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-
     }
 
+    function formatValue(value, fallback) {
+        if (
+            value === null ||
+            value === undefined ||
+            String(value).trim() === ""
+        ) {
+            return fallback || "Not available";
+        }
 
-    /* ---------------------------------------------------------
-       GLOBAL FUNCTIONS
-       --------------------------------------------------------- */
+        return escapeHtml(value);
+    }
+
+    function getPagePath(page) {
+        const currentPage = window.location.pathname;
+
+        if (
+            currentPage.includes("/pages/") &&
+            !page.startsWith("../")
+        ) {
+            return page;
+        }
+
+        return page;
+    }
+
+    function navigateTo(url) {
+        window.location.href = url;
+    }
+
+    /* =====================================================
+       API HELPER
+       ===================================================== */
+
+    async function apiFetch(endpoint, options) {
+        const requestOptions = options || {};
+        const headers = new Headers(requestOptions.headers || {});
+
+        const token = getToken();
+
+        if (token) {
+            headers.set("Authorization", "Bearer " + token);
+        }
+
+        if (
+            requestOptions.body &&
+            typeof requestOptions.body === "object" &&
+            !(requestOptions.body instanceof FormData) &&
+            !headers.has("Content-Type")
+        ) {
+            headers.set("Content-Type", "application/json");
+        }
+
+        const response = await fetch(
+            API_BASE + endpoint,
+            {
+                ...requestOptions,
+                headers: headers
+            }
+        );
+
+        if (response.status === 401) {
+            clearAuthentication();
+
+            const currentPath = window.location.pathname;
+
+            if (
+                !currentPath.endsWith("/login.html") &&
+                !currentPath.endsWith("/")
+            ) {
+                sessionStorage.setItem(
+                    "rationPortalRedirect",
+                    window.location.href
+                );
+
+                navigateTo(
+                    currentPath.includes("/pages/")
+                        ? "login.html"
+                        : "pages/login.html"
+                );
+            }
+        }
+
+        return response;
+    }
+
+    /* =====================================================
+       PROFILE / AUTHENTICATION UI
+       ===================================================== */
+
+    function updateAuthenticationUI() {
+        const token = getToken();
+        const user = getStoredUser();
+
+        const loginLinks =
+            document.querySelectorAll("[data-auth-login]");
+
+        const registerLinks =
+            document.querySelectorAll("[data-auth-register]");
+
+        const logoutButtons =
+            document.querySelectorAll("[data-auth-logout]");
+
+        const profileNames =
+            document.querySelectorAll("[data-profile-name]");
+
+        const profileEmails =
+            document.querySelectorAll("[data-profile-email]");
+
+        const profileMenus =
+            document.querySelectorAll("[data-profile-menu]");
+
+        if (token) {
+            loginLinks.forEach(function (element) {
+                element.style.display = "none";
+            });
+
+            registerLinks.forEach(function (element) {
+                element.style.display = "none";
+            });
+
+            logoutButtons.forEach(function (element) {
+                element.style.display = "";
+            });
+
+            profileMenus.forEach(function (element) {
+                element.style.display = "";
+            });
+
+            profileNames.forEach(function (element) {
+                element.textContent =
+                    user && user.name
+                        ? user.name
+                        : user && user.email
+                            ? user.email
+                            : "Citizen";
+            });
+
+            profileEmails.forEach(function (element) {
+                element.textContent =
+                    user && user.email
+                        ? user.email
+                        : "";
+            });
+        } else {
+            loginLinks.forEach(function (element) {
+                element.style.display = "";
+            });
+
+            registerLinks.forEach(function (element) {
+                element.style.display = "";
+            });
+
+            logoutButtons.forEach(function (element) {
+                element.style.display = "none";
+            });
+
+            profileMenus.forEach(function (element) {
+                element.style.display = "none";
+            });
+        }
+    }
+
+    function setupProfileMenu() {
+        const profileButtons =
+            document.querySelectorAll("[data-profile-button]");
+
+        profileButtons.forEach(function (button) {
+            button.addEventListener("click", function (event) {
+                event.stopPropagation();
+
+                const menu =
+                    button.closest("[data-profile-menu]");
+
+                if (!menu) {
+                    return;
+                }
+
+                const dropdown =
+                    menu.querySelector("[data-profile-dropdown]");
+
+                if (!dropdown) {
+                    return;
+                }
+
+                dropdown.classList.toggle("open");
+            });
+        });
+
+        document.addEventListener("click", function () {
+            document
+                .querySelectorAll("[data-profile-dropdown]")
+                .forEach(function (dropdown) {
+                    dropdown.classList.remove("open");
+                });
+        });
+
+        document
+            .querySelectorAll("[data-profile-dropdown]")
+            .forEach(function (dropdown) {
+                dropdown.addEventListener(
+                    "click",
+                    function (event) {
+                        event.stopPropagation();
+                    }
+                );
+            });
+    }
+
+    function logout() {
+        clearAuthentication();
+
+        showNotification(
+            "You have been logged out successfully.",
+            "success"
+        );
+
+        setTimeout(function () {
+            const currentPath = window.location.pathname;
+
+            if (currentPath.includes("/pages/")) {
+                navigateTo("login.html");
+            } else {
+                navigateTo("pages/login.html");
+            }
+        }, 500);
+    }
+
+    function setupLogoutButtons() {
+        document
+            .querySelectorAll("[data-auth-logout]")
+            .forEach(function (button) {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    logout();
+                });
+            });
+    }
+
+    /* =====================================================
+       RATION CARD SEARCH
+       ===================================================== */
+
+    async function searchRationCard(rationNumber) {
+        const cleanNumber =
+            String(rationNumber || "").trim();
+
+        if (!cleanNumber) {
+            throw new Error("EMPTY_RATION_NUMBER");
+        }
+
+        const response = await apiFetch(
+            "/ration-cards/" +
+                encodeURIComponent(cleanNumber),
+            {
+                method: "GET"
+            }
+        );
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error("RATION_CARD_NOT_FOUND");
+            }
+
+            throw new Error("RATION_CARD_REQUEST_FAILED");
+        }
+
+        return response.json();
+    }
+
+    function renderRationCardResult(card, resultElement) {
+        if (!resultElement) {
+            return;
+        }
+
+        const rationCardNumber =
+            card.rationCardNumber ||
+            card.rationNumber ||
+            card.cardNumber;
+
+        const cardType = card.cardType;
+        const headOfFamily =
+            card.headOfFamily ||
+            card.headOfFamilyName;
+
+        const address = card.address;
+        const district = card.district;
+        const state = card.state;
+        const status = card.status;
+
+        resultElement.innerHTML = `
+            <div class="card card-padding">
+                <div class="section-title">
+                    <span>SEARCH RESULT</span>
+                    <h2>Ration Card Details</h2>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Ration Card Number</label>
+                        <div class="form-control">
+                            ${formatValue(
+                                rationCardNumber,
+                                "Not available"
+                            )}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Card Type</label>
+                        <div class="form-control">
+                            ${formatValue(
+                                cardType,
+                                "Not available"
+                            )}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Head of Family</label>
+                        <div class="form-control">
+                            ${formatValue(
+                                headOfFamily,
+                                "Not available"
+                            )}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>District</label>
+                        <div class="form-control">
+                            ${formatValue(
+                                district,
+                                "Not available"
+                            )}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>State</label>
+                        <div class="form-control">
+                            ${formatValue(
+                                state,
+                                "Not available"
+                            )}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="form-control">
+                            ${formatValue(
+                                status,
+                                "Not available"
+                            )}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        `;
+    }
+
+    async function trackCard() {
+        const input =
+            document.getElementById("rationNumber");
+
+        const result =
+            document.getElementById("trackResult");
+
+        if (!input || !result) {
+            return;
+        }
+
+        const rationNumber = input.value.trim();
+
+        if (!rationNumber) {
+            result.innerHTML = `
+                <div class="alert alert-warning">
+                    Please enter a ration card number.
+                </div>
+            `;
+            input.focus();
+            return;
+        }
+
+        result.innerHTML = `
+            <div class="loading">
+                <span class="loading-spinner"></span>
+                <span>Searching ration card...</span>
+            </div>
+        `;
+
+        try {
+            const card =
+                await searchRationCard(rationNumber);
+
+            renderRationCardResult(card, result);
+
+            result.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+        } catch (error) {
+            console.error(
+                "Ration card search failed:",
+                error
+            );
+
+            if (
+                error.message ===
+                "RATION_CARD_NOT_FOUND"
+            ) {
+                result.innerHTML = `
+                    <div class="alert alert-warning">
+                        Ration card not found. Please check the
+                        ration card number and try again.
+                    </div>
+                `;
+            } else {
+                result.innerHTML = `
+                    <div class="alert alert-danger">
+                        Unable to retrieve ration card details.
+                        Please try again later.
+                    </div>
+                `;
+            }
+        }
+    }
 
     window.trackCard = trackCard;
-    window.logout = logout;
 
+    function setupRationSearch() {
+        const input =
+            document.getElementById("rationNumber");
 
-    /* ---------------------------------------------------------
-       PAGE INITIALIZATION
-       --------------------------------------------------------- */
+        const button =
+            document.querySelector(
+                "[data-ration-search]"
+            );
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            loadSavedTheme();
-
-            initializeAuthUI();
-
-            initializeSearchForm();
-
-            initializeMobileNavigation();
-
+        if (input) {
+            input.addEventListener(
+                "keydown",
+                function (event) {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        trackCard();
+                    }
+                }
+            );
         }
-    );
+
+        if (button) {
+            button.addEventListener(
+                "click",
+                function (event) {
+                    event.preventDefault();
+                    trackCard();
+                }
+            );
+        }
+    }
+
+    /* =====================================================
+       THEME
+       ===================================================== */
+
+    function setupTheme() {
+        const themeButtons =
+            document.querySelectorAll(
+                "[data-theme-toggle]"
+            );
+
+        const savedTheme =
+            localStorage.getItem("rationPortalTheme");
+
+        if (savedTheme === "dark") {
+            document.body.classList.add("dark-theme");
+        }
+
+        themeButtons.forEach(function (button) {
+            button.addEventListener(
+                "click",
+                function () {
+                    document.body.classList.toggle(
+                        "dark-theme"
+                    );
+
+                    const darkMode =
+                        document.body.classList.contains(
+                            "dark-theme"
+                        );
+
+                    localStorage.setItem(
+                        "rationPortalTheme",
+                        darkMode ? "dark" : "light"
+                    );
+                }
+            );
+        });
+    }
+
+    /* =====================================================
+       MOBILE NAVIGATION
+       ===================================================== */
+
+    function setupMobileNavigation() {
+        const menuButtons =
+            document.querySelectorAll(
+                "[data-mobile-menu-toggle]"
+            );
+
+        menuButtons.forEach(function (button) {
+            button.addEventListener(
+                "click",
+                function () {
+                    const targetSelector =
+                        button.getAttribute(
+                            "data-mobile-menu-toggle"
+                        );
+
+                    let menu = null;
+
+                    if (targetSelector) {
+                        menu =
+                            document.querySelector(
+                                targetSelector
+                            );
+                    }
+
+                    if (!menu) {
+                        menu =
+                            document.querySelector(
+                                ".main-nav"
+                            );
+                    }
+
+                    if (!menu) {
+                        return;
+                    }
+
+                    menu.classList.toggle("open");
+
+                    const expanded =
+                        menu.classList.contains(
+                            "open"
+                        );
+
+                    button.setAttribute(
+                        "aria-expanded",
+                        String(expanded)
+                    );
+                }
+            );
+        });
+
+        document
+            .querySelectorAll(".main-nav a")
+            .forEach(function (link) {
+                link.addEventListener(
+                    "click",
+                    function () {
+                        const nav =
+                            link.closest(".main-nav");
+
+                        if (nav) {
+                            nav.classList.remove(
+                                "open"
+                            );
+                        }
+                    }
+                );
+            });
+    }
+
+    /* =====================================================
+       QUICK SERVICE NAVIGATION
+       ===================================================== */
+
+    function setupServiceLinks() {
+        document
+            .querySelectorAll("[data-service-url]")
+            .forEach(function (element) {
+                element.addEventListener(
+                    "click",
+                    function () {
+                        const url =
+                            element.getAttribute(
+                                "data-service-url"
+                            );
+
+                        if (url) {
+                            navigateTo(url);
+                        }
+                    }
+                );
+            });
+    }
+
+    /* =====================================================
+       PROFILE DATA REFRESH
+       ===================================================== */
+
+    function refreshProfileData() {
+        const user = getStoredUser();
+
+        if (!user) {
+            return;
+        }
+
+        document
+            .querySelectorAll("[data-profile-name]")
+            .forEach(function (element) {
+                element.textContent =
+                    user.name ||
+                    user.email ||
+                    "Citizen";
+            });
+
+        document
+            .querySelectorAll("[data-profile-email]")
+            .forEach(function (element) {
+                element.textContent =
+                    user.email || "";
+            });
+    }
+
+    /* =====================================================
+       CURRENT USER HELPER
+       ===================================================== */
+
+    function isAuthenticated() {
+        return Boolean(getToken());
+    }
+
+    window.rationPortalAuth = {
+        getToken: getToken,
+        getUser: getStoredUser,
+        isAuthenticated: isAuthenticated,
+        logout: logout,
+        apiFetch: apiFetch
+    };
+
+    /* =====================================================
+       INITIALIZATION
+       ===================================================== */
+
+    function initializeApp() {
+        updateAuthenticationUI();
+        refreshProfileData();
+
+        setupProfileMenu();
+        setupLogoutButtons();
+        setupRationSearch();
+        setupTheme();
+        setupMobileNavigation();
+        setupServiceLinks();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeApp
+        );
+    } else {
+        initializeApp();
+    }
 
 })();
