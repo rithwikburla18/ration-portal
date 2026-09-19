@@ -1,1 +1,2 @@
-window.RATION_API_BASE = window.RATION_API_BASE || "http://localhost:8080/api";
+window.RATION_API_BASE = window.RATION_API_BASE || "https://ration-portal-backend.onrender.com/api";
+
