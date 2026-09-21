@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    RATION PORTAL - AUTHENTICATION GUARD
    File: frontend/js/auth-guard.js
 
@@ -38,8 +38,7 @@
 
     function getUser() {
         try {
-            const rawUser =
-                localStorage.getItem(USER_KEY);
+            const rawUser = localStorage.getItem(USER_KEY);
 
             return rawUser
                 ? JSON.parse(rawUser)
@@ -82,26 +81,20 @@
     }
 
     function isPublicPage() {
-        const currentPage =
-            getCurrentPage();
+        const currentPage = getCurrentPage();
 
-        return PUBLIC_PAGES.some(
-            function (page) {
-                return (
-                    currentPage === page ||
-                    currentPage.endsWith(page)
-                );
-            }
-        );
+        return PUBLIC_PAGES.some(function (page) {
+            return (
+                currentPage === page ||
+                currentPage.endsWith(page)
+            );
+        });
     }
 
     function getLoginUrl() {
-        const currentPage =
-            getCurrentPage();
+        const currentPage = getCurrentPage();
 
-        if (
-            currentPage.includes("/pages/")
-        ) {
+        if (currentPage.includes("/pages/")) {
             return "login.html";
         }
 
@@ -117,16 +110,14 @@
             return;
         }
 
-        const currentUrl =
-            window.location.href;
+        const currentUrl = window.location.href;
 
         sessionStorage.setItem(
             REDIRECT_KEY,
             currentUrl
         );
 
-        window.location.href =
-            getLoginUrl();
+        window.location.href = getLoginUrl();
     }
 
     /* =====================================================
@@ -153,8 +144,7 @@
             return false;
         }
 
-        const parts =
-            token.split(".");
+        const parts = token.split(".");
 
         return parts.length === 3;
     }
@@ -165,31 +155,28 @@
         }
 
         try {
-            const payload =
-                token.split(".")[1];
+            const payload = token.split(".")[1];
 
-            const normalized =
-                payload
-                    .replace(/-/g, "+")
-                    .replace(/_/g, "/");
+            const normalized = payload
+                .replace(/-/g, "+")
+                .replace(/_/g, "/");
 
-            const decoded =
-                decodeURIComponent(
-                    atob(normalized)
-                        .split("")
-                        .map(function (character) {
-                            return (
-                                "%" +
-                                (
-                                    "00" +
-                                    character
-                                        .charCodeAt(0)
-                                        .toString(16)
-                                ).slice(-2)
-                            );
-                        })
-                        .join("")
-                );
+            const decoded = decodeURIComponent(
+                atob(normalized)
+                    .split("")
+                    .map(function (character) {
+                        return (
+                            "%" +
+                            (
+                                "00" +
+                                character
+                                    .charCodeAt(0)
+                                    .toString(16)
+                            ).slice(-2)
+                        );
+                    })
+                    .join("")
+            );
 
             return JSON.parse(decoded);
         } catch (error) {
@@ -202,13 +189,12 @@
     }
 
     function isTokenExpired(token) {
-        const payload =
-            getJwtPayload(token);
+        const payload = getJwtPayload(token);
 
         /*
-         * If this is not a standard JWT or the
-         * payload cannot be decoded, allow the
-         * backend to perform the final validation.
+         * If the token cannot be decoded locally,
+         * the backend remains responsible for the
+         * final authentication decision.
          */
         if (!payload) {
             return false;
@@ -218,15 +204,11 @@
             return false;
         }
 
-        const currentTime =
-            Math.floor(
-                Date.now() / 1000
-            );
-
-        return (
-            Number(payload.exp) <=
-            currentTime
+        const currentTime = Math.floor(
+            Date.now() / 1000
         );
+
+        return Number(payload.exp) <= currentTime;
     }
 
     /* =====================================================
@@ -234,10 +216,17 @@
        ===================================================== */
 
     function validateLocalSession() {
-        const token =
-            getToken();
+        const token = getToken();
 
         if (!token) {
+            return false;
+        }
+
+        /*
+         * A stored authentication token must have
+         * normal JWT structure.
+         */
+        if (!isJwtFormat(token)) {
             return false;
         }
 
@@ -257,16 +246,13 @@
         url,
         options
     ) {
-        const requestOptions =
-            options || {};
+        const requestOptions = options || {};
 
-        const headers =
-            new Headers(
-                requestOptions.headers || {}
-            );
+        const headers = new Headers(
+            requestOptions.headers || {}
+        );
 
-        const token =
-            getToken();
+        const token = getToken();
 
         if (token) {
             headers.set(
@@ -277,8 +263,7 @@
 
         if (
             requestOptions.body &&
-            typeof requestOptions.body ===
-                "object" &&
+            typeof requestOptions.body === "object" &&
             !(requestOptions.body instanceof FormData) &&
             !headers.has("Content-Type")
         ) {
@@ -288,14 +273,13 @@
             );
         }
 
-        const response =
-            await fetch(
-                url,
-                {
-                    ...requestOptions,
-                    headers: headers
-                }
-            );
+        const response = await fetch(
+            url,
+            {
+                ...requestOptions,
+                headers: headers
+            }
+        );
 
         /*
          * A 401 means the backend rejected
@@ -329,14 +313,10 @@
             REDIRECT_KEY
         );
 
-        const currentPage =
-            getCurrentPage();
+        const currentPage = getCurrentPage();
 
-        if (
-            currentPage.includes("/pages/")
-        ) {
-            window.location.href =
-                "login.html";
+        if (currentPage.includes("/pages/")) {
+            window.location.href = "login.html";
         } else {
             window.location.href =
                 "pages/login.html";
@@ -367,11 +347,10 @@
          * open-redirect vulnerability.
          */
         try {
-            const parsed =
-                new URL(
-                    redirect,
-                    window.location.origin
-                );
+            const parsed = new URL(
+                redirect,
+                window.location.origin
+            );
 
             if (
                 parsed.origin !==
@@ -417,19 +396,25 @@
     };
 
     /*
-     * Compatibility with the existing
+     * Compatibility with existing
      * application code.
      */
-    window.authGuard = window.rationAuth;
+    window.authGuard =
+        window.rationAuth;
 
     /* =====================================================
        INITIAL PAGE GUARD
        ===================================================== */
 
-    function initializeAuthGuard() {`r`n        if (isPublicPage()) {`r`n            return;`r`n        }`r`n`r`n        if (!validateLocalSession()) {`r`n            clearSession();`r`n            redirectToLogin();`r`n            return;`r`n        }`r`n`r`n        const token = getToken();`r`n`r`n        if (!isJwtFormat(token)) {`r`n            clearSession();`r`n            redirectToLogin();`r`n            return;`r`n        }`r`n    }
+    function initializeAuthGuard() {
+        if (isPublicPage()) {
+            return;
+        }
 
         if (!validateLocalSession()) {
+            clearSession();
             redirectToLogin();
+            return;
         }
     }
 
