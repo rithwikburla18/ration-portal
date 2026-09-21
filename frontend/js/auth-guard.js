@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    RATION PORTAL - AUTHENTICATION GUARD
    File: frontend/js/auth-guard.js
 
@@ -426,10 +426,7 @@
        INITIAL PAGE GUARD
        ===================================================== */
 
-    function initializeAuthGuard() {
-        if (isPublicPage()) {
-            return;
-        }
+    function initializeAuthGuard() {`r`n        if (isPublicPage()) {`r`n            return;`r`n        }`r`n`r`n        if (!validateLocalSession()) {`r`n            clearSession();`r`n            redirectToLogin();`r`n            return;`r`n        }`r`n`r`n        const token = getToken();`r`n`r`n        if (!isJwtFormat(token)) {`r`n            clearSession();`r`n            redirectToLogin();`r`n            return;`r`n        }`r`n    }
 
         if (!validateLocalSession()) {
             redirectToLogin();
