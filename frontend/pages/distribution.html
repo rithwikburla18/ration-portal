@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rice Distribution | Ration Portal</title>
+
+    <meta
+        name="description"
+        content="View monthly rice distribution and transaction history."
+    >
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/redesign.css">
+
+    <style>
+        :root {
+            --navy: #071a3a;
+            --navy-2: #0d2854;
+            --saffron: #ff9933;
+            --green: #138808;
+            --gold: #d6a84f;
+            --border: #dfe5ec;
+            --text: #172033;
+            --muted: #64748b;
+            --white: #ffffff;
+            --danger: #b42318;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(
+                180deg,
+                #ffffff 0%,
+                #f7f9fc 50%,
+                #eef3f8 100%
+            );
+            color: var(--text);
+        }
+
+        body::before {
+            content: "";
+            display: block;
+            height: 5px;
+            background: linear-gradient(
+                90deg,
+                var(--saffron) 0%,
+                var(--saffron) 33.33%,
+                #ffffff 33.33%,
+                #ffffff 66.66%,
+                var(--green) 66.66%,
+                var(--green) 100%
+            );
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .gov-strip {
+            background: #f4f4f4;
+            border-bottom: 1px solid #e4e7eb;
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        .gov-strip-inner {
+            max-width: 1240px;
+            margin: auto;
+            padding: 8px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .gov-left {
+            font-weight: 600;
+        }
+
+        .gov-right {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .brand-header {
+            background: var(--white);
+            border-bottom: 1px solid #e3e7ed;
+        }
+
+        .brand-inner {
+            max-width: 1240px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .emblem {
+            width: 64px;
+            height: 64px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #fffaf0;
+            color: var(--navy);
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .brand-title {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .brand-subtitle {
+            color: #596579;
+            font-size: 14px;
+        }
+
+        .citizen-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e8eef8;
+            color: var(--navy);
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+        }
+
+        .logout-button {
+            border: 1px solid #cbd5e1;
+            background: white;
+            color: var(--navy);
+            border-radius: 7px;
+            padding: 9px 15px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .logout-button:hover {
+            background: #f1f5f9;
+        }
+
+        .main-nav {
+            background: var(--navy);
+            color: white;
+        }
+
+        .nav-inner {
+            max-width: 1240px;
+            margin: auto;
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            padding: 17px 15px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--navy-2);
+            box-shadow: inset 0 -3px 0 var(--saffron);
+        }
+
+        .nav-date {
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        .page-hero {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    circle at 85% 20%,
+                    rgba(255, 153, 51, 0.16),
+                    transparent 28%
+                ),
+                linear-gradient(
+                    135deg,
+                    #f9fbff 0%,
+                    #eef4fb 60%,
+                    #edf8ef 100%
+                );
+            border-bottom: 1px solid var(--border);
+        }
+
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            right: -100px;
+            bottom: -150px;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            border: 45px solid rgba(19, 136, 8, 0.07);
+        }
+
+        .hero-inner {
+            max-width: 1240px;
+            margin: auto;
+            padding: 52px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+
+        .breadcrumb a {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .hero-title {
+            margin: 0;
+            font-size: clamp(30px, 4vw, 46px);
+            color: var(--navy);
+            line-height: 1.12;
+        }
+
+        .hero-title span {
+            color: var(--green);
+        }
+
+        .hero-text {
+            max-width: 720px;
+            margin: 15px 0 0;
+            color: #596579;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .content {
+            max-width: 1240px;
+            margin: auto;
+            padding: 38px 24px 70px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 23px;
+            box-shadow: 0 8px 28px rgba(7, 26, 58, 0.05);
+        }
+
+        .summary-card:nth-child(1) {
+            border-top: 4px solid var(--green);
+        }
+
+        .summary-card:nth-child(2) {
+            border-top: 4px solid var(--saffron);
+        }
+
+        .summary-card:nth-child(3) {
+            border-top: 4px solid var(--gold);
+        }
+
+        .summary-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        .summary-value {
+            color: var(--navy);
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .summary-subtext {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .section-title {
+            color: var(--navy);
+            font-size: 25px;
+            margin: 0 0 18px;
+        }
+
+        .table-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(7, 26, 58, 0.05);
+        }
+
+        .table-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(
+                90deg,
+                #f8fafc,
+                #ffffff
+            );
+        }
+
+        .table-header h3 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 17px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 820px;
+        }
+
+        th {
+            background: var(--navy);
+            color: white;
+            padding: 14px 15px;
+            text-align: left;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #edf0f4;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .date-value {
+            color: var(--navy);
+            font-weight: 800;
+        }
+
+        .quantity {
+            color: var(--green);
+            font-weight: 900;
+        }
+
+        .fps-id {
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border-radius: 999px;
+            padding: 6px 11px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .status-success {
+            background: #ecfdf3;
+            color: #067647;
+            border: 1px solid #abefc6;
+        }
+
+        .status-pending {
+            background: #fffaeb;
+            color: #b54708;
+            border: 1px solid #fedf89;
+        }
+
+        .status-failed {
+            background: #fef3f2;
+            color: #b42318;
+            border: 1px solid #fecdca;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .loading {
+            padding: 45px 25px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .empty-state {
+            display: none;
+            padding: 45px 25px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .error-box {
+            display: none;
+            margin-top: 20px;
+            background: #fff5f5;
+            border: 1px solid #f3b4b4;
+            color: var(--danger);
+            border-radius: 10px;
+            padding: 16px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            margin-top: 28px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .primary-button,
+        .secondary-button {
+            border-radius: 8px;
+            padding: 12px 18px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .primary-button {
+            border: 1px solid var(--navy);
+            background: var(--navy);
+            color: white;
+        }
+
+        .primary-button:hover {
+            background: var(--navy-2);
+        }
+
+        .secondary-button {
+            border: 1px solid #cbd5e1;
+            background: white;
+            color: var(--navy);
+        }
+
+        .secondary-button:hover {
+            background: #f8fafc;
+        }
+
+        .footer {
+            background: var(--navy);
+            color: #dbe4f0;
+        }
+
+        .footer-inner {
+            max-width: 1240px;
+            margin: auto;
+            padding: 34px 24px;
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-title {
+            color: white;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .footer-text {
+            max-width: 560px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        @media (max-width: 900px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-inner,
+            .gov-strip-inner,
+            .nav-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav-inner {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            .nav-links {
+                width: 100%;
+            }
+
+            .nav-links a {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .brand-title {
+                font-size: 20px;
+            }
+
+            .emblem {
+                width: 54px;
+                height: 54px;
+                font-size: 20px;
+            }
+
+            .hero-inner {
+                padding-top: 35px;
+                padding-bottom: 35px;
+            }
+
+            .content {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="gov-strip">
+        <div class="gov-strip-inner">
+            <div class="gov-left">
+                Government of India
+            </div>
+
+            <div class="gov-right">
+                <span>Public Distribution System</span>
+                <span>Accessibility</span>
+                <span>English</span>
+            </div>
+        </div>
+    </div>
+
+    <header class="brand-header">
+        <div class="brand-inner">
+
+            <div class="brand">
+                <div
+                    class="emblem"
+                    aria-label="Government emblem placeholder"
+                >
+                    ☸
+                </div>
+
+                <div>
+                    <div class="brand-title">
+                        Public Distribution System
+                    </div>
+
+                    <div class="brand-subtitle">
+                        Citizen Ration Portal
+                    </div>
+                </div>
+            </div>
+
+            <div class="citizen-status">
+                <div class="user-badge">
+                    C
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    onclick="logoutCitizen()"
+                >
+                    Logout
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-inner">
+
+            <div class="nav-links">
+
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="citizen-dashboard.html">
+                    Citizen Portal
+                </a>
+
+                <a href="ration-card.html">
+                    My Ration Card
+                </a>
+
+                <a href="family.html">
+                    My Family
+                </a>
+
+                <a
+                    href="distribution.html"
+                    class="active"
+                >
+                    Rice Distribution
+                </a>
+
+                <a href="grievance.html">
+                    Grievance
+                </a>
+
+            </div>
+
+            <div
+                class="nav-date"
+                id="currentDate"
+            >
+                Loading...
+            </div>
+
+        </div>
+    </nav>
+
+    <section class="page-hero">
+
+        <div class="hero-inner">
+
+            <div class="breadcrumb">
+                <a href="citizen-dashboard.html">
+                    Citizen Portal
+                </a>
+                &nbsp; / &nbsp;
+                Rice Distribution
+            </div>
+
+            <h1 class="hero-title">
+                Rice <span>Distribution</span>
+            </h1>
+
+            <p class="hero-text">
+                View your monthly rice distribution,
+                Fair Price Shop information and transaction
+                history linked to your ration card.
+            </p>
+
+        </div>
+
+    </section>
+
+    <main class="content">
+
+        <div class="summary-grid">
+
+            <div class="summary-card">
+
+                <div class="summary-label">
+                    Total Rice Distributed
+                </div>
+
+                <div
+                    class="summary-value"
+                    id="totalRice"
+                >
+                    0
+                </div>
+
+                <div class="summary-subtext">
+                    Across available distribution records
+                </div>
+
+            </div>
+
+            <div class="summary-card">
+
+                <div class="summary-label">
+                    Completed Transactions
+                </div>
+
+                <div
+                    class="summary-value"
+                    id="completedTransactions"
+                >
+                    0
+                </div>
+
+                <div class="summary-subtext">
+                    Successfully completed distributions
+                </div>
+
+            </div>
+
+            <div class="summary-card">
+
+                <div class="summary-label">
+                    Latest Distribution
+                </div>
+
+                <div
+                    class="summary-value"
+                    id="latestDistribution"
+                >
+                    —
+                </div>
+
+                <div class="summary-subtext">
+                    Most recent recorded transaction
+                </div>
+
+            </div>
+
+        </div>
+
+        <h2 class="section-title">
+            Distribution History
+        </h2>
+
+        <section class="table-card">
+
+            <div class="table-header">
+                <h3>
+                    Monthly Rice Distribution Records
+                </h3>
+            </div>
+
+            <div
+                class="loading"
+                id="loadingBox"
+            >
+                Loading your distribution history...
+            </div>
+
+            <div
+                class="table-wrapper"
+                id="tableWrapper"
+                style="display:none;"
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Rice Quantity
+                            </th>
+
+                            <th>
+                                FPS ID
+                            </th>
+
+                            <th>
+                                Transaction Status
+                            </th>
+
+                            <th>
+                                Transaction ID
+                            </th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody
+                        id="distributionTableBody"
+                    ></tbody>
+
+                </table>
+
+            </div>
+
+            <div
+                class="empty-state"
+                id="emptyState"
+            >
+                No rice distribution records were found for your account.
+            </div>
+
+        </section>
+
+        <div
+            class="error-box"
+            id="errorBox"
+        ></div>
+
+        <div class="actions">
+
+            <a
+                href="ration-card.html"
+                class="primary-button"
+            >
+                View My Ration Card
+            </a>
+
+            <a
+                href="fair-price-shop.html"
+                class="secondary-button"
+            >
+                Locate Fair Price Shop
+            </a>
+
+            <a
+                href="citizen-dashboard.html"
+                class="secondary-button"
+            >
+                Back to Citizen Portal
+            </a>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+
+        <div class="footer-inner">
+
+            <div>
+
+                <div class="footer-title">
+                    Public Distribution System
+                </div>
+
+                <div class="footer-text">
+                    Citizen Ration Portal for accessing
+                    ration card and food security services.
+                </div>
+
+            </div>
+
+            <div class="footer-links">
+
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="transparency.html">
+                    Transparency
+                </a>
+
+                <a href="grievance.html">
+                    Grievance
+                </a>
+
+                <a href="citizen-dashboard.html">
+                    Citizen Portal
+                </a>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/auth-guard.js"></script>
+
+    <script>
+        "use strict";
+
+        const API_BASE =
+            window.RATION_API_BASE ||
+            "http://localhost:8080/api";
+
+        function getToken() {
+            return localStorage.getItem(
+                "rationPortalToken"
+            );
+        }
+
+        function authenticatedFetch(
+            url,
+            options = {}
+        ) {
+            const token = getToken();
+
+            const headers = {
+                ...(options.headers || {})
+            };
+
+            if (token) {
+                headers.Authorization =
+                    "Bearer " + token;
+            }
+
+            headers.Accept =
+                "application/json";
+
+            return fetch(url, {
+                ...options,
+                headers
+            });
+        }
+
+        function getCurrentUser() {
+            try {
+                return JSON.parse(
+                    localStorage.getItem(
+                        "rationPortalUser"
+                    ) || "null"
+                );
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function firstValue(
+            object,
+            keys,
+            fallback = null
+        ) {
+            if (!object) {
+                return fallback;
+            }
+
+            for (const key of keys) {
+                if (
+                    object[key] !== undefined &&
+                    object[key] !== null &&
+                    object[key] !== ""
+                ) {
+                    return object[key];
+                }
+            }
+
+            return fallback;
+        }
+
+        function normalizeRecords(
+            response
+        ) {
+            if (Array.isArray(response)) {
+                return response;
+            }
+
+            if (
+                response &&
+                Array.isArray(
+                    response.distributionLogs
+                )
+            ) {
+                return response.distributionLogs;
+            }
+
+            if (
+                response &&
+                Array.isArray(
+                    response.distributionHistory
+                )
+            ) {
+                return response.distributionHistory;
+            }
+
+            if (
+                response &&
+                Array.isArray(
+                    response.records
+                )
+            ) {
+                return response.records;
+            }
+
+            if (
+                response &&
+                response.data
+            ) {
+                if (
+                    Array.isArray(
+                        response.data
+                    )
+                ) {
+                    return response.data;
+                }
+
+                if (
+                    Array.isArray(
+                        response.data.distributionLogs
+                    )
+                ) {
+                    return response.data.distributionLogs;
+                }
+
+                if (
+                    Array.isArray(
+                        response.data.distributionHistory
+                    )
+                ) {
+                    return response.data.distributionHistory;
+                }
+
+                if (
+                    Array.isArray(
+                        response.data.records
+                    )
+                ) {
+                    return response.data.records;
+                }
+            }
+
+            return [];
+        }
+
+        function getDate(
+            record
+        ) {
+            return firstValue(
+                record,
+                [
+                    "distributionDate",
+                    "distribution_date",
+                    "date",
+                    "transactionDate",
+                    "transaction_date"
+                ],
+                null
+            );
+        }
+
+        function getQuantity(
+            record
+        ) {
+            return Number(
+                firstValue(
+                    record,
+                    [
+                        "quantity",
+                        "riceQuantity",
+                        "rice_quantity",
+                        "distributedQuantity",
+                        "distributed_quantity"
+                    ],
+                    0
+                )
+            ) || 0;
+        }
+
+        function getFpsId(
+            record
+        ) {
+            return firstValue(
+                record,
+                [
+                    "fpsId",
+                    "fps_id",
+                    "fps",
+                    "fairPriceShopId",
+                    "fair_price_shop_id"
+                ],
+                "—"
+            );
+        }
+
+        function getStatus(
+            record
+        ) {
+            return String(
+                firstValue(
+                    record,
+                    [
+                        "transactionStatus",
+                        "transaction_status",
+                        "status"
+                    ],
+                    "Unknown"
+                )
+            );
+        }
+
+        function getTransactionId(
+            record
+        ) {
+            return firstValue(
+                record,
+                [
+                    "transactionId",
+                    "transaction_id",
+                    "id",
+                    "distributionId",
+                    "distribution_id"
+                ],
+                "—"
+            );
+        }
+
+        function formatDate(
+            value
+        ) {
+            if (!value) {
+                return "—";
+            }
+
+            const date =
+                new Date(value);
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+                return String(value);
+            }
+
+            return date.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+        }
+
+        function statusClass(
+            status
+        ) {
+            const normalized =
+                String(status)
+                    .toLowerCase();
+
+            if (
+                normalized.includes(
+                    "success"
+                ) ||
+                normalized.includes(
+                    "complete"
+                ) ||
+                normalized.includes(
+                    "distributed"
+                ) ||
+                normalized.includes(
+                    "approved"
+                )
+            ) {
+                return "status-success";
+            }
+
+            if (
+                normalized.includes(
+                    "pending"
+                ) ||
+                normalized.includes(
+                    "process"
+                )
+            ) {
+                return "status-pending";
+            }
+
+            if (
+                normalized.includes(
+                    "failed"
+                ) ||
+                normalized.includes(
+                    "reject"
+                ) ||
+                normalized.includes(
+                    "cancel"
+                )
+            ) {
+                return "status-failed";
+            }
+
+            return "status-pending";
+        }
+
+        function escapeHtml(
+            value
+        ) {
+            return String(value)
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+        }
+
+        function showError(
+            message
+        ) {
+            document.getElementById(
+                "loadingBox"
+            ).style.display =
+                "none";
+
+            const errorBox =
+                document.getElementById(
+                    "errorBox"
+                );
+
+            errorBox.textContent =
+                message;
+
+            errorBox.style.display =
+                "block";
+        }
+
+        function renderRecords(
+            records
+        ) {
+            const body =
+                document.getElementById(
+                    "distributionTableBody"
+                );
+
+            body.innerHTML = "";
+
+            if (
+                !records ||
+                records.length === 0
+            ) {
+                document.getElementById(
+                    "loadingBox"
+                ).style.display =
+                    "none";
+
+                document.getElementById(
+                    "emptyState"
+                ).style.display =
+                    "block";
+
+                return;
+            }
+
+            const sorted =
+                [...records].sort(
+                    function (a, b) {
+
+                        const dateA =
+                            new Date(
+                                getDate(a) ||
+                                0
+                            ).getTime();
+
+                        const dateB =
+                            new Date(
+                                getDate(b) ||
+                                0
+                            ).getTime();
+
+                        return (
+                            dateB -
+                            dateA
+                        );
+                    }
+                );
+
+            let totalRice = 0;
+            let completed = 0;
+
+            sorted.forEach(
+                function (record) {
+
+                    const date =
+                        getDate(record);
+
+                    const quantity =
+                        getQuantity(
+                            record
+                        );
+
+                    const fpsId =
+                        getFpsId(
+                            record
+                        );
+
+                    const status =
+                        getStatus(
+                            record
+                        );
+
+                    const transactionId =
+                        getTransactionId(
+                            record
+                        );
+
+                    totalRice +=
+                        quantity;
+
+                    const normalizedStatus =
+                        status.toLowerCase();
+
+                    if (
+                        normalizedStatus.includes(
+                            "success"
+                        ) ||
+                        normalizedStatus.includes(
+                            "complete"
+                        ) ||
+                        normalizedStatus.includes(
+                            "distributed"
+                        ) ||
+                        normalizedStatus.includes(
+                            "approved"
+                        )
+                    ) {
+                        completed++;
+                    }
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+                    row.innerHTML = `
+                        <td>
+                            <span class="date-value">
+                                ${escapeHtml(
+                                    formatDate(date)
+                                )}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="quantity">
+                                ${quantity}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="fps-id">
+                                ${escapeHtml(
+                                    fpsId
+                                )}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="status-pill ${statusClass(status)}">
+                                <span class="status-dot"></span>
+                                ${escapeHtml(status)}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                transactionId
+                            )}
+                        </td>
+                    `;
+
+                    body.appendChild(
+                        row
+                    );
+                }
+            );
+
+            document.getElementById(
+                "totalRice"
+            ).textContent =
+                totalRice;
+
+            document.getElementById(
+                "completedTransactions"
+            ).textContent =
+                completed;
+
+            document.getElementById(
+                "latestDistribution"
+            ).textContent =
+                formatDate(
+                    getDate(
+                        sorted[0]
+                    )
+                );
+
+            document.getElementById(
+                "loadingBox"
+            ).style.display =
+                "none";
+
+            document.getElementById(
+                "tableWrapper"
+            ).style.display =
+                "block";
+        }
+
+        async function loadDistribution() {
+
+            const user =
+                getCurrentUser();
+
+            const rationCardNumber =
+                firstValue(
+                    user,
+                    [
+                        "rationCardNumber",
+                        "ration_card_number",
+                        "cardNumber",
+                        "rationId",
+                        "ration_id"
+                    ]
+                );
+
+            const memberId =
+                firstValue(
+                    user,
+                    [
+                        "memberId",
+                        "member_id"
+                    ]
+                );
+
+            let endpoint = null;
+
+            /*
+             * Prefer ration-card-specific distribution
+             * records when the logged-in user has a card number.
+             */
+            if (
+                rationCardNumber
+            ) {
+                endpoint =
+                    API_BASE +
+                    "/distribution-logs/ration-card/" +
+                    encodeURIComponent(
+                        rationCardNumber
+                    );
+            } else if (
+                memberId
+            ) {
+                endpoint =
+                    API_BASE +
+                    "/distribution-logs/member/" +
+                    encodeURIComponent(
+                        memberId
+                    );
+            } else {
+                showError(
+                    "Your account does not currently contain a ration card or member identifier. Please contact the administrator."
+                );
+
+                return;
+            }
+
+            try {
+
+                const response =
+                    await authenticatedFetch(
+                        endpoint
+                    );
+
+                if (
+                    response.status === 401 ||
+                    response.status === 403
+                ) {
+                    if (
+                        window.authGuard &&
+                        typeof window.authGuard.logoutAndRedirect ===
+                            "function"
+                    ) {
+                        window.authGuard.logoutAndRedirect();
+                    }
+
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Unable to load distribution history."
+                    );
+                }
+
+                const data =
+                    await response.json();
+
+                const records =
+                    normalizeRecords(
+                        data
+                    );
+
+                renderRecords(
+                    records
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Distribution loading error:",
+                    error
+                );
+
+                showError(
+                    "Rice distribution history could not be loaded from the server yet. Please make sure distribution records are available for your ration card."
+                );
+            }
+        }
+
+        function updateDate() {
+
+            const element =
+                document.getElementById(
+                    "currentDate"
+                );
+
+            const now =
+                new Date();
+
+            element.textContent =
+                now.toLocaleDateString(
+                    "en-IN",
+                    {
+                        weekday: "short",
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+                    }
+                );
+        }
+
+        function logoutCitizen() {
+
+            if (
+                window.authGuard &&
+                typeof window.authGuard.logoutAndRedirect ===
+                    "function"
+            ) {
+                window.authGuard.logoutAndRedirect();
+                return;
+            }
+
+            localStorage.removeItem(
+                "rationPortalToken"
+            );
+
+            localStorage.removeItem(
+                "rationPortalUser"
+            );
+
+            window.location.href =
+                "login.html";
+        }
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                updateDate();
+
+                loadDistribution();
+
+            }
+        );
+    </script>
+
+</body>
+</html>
