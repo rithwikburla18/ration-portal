@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,504 +12,2985 @@
 
     <meta
         name="description"
-        content="Ration Portal Citizen Dashboard"
+        content="Citizen Dashboard - Public Distribution System Ration Portal"
     >
 
     <title>Citizen Dashboard | Ration Portal</title>
 
-    <link
-        rel="stylesheet"
-        href="../css/style.css"
-    >
 
-    <link
-        rel="stylesheet"
-        href="../css/redesign.css"
-    >
+    <style>
+
+        /* =========================================================
+           GLOBAL
+           ========================================================= */
+
+        :root {
+
+            --navy: #063b82;
+            --navy-dark: #02295f;
+            --navy-light: #0c5fc7;
+
+            --saffron: #f47b20;
+            --saffron-light: #ffad42;
+
+            --green: #12833d;
+            --green-light: #39a95a;
+
+            --blue: #1478d4;
+
+            --purple: #6842c5;
+
+            --cyan: #10a9b8;
+
+            --red: #d93636;
+
+            --white: #ffffff;
+
+            --background: #f4f8fc;
+
+            --text: #17365f;
+
+            --muted: #60728c;
+
+            --border: #dce6f2;
+
+            --shadow:
+                0 15px 45px rgba(4, 48, 101, 0.10);
+
+            --shadow-small:
+                0 7px 22px rgba(4, 48, 101, 0.09);
+
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 10% 20%,
+                    rgba(244,123,32,.07),
+                    transparent 25%
+                ),
+                radial-gradient(
+                    circle at 90% 30%,
+                    rgba(18,131,61,.07),
+                    transparent 25%
+                ),
+                #f4f8fc;
+
+            overflow-x: hidden;
+
+        }
+
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* =========================================================
+           TOP TRICOLOUR LINE
+           ========================================================= */
+
+        .tricolour-top {
+
+            height: 6px;
+
+            width: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #f47b20 0%,
+                    #ff9933 33%,
+                    #ffffff 33%,
+                    #ffffff 66%,
+                    #12833d 66%,
+                    #12833d 100%
+                );
+
+            position: relative;
+
+            z-index: 10;
+
+        }
+
+
+        /* =========================================================
+           GOVERNMENT HEADER
+           ========================================================= */
+
+        .header {
+
+            position: relative;
+
+            background: rgba(255,255,255,.97);
+
+            border-bottom: 1px solid #e4ebf4;
+
+            box-shadow:
+                0 4px 20px rgba(4,48,101,.07);
+
+            overflow: hidden;
+
+        }
+
+
+        .header::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 550px;
+
+            height: 180px;
+
+            right: 5%;
+
+            top: -110px;
+
+            background:
+                radial-gradient(
+                    ellipse,
+                    rgba(18,131,61,.10),
+                    transparent 70%
+                );
+
+            pointer-events: none;
+
+        }
+
+
+        .header-inner {
+
+            width: min(1450px, 94%);
+
+            min-height: 104px;
+
+            margin: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 25px;
+
+            position: relative;
+
+            z-index: 2;
+
+        }
+
+
+        .government-brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+        }
+
+
+        .emblem {
+
+            width: 66px;
+
+            height: 66px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 42px;
+
+            color: var(--navy);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #fff,
+                    #eef5fd
+                );
+
+            border: 1px solid #d5e2f0;
+
+            box-shadow:
+                0 5px 15px rgba(0,0,0,.08);
+
+        }
+
+
+        .brand-government {
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            color: #222;
+
+            margin-bottom: 3px;
+
+        }
+
+
+        .brand-title {
+
+            font-size: 28px;
+
+            line-height: 1.05;
+
+            font-weight: 800;
+
+            color: var(--navy);
+
+        }
+
+
+        .brand-subtitle {
+
+            margin-top: 5px;
+
+            color: #60728c;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+
+        .header-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+        .national-message {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-right: 15px;
+
+            color: #25374d;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+        }
+
+
+        .flag {
+
+            width: 28px;
+
+            height: 19px;
+
+            border-radius: 2px;
+
+            background:
+                linear-gradient(
+                    #ff9933 0 33%,
+                    #fff 33% 66%,
+                    #138808 66%
+                );
+
+            position: relative;
+
+            box-shadow:
+                0 2px 4px rgba(0,0,0,.15);
+
+        }
+
+
+        .flag::after {
+
+            content: "☸";
+
+            position: absolute;
+
+            left: 50%;
+
+            top: 50%;
+
+            transform:
+                translate(-50%,-50%);
+
+            font-size: 8px;
+
+            color: #174ea6;
+
+        }
+
+
+        .accessibility {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 3px;
+
+            padding: 5px;
+
+            background: #f6f9fd;
+
+            border: 1px solid #dce6f2;
+
+            border-radius: 9px;
+
+        }
+
+
+        .accessibility button {
+
+            border: 0;
+
+            background: transparent;
+
+            color: #17365f;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            padding: 5px 7px;
+
+        }
+
+
+        .language {
+
+            height: 38px;
+
+            padding: 0 14px;
+
+            border-radius: 9px;
+
+            border: 1px solid #d5e1ee;
+
+            background: white;
+
+            color: var(--navy);
+
+            font-weight: 600;
+
+        }
+
+
+        .logout {
+
+            border: 0;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0c63c7,
+                    #043b82
+                );
+
+            padding: 11px 18px;
+
+            border-radius: 9px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 7px 17px rgba(5,73,151,.22);
+
+        }
+
+
+        /* =========================================================
+           NAVIGATION
+           ========================================================= */
+
+        .navigation {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #02295f,
+                    #064b98,
+                    #02295f
+                );
+
+            min-height: 53px;
+
+            color: white;
+
+            position: relative;
+
+            z-index: 5;
+
+        }
+
+
+        .navigation-inner {
+
+            width: min(1450px,94%);
+
+            margin: auto;
+
+            min-height: 53px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            align-items: stretch;
+
+            height: 53px;
+
+        }
+
+
+        .nav-link {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 0 21px;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            color: rgba(255,255,255,.92);
+
+            transition:
+                .2s ease;
+
+            border-bottom: 3px solid transparent;
+
+        }
+
+
+        .nav-link:hover,
+        .nav-link.active {
+
+            background:
+                linear-gradient(
+                    #f47b20,
+                    #ec6c0e
+                );
+
+            border-bottom-color: #ffbf65;
+
+            color: white;
+
+        }
+
+
+        .nav-status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 13px;
+
+        }
+
+
+        .online-dot {
+
+            width: 8px;
+
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #40d978;
+
+            box-shadow:
+                0 0 0 4px rgba(64,217,120,.14);
+
+        }
+
+
+        /* =========================================================
+           HERO DASHBOARD
+           ========================================================= */
+
+        .hero {
+
+            position: relative;
+
+            overflow: hidden;
+
+            background:
+
+                radial-gradient(
+                    circle at 15% 50%,
+                    rgba(244,123,32,.24),
+                    transparent 28%
+                ),
+
+                radial-gradient(
+                    circle at 85% 40%,
+                    rgba(18,131,61,.20),
+                    transparent 28%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #edf5fc,
+                    #ffffff 48%,
+                    #eff8f1
+                );
+
+            border-bottom:
+                1px solid #dbe7f1;
+
+        }
+
+
+        .hero::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: -100px;
+
+            top: -100px;
+
+            width: 550px;
+
+            height: 280px;
+
+            border-radius: 50%;
+
+            border-top:
+                18px solid rgba(244,123,32,.18);
+
+            transform:
+                rotate(-9deg);
+
+        }
+
+
+        .hero::after {
+
+            content: "";
+
+            position: absolute;
+
+            right: -100px;
+
+            bottom: -120px;
+
+            width: 600px;
+
+            height: 300px;
+
+            border-radius: 50%;
+
+            border-bottom:
+                18px solid rgba(18,131,61,.17);
+
+            transform:
+                rotate(-8deg);
+
+        }
+
+
+        .hero-inner {
+
+            width: min(1450px,94%);
+
+            margin: auto;
+
+            padding:
+                42px 0 38px;
+
+            position: relative;
+
+            z-index: 2;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0,1.4fr)
+                minmax(320px,.6fr);
+
+            gap: 30px;
+
+            align-items: center;
+
+        }
+
+
+        .hero-kicker {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: var(--navy);
+
+            font-weight: 800;
+
+            font-size: 13px;
+
+            text-transform: uppercase;
+
+            letter-spacing: .7px;
+
+            padding:
+                7px 12px;
+
+            border-radius: 30px;
+
+            background: white;
+
+            border: 1px solid #dbe7f1;
+
+            box-shadow: var(--shadow-small);
+
+        }
+
+
+        .hero-title {
+
+            margin:
+                13px 0 8px;
+
+            font-size:
+                clamp(31px,4vw,51px);
+
+            line-height: 1.08;
+
+            font-weight: 900;
+
+            color: var(--navy);
+
+        }
+
+
+        .hero-title .orange {
+            color: var(--saffron);
+        }
+
+
+        .hero-title .green {
+            color: var(--green);
+        }
+
+
+        .hero-description {
+
+            margin: 0;
+
+            color: #526a84;
+
+            font-size: 16px;
+
+            line-height: 1.6;
+
+            max-width: 720px;
+
+        }
+
+
+        .hero-search {
+
+            margin-top: 22px;
+
+            background: white;
+
+            padding: 8px;
+
+            border-radius: 14px;
+
+            border: 1px solid #d9e5f1;
+
+            box-shadow:
+                0 15px 35px rgba(2,41,95,.12);
+
+            display: flex;
+
+            max-width: 700px;
+
+        }
+
+
+        .hero-search input {
+
+            flex: 1;
+
+            min-width: 0;
+
+            border: 0;
+
+            outline: 0;
+
+            padding:
+                13px 15px;
+
+            color: var(--text);
+
+            font-size: 14px;
+
+        }
+
+
+        .hero-search button {
+
+            border: 0;
+
+            border-radius: 10px;
+
+            padding:
+                0 25px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0c71db,
+                    #06438e
+                );
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+        }
+
+
+        /* Rice visual */
+
+        .rice-visual {
+
+            min-height: 245px;
+
+            position: relative;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+
+        .rice-glow {
+
+            position: absolute;
+
+            width: 245px;
+
+            height: 245px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255,255,255,.95),
+                    rgba(255,255,255,.2) 65%,
+                    transparent 70%
+                );
+
+            box-shadow:
+                0 0 80px rgba(244,123,32,.16);
+
+        }
+
+
+        .rice-bowl {
+
+            position: relative;
+
+            width: 190px;
+
+            height: 120px;
+
+            border-radius:
+                0 0 100px 100px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #f7f7f4,
+                    #ddd
+                );
+
+            border:
+                4px solid #c8c8c5;
+
+            box-shadow:
+                0 22px 35px rgba(0,0,0,.15);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: flex-start;
+
+            padding-top: 10px;
+
+            z-index: 2;
+
+        }
+
+
+        .rice {
+
+            width: 135px;
+
+            height: 55px;
+
+            border-radius:
+                50%;
+
+            background:
+                radial-gradient(
+                    ellipse,
+                    #fff 0 45%,
+                    #f2eee2 46% 100%
+                );
+
+            position: relative;
+
+            top: -32px;
+
+            box-shadow:
+                0 5px 10px rgba(0,0,0,.12);
+
+        }
+
+
+        .rice-stalk {
+
+            position: absolute;
+
+            width: 7px;
+
+            height: 125px;
+
+            border-radius: 8px;
+
+            background:
+                linear-gradient(
+                    #5ca73d,
+                    #21813a
+                );
+
+            transform:
+                rotate(-18deg);
+
+            top: -100px;
+
+            left: 75px;
+
+            z-index: 1;
+
+        }
+
+
+        .rice-leaf {
+
+            position: absolute;
+
+            width: 60px;
+
+            height: 17px;
+
+            border-radius:
+                100% 0 100% 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #2a963c,
+                    #72bd45
+                );
+
+            transform-origin: left center;
+
+        }
+
+
+        .leaf-one {
+
+            top: -70px;
+
+            left: 65px;
+
+            transform: rotate(-25deg);
+
+        }
+
+
+        .leaf-two {
+
+            top: -48px;
+
+            left: 88px;
+
+            transform: rotate(25deg);
+
+        }
+
+
+        .leaf-three {
+
+            top: -91px;
+
+            left: 52px;
+
+            transform: rotate(-52deg);
+
+        }
+
+
+        .chakra {
+
+            position: absolute;
+
+            right: 2%;
+
+            top: 5px;
+
+            width: 120px;
+
+            height: 120px;
+
+            border-radius: 50%;
+
+            border:
+                7px solid rgba(13,72,153,.14);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 70px;
+
+            color: rgba(13,72,153,.13);
+
+        }
+
+
+        /* =========================================================
+           MAIN CONTENT
+           ========================================================= */
+
+        .main {
+
+            width: min(1450px,94%);
+
+            margin: auto;
+
+            padding:
+                28px 0 55px;
+
+        }
+
+
+        .section-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: end;
+
+            margin-bottom: 17px;
+
+        }
+
+
+        .section-title {
+
+            margin: 0;
+
+            font-size: 22px;
+
+            color: var(--navy);
+
+            font-weight: 900;
+
+        }
+
+
+        .section-subtitle {
+
+            margin: 5px 0 0;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+        }
+
+
+        .view-all {
+
+            color: var(--navy-light);
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+        }
+
+
+        /* =========================================================
+           STATISTICS
+           ========================================================= */
+
+        .stats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            gap: 16px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .stat {
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 15px;
+
+            padding: 19px;
+
+            box-shadow: var(--shadow-small);
+
+            position: relative;
+
+            overflow: hidden;
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .stat:hover {
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+                0 15px 35px rgba(4,48,101,.13);
+
+        }
+
+
+        .stat::after {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            bottom: 0;
+
+            width: 100%;
+
+            height: 3px;
+
+        }
+
+
+        .stat-orange::after {
+            background: var(--saffron);
+        }
+
+
+        .stat-green::after {
+            background: var(--green);
+        }
+
+
+        .stat-blue::after {
+            background: var(--blue);
+        }
+
+
+        .stat-purple::after {
+            background: var(--purple);
+        }
+
+
+        .stat-top {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+        }
+
+
+        .stat-icon {
+
+            width: 48px;
+
+            height: 48px;
+
+            border-radius: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+
+            color: white;
+
+        }
+
+
+        .orange-icon {
+            background: linear-gradient(135deg,#ff9a27,#e86600);
+        }
+
+
+        .green-icon {
+            background: linear-gradient(135deg,#43ad54,#117a37);
+        }
+
+
+        .blue-icon {
+            background: linear-gradient(135deg,#3494ed,#0761bd);
+        }
+
+
+        .purple-icon {
+            background: linear-gradient(135deg,#8761e7,#5131ad);
+        }
+
+
+        .stat-label {
+
+            margin-top: 14px;
+
+            font-size: 12px;
+
+            color: var(--muted);
+
+            font-weight: 700;
+
+        }
+
+
+        .stat-value {
+
+            margin-top: 4px;
+
+            font-size: 25px;
+
+            font-weight: 900;
+
+            color: var(--navy);
+
+        }
+
+
+        .stat-info {
+
+            margin-top: 6px;
+
+            color: var(--green);
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =========================================================
+           SERVICE GRID
+           ========================================================= */
+
+        .service-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            gap: 15px;
+
+            margin-bottom: 32px;
+
+        }
+
+
+        .service-card {
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 15px;
+
+            padding: 20px;
+
+            min-height: 164px;
+
+            box-shadow: var(--shadow-small);
+
+            position: relative;
+
+            overflow: hidden;
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+
+        }
+
+
+        .service-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 4px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--saffron),
+                    white,
+                    var(--green)
+                );
+
+        }
+
+
+        .service-card:hover {
+
+            transform:
+                translateY(-5px);
+
+            box-shadow:
+                0 18px 38px rgba(4,48,101,.14);
+
+        }
+
+
+        .service-icon {
+
+            width: 48px;
+
+            height: 48px;
+
+            border-radius: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: white;
+
+            font-size: 21px;
+
+            margin-bottom: 14px;
+
+        }
+
+
+        .service-card:nth-child(1)
+        .service-icon {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1478d4,
+                    #064184
+                );
+
+        }
+
+
+        .service-card:nth-child(2)
+        .service-icon {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2ba64c,
+                    #0c6b30
+                );
+
+        }
+
+
+        .service-card:nth-child(3)
+        .service-icon {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff9d2e,
+                    #df5c00
+                );
+
+        }
+
+
+        .service-card:nth-child(4)
+        .service-icon {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7753d5,
+                    #4325a1
+                );
+
+        }
+
+
+        .service-card:nth-child(5)
+        .service-icon {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16b8c5,
+                    #07808c
+                );
+
+        }
+
+
+        .service-card:nth-child(6)
+        .service-icon {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #e14b4b,
+                    #a91e1e
+                );
+
+        }
+
+
+        .service-card:nth-child(7)
+        .service-icon {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b75cc,
+                    #03447c
+                );
+
+        }
+
+
+        .service-card:nth-child(8)
+        .service-icon {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ed7b21,
+                    #bd4d00
+                );
+
+        }
+
+
+        .service-card h3 {
+
+            margin: 0 0 6px;
+
+            color: var(--navy);
+
+            font-size: 16px;
+
+        }
+
+
+        .service-card p {
+
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* =========================================================
+           TWO COLUMN PANELS
+           ========================================================= */
+
+        .two-column {
+
+            display: grid;
+
+            grid-template-columns:
+                1.25fr
+                .75fr;
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .panel {
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 17px;
+
+            box-shadow: var(--shadow-small);
+
+            overflow: hidden;
+
+        }
+
+
+        .panel-header {
+
+            min-height: 58px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 19px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #063b82,
+                    #0a5eaf
+                );
+
+        }
+
+
+        .panel-header h3 {
+
+            margin: 0;
+
+            font-size: 16px;
+
+        }
+
+
+        .panel-body {
+
+            padding: 18px;
+
+        }
+
+
+        .ration-card-preview {
+
+            background:
+                linear-gradient(
+                    125deg,
+                    #fff,
+                    #eef7ff
+                );
+
+            border:
+                1px solid #cfddeb;
+
+            border-radius: 13px;
+
+            padding: 18px;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+
+        .ration-card-preview::after {
+
+            content: "☸";
+
+            position: absolute;
+
+            right: 22px;
+
+            top: 25px;
+
+            font-size: 90px;
+
+            color: rgba(9,66,139,.06);
+
+        }
+
+
+        .card-label {
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            color: var(--muted);
+
+            font-weight: 700;
+
+            letter-spacing: .5px;
+
+        }
+
+
+        .card-number {
+
+            margin-top: 4px;
+
+            font-size: 23px;
+
+            font-weight: 900;
+
+            color: var(--navy);
+
+            letter-spacing: 1px;
+
+        }
+
+
+        .card-details {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2,1fr);
+
+            gap: 14px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .card-detail span {
+
+            display: block;
+
+        }
+
+
+        .card-detail .label {
+
+            color: var(--muted);
+
+            font-size: 10px;
+
+        }
+
+
+        .card-detail .value {
+
+            color: var(--text);
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            margin-top: 3px;
+
+        }
+
+
+        .status {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: #117239;
+
+            background: #e8f8ed;
+
+            border-radius: 30px;
+
+            padding: 5px 10px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+        }
+
+
+        .status::before {
+
+            content: "";
+
+            width: 6px;
+
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: #20a64d;
+
+        }
+
+
+        /* =========================================================
+           FAMILY SUMMARY
+           ========================================================= */
+
+        .family-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2,1fr);
+
+            gap: 12px;
+
+        }
+
+
+        .family-box {
+
+            border:
+                1px solid #e0e8f1;
+
+            background: #f9fbfe;
+
+            border-radius: 11px;
+
+            padding: 14px;
+
+        }
+
+
+        .family-box strong {
+
+            display: block;
+
+            color: var(--navy);
+
+            font-size: 20px;
+
+        }
+
+
+        .family-box span {
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+        }
+
+
+        .family-box.full {
+
+            grid-column:
+                1 / -1;
+
+        }
+
+
+        /* =========================================================
+           DISTRIBUTION TABLE
+           ========================================================= */
+
+        .distribution-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+        }
+
+
+        .distribution-table th {
+
+            text-align: left;
+
+            padding: 11px;
+
+            color: #55708d;
+
+            font-size: 11px;
+
+            background: #f5f8fc;
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .distribution-table td {
+
+            padding: 12px 11px;
+
+            font-size: 12px;
+
+            border-bottom:
+                1px solid #edf1f5;
+
+        }
+
+
+        .distribution-table tr:last-child td {
+
+            border-bottom: 0;
+
+        }
+
+
+        /* =========================================================
+           ANNOUNCEMENT
+           ========================================================= */
+
+        .announcement {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 13px;
+
+            padding: 13px 16px;
+
+            box-shadow: var(--shadow-small);
+
+            margin-bottom: 28px;
+
+        }
+
+
+        .announcement-icon {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ed542d,
+                    #ba2414
+                );
+
+            flex-shrink: 0;
+
+        }
+
+
+        .announcement-text {
+
+            color: #415d78;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+        }
+
+
+        .announcement-text strong {
+
+            color: var(--navy);
+
+        }
+
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        .footer {
+
+            position: relative;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #021f4b,
+                    #043e80
+                );
+
+            color: white;
+
+            overflow: hidden;
+
+        }
+
+
+        .footer::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            right: 0;
+
+            top: 0;
+
+            height: 4px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #f47b20,
+                    #fff,
+                    #12833d
+                );
+
+        }
+
+
+        .footer-inner {
+
+            width: min(1450px,94%);
+
+            margin: auto;
+
+            padding:
+                28px 0;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 30px;
+
+        }
+
+
+        .footer-title {
+
+            font-size: 17px;
+
+            font-weight: 800;
+
+        }
+
+
+        .footer-text {
+
+            margin-top: 6px;
+
+            color: rgba(255,255,255,.7);
+
+            font-size: 11px;
+
+        }
+
+
+        .footer-links {
+
+            display: flex;
+
+            gap: 22px;
+
+            flex-wrap: wrap;
+
+            align-items: center;
+
+        }
+
+
+        .footer-links a {
+
+            color: white;
+
+            font-size: 12px;
+
+            opacity: .82;
+
+        }
+
+
+        .footer-links a:hover {
+
+            opacity: 1;
+
+            color: #ffb66b;
+
+        }
+
+
+        /* =========================================================
+           ANIMATIONS
+           ========================================================= */
+
+        .floating {
+
+            animation:
+                floating 5s ease-in-out infinite;
+
+        }
+
+
+        @keyframes floating {
+
+            0%,
+            100% {
+                transform:
+                    translateY(0);
+            }
+
+            50% {
+                transform:
+                    translateY(-8px);
+            }
+
+        }
+
+
+        .glow {
+
+            animation:
+                glow 3.5s ease-in-out infinite;
+
+        }
+
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                opacity: .75;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media(max-width:1100px) {
+
+            .national-message {
+                display: none;
+            }
+
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+
+            .service-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+
+            .hero-inner {
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .rice-visual {
+                display: none;
+            }
+
+        }
+
+
+        @media(max-width:760px) {
+
+            .header-inner {
+                padding:
+                    14px 0;
+
+                align-items:
+                    flex-start;
+            }
+
+
+            .header-right {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+
+
+            .brand-title {
+                font-size: 22px;
+            }
+
+
+            .emblem {
+                width: 53px;
+                height: 53px;
+                font-size: 32px;
+            }
+
+
+            .navigation {
+                overflow-x: auto;
+            }
+
+
+            .nav-links {
+                min-width: max-content;
+            }
+
+
+            .nav-status {
+                display: none;
+            }
+
+
+            .stats-grid,
+            .service-grid,
+            .two-column {
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .footer-inner {
+                flex-direction:
+                    column;
+            }
+
+        }
+
+
+        @media(max-width:480px) {
+
+            .header-inner,
+            .navigation-inner,
+            .hero-inner,
+            .main,
+            .footer-inner {
+                width: 92%;
+            }
+
+
+            .accessibility,
+            .language {
+                display: none;
+            }
+
+
+            .hero-title {
+                font-size: 31px;
+            }
+
+
+            .hero-search {
+                flex-direction:
+                    column;
+            }
+
+
+            .hero-search button {
+                min-height: 44px;
+            }
+
+        }
+
+
+        @media(prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+
+                animation:
+                    none !important;
+
+                scroll-behavior:
+                    auto !important;
+
+                transition:
+                    none !important;
+
+            }
+
+        }
+
+    </style>
+
 </head>
 
+
 <body>
+
+
+<!-- =========================================================
+     TOP
+     ========================================================= -->
+
+<div class="tricolour-top"></div>
+
 
 <!-- =========================================================
      HEADER
      ========================================================= -->
 
-<header class="site-header">
+<header class="header">
 
-    <div class="gov-bar">
-        Government of India • Public Distribution System
-    </div>
+    <div class="header-inner">
 
-    <div class="brand-header">
 
-        <div class="brand-header-inner">
+        <a
+            href="../index.html"
+            class="government-brand"
+        >
 
-            <a
-                href="../index.html"
-                class="brand"
-                aria-label="Ration Portal Home"
-            >
+            <div class="emblem">
+                ☸
+            </div>
 
-                <div
-                    class="brand-emblem"
-                    aria-hidden="true"
-                >
-                    ☸
+            <div>
+
+                <div class="brand-government">
+                    Government of India
                 </div>
 
-                <div>
-
-                    <div class="brand-title">
-                        Ration Portal
-                    </div>
-
-                    <div class="brand-subtitle">
-                        Public Distribution System
-                    </div>
-
+                <div class="brand-title">
+                    Public Distribution System
                 </div>
 
-            </a>
+                <div class="brand-subtitle">
+                    Ration Portal • Citizen Services
+                </div>
+
+            </div>
+
+        </a>
 
 
-            <div class="header-actions">
+        <div class="header-right">
+
+
+            <div class="national-message">
+
+                <span class="flag"></span>
 
                 <span>
-                    Citizen Portal
+                    Har Ghar Ann,
+                    Har Ghar Suraksha
                 </span>
+
+            </div>
+
+
+            <div class="accessibility">
 
                 <button
                     type="button"
-                    class="btn btn-danger"
-                    id="logoutButton"
+                    onclick="changeFont(-10)"
                 >
-                    Logout
+                    A-
+                </button>
+
+                <button
+                    type="button"
+                    onclick="setFont(100)"
+                >
+                    A
+                </button>
+
+                <button
+                    type="button"
+                    onclick="changeFont(10)"
+                >
+                    A+
                 </button>
 
             </div>
 
+
+            <select
+                class="language"
+                aria-label="Language"
+            >
+
+                <option>
+                    English
+                </option>
+
+                <option>
+                    हिंदी
+                </option>
+
+            </select>
+
+
+            <button
+                class="logout"
+                id="logoutButton"
+                type="button"
+            >
+                Logout
+            </button>
+
         </div>
 
     </div>
-
-
-    <nav
-        class="main-nav"
-        aria-label="Citizen navigation"
-    >
-
-        <div class="container">
-
-            <div class="header-actions">
-
-                <a
-                    href="citizen-dashboard.html"
-                    class="btn btn-primary"
-                >
-                    Dashboard
-                </a>
-
-                <a
-                    href="ration-card.html"
-                    class="btn btn-secondary"
-                >
-                    My Ration Card
-                </a>
-
-                <a
-                    href="family.html"
-                    class="btn btn-secondary"
-                >
-                    My Family
-                </a>
-
-                <a
-                    href="apply-ration-card.html"
-                    class="btn btn-secondary"
-                >
-                    Apply
-                </a>
-
-                <a
-                    href="application-status.html"
-                    class="btn btn-secondary"
-                >
-                    Track Application
-                </a>
-
-                <a
-                    href="digital-ration-card.html"
-                    class="btn btn-secondary"
-                >
-                    Digital Card
-                </a>
-
-                <a
-                    href="grievance.html"
-                    class="btn btn-secondary"
-                >
-                    Grievance
-                </a>
-
-            </div>
-
-        </div>
-
-    </nav>
 
 </header>
 
 
 <!-- =========================================================
-     MAIN CONTENT
+     NAVIGATION
      ========================================================= -->
 
-<main>
+<nav class="navigation">
 
-    <!-- HERO -->
+    <div class="navigation-inner">
 
-    <section class="page-hero">
 
-        <div class="container page-hero-content">
+        <div class="nav-links">
 
-            <div>
+            <a
+                href="citizen-dashboard.html"
+                class="nav-link active"
+            >
+                🏠 Dashboard
+            </a>
 
-                <h1>
-                    Citizen Dashboard
-                </h1>
+            <a
+                href="ration-card.html"
+                class="nav-link"
+            >
+                ▣ My Ration Card
+            </a>
 
-                <p>
-                    Access your ration card, family,
-                    applications and public distribution services.
-                </p>
+            <a
+                href="family.html"
+                class="nav-link"
+            >
+                👨‍👩‍👧 My Family
+            </a>
 
-            </div>
+            <a
+                href="apply-ration-card.html"
+                class="nav-link"
+            >
+                ＋ Apply
+            </a>
+
+            <a
+                href="application-status.html"
+                class="nav-link"
+            >
+                ✓ Applications
+            </a>
+
+            <a
+                href="grievance.html"
+                class="nav-link"
+            >
+                ⚑ Grievance
+            </a>
 
         </div>
 
-    </section>
 
+        <div class="nav-status">
 
-    <!-- WELCOME -->
+            <span class="online-dot"></span>
 
-    <section class="page-section">
-
-        <div class="container">
-
-            <div class="card card-padding">
-
-                <h2 class="section-title">
-                    Welcome to Citizen Services
-                </h2>
-
-                <p class="section-subtitle">
-                    Manage your Public Distribution System
-                    services from one place.
-                </p>
-
-            </div>
+            Citizen Account
 
         </div>
 
-    </section>
+    </div>
+
+</nav>
 
 
-    <!-- QUICK SERVICES -->
+<!-- =========================================================
+     HERO
+     ========================================================= -->
 
-    <section class="page-section">
+<section class="hero">
 
-        <div class="container">
+    <div class="hero-inner">
 
-            <h2 class="section-title">
-                My Services
-            </h2>
 
-            <p class="section-subtitle">
-                Quickly access your important ration services.
+        <div>
+
+            <div class="hero-kicker">
+
+                🇮🇳
+
+                Citizen Digital Services
+
+            </div>
+
+
+            <h1 class="hero-title">
+
+                <span class="orange">
+                    Your Ration
+                </span>
+
+                <br>
+
+                Your Rights.
+                <span class="green">
+                    Your Benefits.
+                </span>
+
+            </h1>
+
+
+            <p class="hero-description">
+
+                Access your ration card, family details,
+                food entitlement, application status and
+                Public Distribution System services from
+                one secure citizen dashboard.
+
             </p>
 
 
-            <div class="service-grid">
+            <form
+                class="hero-search"
+                id="rationSearchForm"
+            >
 
-
-                <!-- MY RATION CARD -->
-
-                <a
-                    href="ration-card.html"
-                    class="service-card"
+                <input
+                    id="rationSearch"
+                    type="text"
+                    placeholder="Enter Ration Card Number / Member ID"
+                    autocomplete="off"
                 >
 
-                    <div
-                        class="service-icon"
-                        aria-hidden="true"
-                    >
-                        ▣
-                    </div>
+                <button type="submit">
+                    🔍 Search
+                </button>
 
-                    <h3>
-                        My Ration Card
-                    </h3>
+            </form>
 
-                    <p>
-                        View your ration card details,
-                        status and entitlement information.
-                    </p>
-
-                </a>
+        </div>
 
 
-                <!-- FAMILY -->
+        <div class="rice-visual floating">
 
-                <a
-                    href="family.html"
-                    class="service-card"
-                >
+            <div class="rice-glow glow"></div>
 
-                    <div
-                        class="service-icon"
-                        aria-hidden="true"
-                    >
-                        👨‍👩‍👧
-                    </div>
-
-                    <h3>
-                        My Family
-                    </h3>
-
-                    <p>
-                        View family members and
-                        household ration information.
-                    </p>
-
-                </a>
+            <div class="chakra">
+                ☸
+            </div>
 
 
-                <!-- APPLY -->
+            <div class="rice-bowl">
 
-                <a
-                    href="apply-ration-card.html"
-                    class="service-card"
-                >
+                <div class="rice"></div>
 
-                    <div
-                        class="service-icon"
-                        aria-hidden="true"
-                    >
-                        +
-                    </div>
+                <div class="rice-stalk"></div>
 
-                    <h3>
-                        Apply for Ration Card
-                    </h3>
+                <div class="rice-leaf leaf-one"></div>
 
-                    <p>
-                        Submit a new ration card
-                        application online.
-                    </p>
+                <div class="rice-leaf leaf-two"></div>
 
-                </a>
-
-
-                <!-- TRACK -->
-
-                <a
-                    href="application-status.html"
-                    class="service-card"
-                >
-
-                    <div
-                        class="service-icon"
-                        aria-hidden="true"
-                    >
-                        ✓
-                    </div>
-
-                    <h3>
-                        Track Application
-                    </h3>
-
-                    <p>
-                        Check the current status of
-                        your submitted application.
-                    </p>
-
-                </a>
-
-
-                <!-- DIGITAL CARD -->
-
-                <a
-                    href="digital-ration-card.html"
-                    class="service-card"
-                >
-
-                    <div
-                        class="service-icon"
-                        aria-hidden="true"
-                    >
-                        ▤
-                    </div>
-
-                    <h3>
-                        Digital Ration Card
-                    </h3>
-
-                    <p>
-                        View and access your digital
-                        ration card.
-                    </p>
-
-                </a>
-
-
-                <!-- DISTRIBUTION -->
-
-                <a
-                    href="distribution.html"
-                    class="service-card"
-                >
-
-                    <div
-                        class="service-icon"
-                        aria-hidden="true"
-                    >
-                        🌾
-                    </div>
-
-                    <h3>
-                        Rice Distribution
-                    </h3>
-
-                    <p>
-                        View your ration distribution
-                        and transaction history.
-                    </p>
-
-                </a>
-
-
-                <!-- FPS -->
-
-                <a
-                    href="fps.html"
-                    class="service-card"
-                >
-
-                    <div
-                        class="service-icon"
-                        aria-hidden="true"
-                    >
-                        ⌖
-                    </div>
-
-                    <h3>
-                        Fair Price Shops
-                    </h3>
-
-                    <p>
-                        Find Fair Price Shops and
-                        available distribution services.
-                    </p>
-
-                </a>
-
-
-                <!-- GRIEVANCE -->
-
-                <a
-                    href="grievance.html"
-                    class="service-card"
-                >
-
-                    <div
-                        class="service-icon"
-                        aria-hidden="true"
-                    >
-                        !
-                    </div>
-
-                    <h3>
-                        Grievance
-                    </h3>
-
-                    <p>
-                        Submit and track your
-                        public distribution grievance.
-                    </p>
-
-                </a>
+                <div class="rice-leaf leaf-three"></div>
 
             </div>
 
         </div>
 
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="main">
+
+
+    <!-- ANNOUNCEMENT -->
+
+    <div class="announcement">
+
+        <div class="announcement-icon">
+            !
+        </div>
+
+        <div class="announcement-text">
+
+            <strong>
+                Important Notice:
+            </strong>
+
+            Please keep your ration card information
+            updated to receive eligible food security
+            benefits without interruption.
+
+        </div>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="section-header">
+
+        <div>
+
+            <h2 class="section-title">
+                My PDS Overview
+            </h2>
+
+            <p class="section-subtitle">
+                A quick view of your current public
+                distribution information.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <section class="stats-grid">
+
+
+        <div class="stat stat-orange">
+
+            <div class="stat-top">
+
+                <div class="stat-icon orange-icon">
+                    ▣
+                </div>
+
+                <span>
+                    🇮🇳
+                </span>
+
+            </div>
+
+            <div class="stat-label">
+                Ration Card Status
+            </div>
+
+            <div class="stat-value">
+                Active
+            </div>
+
+            <div class="stat-info">
+                ● Card is currently active
+            </div>
+
+        </div>
+
+
+        <div class="stat stat-green">
+
+            <div class="stat-top">
+
+                <div class="stat-icon green-icon">
+                    🌾
+                </div>
+
+                <span>
+                    2026
+                </span>
+
+            </div>
+
+            <div class="stat-label">
+                Monthly Rice Entitlement
+            </div>
+
+            <div class="stat-value">
+                25 kg
+            </div>
+
+            <div class="stat-info">
+                Available entitlement
+            </div>
+
+        </div>
+
+
+        <div class="stat stat-blue">
+
+            <div class="stat-top">
+
+                <div class="stat-icon blue-icon">
+                    👨‍👩‍👧
+                </div>
+
+                <span>
+                    Family
+                </span>
+
+            </div>
+
+            <div class="stat-label">
+                Family Members
+            </div>
+
+            <div class="stat-value">
+                4
+            </div>
+
+            <div class="stat-info">
+                Registered household members
+            </div>
+
+        </div>
+
+
+        <div class="stat stat-purple">
+
+            <div class="stat-top">
+
+                <div class="stat-icon purple-icon">
+                    ✓
+                </div>
+
+                <span>
+                    Secure
+                </span>
+
+            </div>
+
+            <div class="stat-label">
+                Current Application
+            </div>
+
+            <div class="stat-value">
+                None
+            </div>
+
+            <div class="stat-info">
+                No pending application
+            </div>
+
+        </div>
+
+
     </section>
 
 
-    <!-- ACCOUNT INFORMATION -->
+    <!-- SERVICES -->
 
-    <section class="page-section">
+    <div class="section-header">
 
-        <div class="container">
+        <div>
 
-            <div class="card card-padding">
+            <h2 class="section-title">
+                Citizen Services
+            </h2>
 
-                <h2 class="section-title">
-                    Account Information
-                </h2>
+            <p class="section-subtitle">
+                Everything you need for your ration
+                and food security services.
+            </p>
 
-                <div
-                    id="citizenAccount"
-                    class="form-grid"
-                >
+        </div>
 
-                    <div class="form-group">
+    </div>
 
-                        <label>
-                            Name
-                        </label>
 
-                        <input
-                            id="citizenName"
-                            class="form-control"
-                            type="text"
-                            readonly
-                            value="Loading..."
-                        >
+    <section class="service-grid">
 
+
+        <a
+            class="service-card"
+            href="ration-card.html"
+        >
+
+            <div class="service-icon">
+                ▣
+            </div>
+
+            <h3>
+                My Ration Card
+            </h3>
+
+            <p>
+                View card number, type, status,
+                address and entitlement details.
+            </p>
+
+        </a>
+
+
+        <a
+            class="service-card"
+            href="family.html"
+        >
+
+            <div class="service-icon">
+                👨‍👩‍👧
+            </div>
+
+            <h3>
+                My Family
+            </h3>
+
+            <p>
+                View registered family members,
+                age, relationship and rice quota.
+            </p>
+
+        </a>
+
+
+        <a
+            class="service-card"
+            href="apply-ration-card.html"
+        >
+
+            <div class="service-icon">
+                ＋
+            </div>
+
+            <h3>
+                Apply New Ration Card
+            </h3>
+
+            <p>
+                Submit a new ration card application
+                through the citizen portal.
+            </p>
+
+        </a>
+
+
+        <a
+            class="service-card"
+            href="application-status.html"
+        >
+
+            <div class="service-icon">
+                ✓
+            </div>
+
+            <h3>
+                Track Application
+            </h3>
+
+            <p>
+                Track application progress and
+                approval or rejection status.
+            </p>
+
+        </a>
+
+
+        <a
+            class="service-card"
+            href="digital-ration-card.html"
+        >
+
+            <div class="service-icon">
+                ▤
+            </div>
+
+            <h3>
+                Digital Ration Card
+            </h3>
+
+            <p>
+                Access your digital ration card
+                and QR-based verification.
+            </p>
+
+        </a>
+
+
+        <a
+            class="service-card"
+            href="distribution.html"
+        >
+
+            <div class="service-icon">
+                🌾
+            </div>
+
+            <h3>
+                Rice Distribution
+            </h3>
+
+            <p>
+                View monthly rice distribution
+                and transaction history.
+            </p>
+
+        </a>
+
+
+        <a
+            class="service-card"
+            href="fps.html"
+        >
+
+            <div class="service-icon">
+                ⌖
+            </div>
+
+            <h3>
+                Locate FPS
+            </h3>
+
+            <p>
+                Find Fair Price Shops and
+                distribution information.
+            </p>
+
+        </a>
+
+
+        <a
+            class="service-card"
+            href="grievance.html"
+        >
+
+            <div class="service-icon">
+                !
+            </div>
+
+            <h3>
+                Lodge Grievance
+            </h3>
+
+            <p>
+                Submit a complaint and track
+                your grievance status.
+            </p>
+
+        </a>
+
+
+    </section>
+
+
+    <!-- CARD + FAMILY -->
+
+    <section class="two-column">
+
+
+        <!-- RATION CARD -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h3>
+                    My Ration Card
+                </h3>
+
+                <span class="status">
+                    Active
+                </span>
+
+            </div>
+
+
+            <div class="panel-body">
+
+                <div class="ration-card-preview">
+
+                    <div class="card-label">
+                        Ration Card Number
+                    </div>
+
+                    <div class="card-number">
+                        XXXX-XXXX-XXXX
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="card-details">
 
-                        <label>
-                            Email
-                        </label>
+                        <div class="card-detail">
 
-                        <input
-                            id="citizenEmail"
-                            class="form-control"
-                            type="text"
-                            readonly
-                            value="Loading..."
-                        >
+                            <span class="label">
+                                Head of Family
+                            </span>
 
-                    </div>
+                            <span class="value">
+                                Citizen
+                            </span>
+
+                        </div>
 
 
-                    <div class="form-group">
+                        <div class="card-detail">
 
-                        <label>
-                            Role
-                        </label>
+                            <span class="label">
+                                Card Type
+                            </span>
 
-                        <input
-                            id="citizenRole"
-                            class="form-control"
-                            type="text"
-                            readonly
-                            value="CITIZEN"
-                        >
+                            <span class="value">
+                                Food Security Card
+                            </span>
+
+                        </div>
+
+
+                        <div class="card-detail">
+
+                            <span class="label">
+                                District
+                            </span>
+
+                            <span class="value">
+                                Telangana
+                            </span>
+
+                        </div>
+
+
+                        <div class="card-detail">
+
+                            <span class="label">
+                                Status
+                            </span>
+
+                            <span class="value">
+                                Active
+                            </span>
+
+                        </div>
 
                     </div>
 
@@ -517,27 +3000,224 @@
 
         </div>
 
-    </section>
+
+        <!-- FAMILY -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h3>
+                    Family Summary
+                </h3>
+
+                <a
+                    href="family.html"
+                    style="
+                        color:white;
+                        font-size:12px;
+                        font-weight:700;
+                    "
+                >
+                    View Family →
+                </a>
+
+            </div>
 
 
-    <!-- NOTICE -->
+            <div class="panel-body">
 
-    <section class="page-section">
+                <div class="family-grid">
 
-        <div class="container">
 
-            <div class="alert alert-info">
+                    <div class="family-box">
 
-                Your citizen services are protected by
-                authenticated access. Ration card and family
-                information will be connected to the backend
-                APIs in the following stages.
+                        <strong>
+                            4
+                        </strong>
+
+                        <span>
+                            Total Members
+                        </span>
+
+                    </div>
+
+
+                    <div class="family-box">
+
+                        <strong>
+                            3
+                        </strong>
+
+                        <span>
+                            Adults
+                        </span>
+
+                    </div>
+
+
+                    <div class="family-box">
+
+                        <strong>
+                            1
+                        </strong>
+
+                        <span>
+                            Child
+                        </span>
+
+                    </div>
+
+
+                    <div class="family-box">
+
+                        <strong>
+                            25 kg
+                        </strong>
+
+                        <span>
+                            Total Rice Quota
+                        </span>
+
+                    </div>
+
+
+                    <div class="family-box full">
+
+                        <span>
+                            Family record
+                        </span>
+
+                        <strong
+                            style="
+                                font-size:15px;
+                                margin-top:4px;
+                            "
+                        >
+                            Family information will be loaded
+                            from the secure backend.
+                        </strong>
+
+                    </div>
+
+
+                </div>
 
             </div>
 
         </div>
 
+
     </section>
+
+
+    <!-- DISTRIBUTION HISTORY -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <h3>
+                Recent Rice Distribution
+            </h3>
+
+            <a
+                href="distribution.html"
+                style="
+                    color:white;
+                    font-size:12px;
+                    font-weight:700;
+                "
+            >
+                View All →
+            </a>
+
+        </div>
+
+
+        <div class="panel-body">
+
+            <table class="distribution-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            FPS
+                        </th>
+
+                        <th>
+                            Quantity
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr>
+
+                        <td>
+                            --
+                        </td>
+
+                        <td>
+                            No transaction loaded
+                        </td>
+
+                        <td>
+                            --
+                        </td>
+
+                        <td>
+                            <span class="status">
+                                Ready
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            --
+                        </td>
+
+                        <td>
+                            Backend integration pending
+                        </td>
+
+                        <td>
+                            --
+                        </td>
+
+                        <td>
+                            <span class="status">
+                                Ready
+                            </span>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
 
 </main>
 
@@ -546,29 +3226,20 @@
      FOOTER
      ========================================================= -->
 
-<footer class="site-footer">
+<footer class="footer">
 
-    <div class="footer-grid">
+    <div class="footer-inner">
 
-        <div class="footer-brand">
 
-            <div
-                class="footer-emblem"
-                aria-hidden="true"
-            >
-                ☸
+        <div>
+
+            <div class="footer-title">
+                🇮🇳 Ration Portal
             </div>
 
-            <div>
-
-                <h3>
-                    Ration Portal
-                </h3>
-
-                <p>
-                    Public Distribution System
-                </p>
-
+            <div class="footer-text">
+                Public Distribution System •
+                Food Security • Citizen Empowerment
             </div>
 
         </div>
@@ -580,188 +3251,172 @@
                 Home
             </a>
 
-            <a href="services.html">
-                Services
+            <a href="about.html">
+                About Us
             </a>
 
-            <a href="grievance.html">
-                Help &amp; Support
+            <a href="privacy.html">
+                Privacy Policy
             </a>
 
-            <a href="transparency.html">
-                Transparency
+            <a href="terms.html">
+                Terms & Conditions
+            </a>
+
+            <a href="contact.html">
+                Contact Us
             </a>
 
         </div>
 
 
-        <div class="footer-disclaimer">
-
-            <div>
-                © <span id="currentYear"></span>
-                Ration Portal
-            </div>
-
-            <div>
-                Educational demonstration project.
-            </div>
-
+        <div class="footer-text">
+            Designed with 🇮🇳 for a Food Secure India
         </div>
+
 
     </div>
 
 </footer>
 
 
-<!-- =========================================================
-     SCRIPTS
-     ========================================================= -->
-
-<script src="../js/config.js"></script>
-
-<script src="../js/app.js"></script>
-
-<script src="../js/script.js"></script>
-
-<script src="../js/auth-guard.js"></script>
-
-
 <script>
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+    /* =========================================================
+       FONT SIZE
+       ========================================================= */
 
-        const year =
-            document.getElementById(
-                "currentYear"
-            );
-
-        if (year) {
-            year.textContent =
-                new Date().getFullYear();
-        }
+    let fontScale = 100;
 
 
-        /*
-         * Read the locally stored authenticated
-         * citizen information.
-         */
+    function setFont(value) {
 
-        let user = null;
-
-        try {
-
-            user =
-                JSON.parse(
-                    localStorage.getItem(
-                        "rationPortalUser"
-                    )
-                );
-
-        } catch (error) {
-
-            user = null;
-
-        }
-
-
-        if (user) {
-
-            const name =
-                document.getElementById(
-                    "citizenName"
-                );
-
-            const email =
-                document.getElementById(
-                    "citizenEmail"
-                );
-
-            const role =
-                document.getElementById(
-                    "citizenRole"
-                );
-
-
-            if (name) {
-
-                name.value =
-                    user.name ||
-                    user.fullName ||
-                    user.username ||
-                    "Citizen";
-
-            }
-
-
-            if (email) {
-
-                email.value =
-                    user.email ||
-                    "Not available";
-
-            }
-
-
-            if (role) {
-
-                role.value =
-                    user.role ||
-                    "CITIZEN";
-
-            }
-
-        }
-
-
-        /*
-         * Logout
-         */
-
-        const logoutButton =
-            document.getElementById(
-                "logoutButton"
+        fontScale =
+            Math.max(
+                85,
+                Math.min(
+                    125,
+                    value
+                )
             );
 
 
-        if (logoutButton) {
-
-            logoutButton.addEventListener(
-                "click",
-                function () {
-
-                    if (
-                        window.rationAuth &&
-                        typeof window.rationAuth.logout === "function"
-                    ) {
-
-                        window.rationAuth.logout();
-
-                        return;
-                    }
-
-
-                    localStorage.removeItem(
-                        "rationPortalToken"
-                    );
-
-                    localStorage.removeItem(
-                        "rationPortalUser"
-                    );
-
-                    window.location.href =
-                        "../index.html";
-
-                }
-            );
-
-        }
+        document.documentElement.style.fontSize =
+            fontScale + "%";
 
     }
-);
+
+
+    function changeFont(amount) {
+
+        setFont(
+            fontScale + amount
+        );
+
+    }
+
+
+    /* =========================================================
+       LOGOUT
+       ========================================================= */
+
+    document
+        .getElementById("logoutButton")
+        .addEventListener(
+            "click",
+            function () {
+
+                localStorage.removeItem(
+                    "rationPortalToken"
+                );
+
+                localStorage.removeItem(
+                    "rationPortalUser"
+                );
+
+                window.location.href =
+                    "../index.html";
+
+            }
+        );
+
+
+    /* =========================================================
+       SEARCH
+       ========================================================= */
+
+    document
+        .getElementById("rationSearchForm")
+        .addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+
+                const value =
+                    document
+                        .getElementById(
+                            "rationSearch"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!value) {
+
+                    alert(
+                        "Please enter a Ration Card Number or Member ID."
+                    );
+
+                    return;
+
+                }
+
+
+                window.location.href =
+                    "search.html?q=" +
+                    encodeURIComponent(value);
+
+            }
+        );
+
+
+    /* =========================================================
+       DEMO ACCOUNT DISPLAY
+       ========================================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            /*
+             * The backend-connected user information
+             * will replace these demonstration values
+             * when authentication integration is completed.
+             */
+
+            const token =
+                localStorage.getItem(
+                    "rationPortalToken"
+                );
+
+
+            if (!token) {
+
+                /*
+                 * Do not force redirect yet.
+                 * Authentication enforcement is handled
+                 * in the authentication stage.
+                 */
+
+            }
+
+        }
+    );
 
 </script>
+
 
 </body>
 </html>
