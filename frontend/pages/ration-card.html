@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Ration Card | Ration Portal</title>
+
+    <meta
+        name="description"
+        content="View your ration card details, household information and entitlement details."
+    >
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/redesign.css">
+
+    <style>
+        :root {
+            --navy: #071a3a;
+            --navy-2: #0d2854;
+            --saffron: #ff9933;
+            --green: #138808;
+            --gold: #d6a84f;
+            --light: #f5f7fa;
+            --border: #dfe5ec;
+            --text: #172033;
+            --muted: #64748b;
+            --white: #ffffff;
+            --danger: #b42318;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                linear-gradient(
+                    180deg,
+                    #ffffff 0%,
+                    #f7f9fc 45%,
+                    #eef3f8 100%
+                );
+            color: var(--text);
+        }
+
+        body::before {
+            content: "";
+            display: block;
+            height: 5px;
+            background: linear-gradient(
+                90deg,
+                var(--saffron) 0%,
+                var(--saffron) 33.33%,
+                #ffffff 33.33%,
+                #ffffff 66.66%,
+                var(--green) 66.66%,
+                var(--green) 100%
+            );
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .gov-strip {
+            background: #f4f4f4;
+            border-bottom: 1px solid #e4e7eb;
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        .gov-strip-inner {
+            max-width: 1240px;
+            margin: auto;
+            padding: 8px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .gov-left {
+            font-weight: 600;
+        }
+
+        .gov-right {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .brand-header {
+            background: var(--white);
+            border-bottom: 1px solid #e3e7ed;
+        }
+
+        .brand-inner {
+            max-width: 1240px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .emblem {
+            width: 64px;
+            height: 64px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #fffaf0;
+            color: var(--navy);
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .brand-title {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .brand-subtitle {
+            color: #596579;
+            font-size: 14px;
+        }
+
+        .citizen-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e8eef8;
+            color: var(--navy);
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+        }
+
+        .logout-button {
+            border: 1px solid #cbd5e1;
+            background: white;
+            color: var(--navy);
+            border-radius: 7px;
+            padding: 9px 15px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .logout-button:hover {
+            background: #f1f5f9;
+        }
+
+        .main-nav {
+            background: var(--navy);
+            color: white;
+        }
+
+        .nav-inner {
+            max-width: 1240px;
+            margin: auto;
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            padding: 17px 15px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--navy-2);
+            box-shadow: inset 0 -3px 0 var(--saffron);
+        }
+
+        .nav-date {
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        .page-hero {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    circle at 85% 20%,
+                    rgba(255, 153, 51, 0.16),
+                    transparent 28%
+                ),
+                linear-gradient(
+                    135deg,
+                    #f9fbff 0%,
+                    #eef4fb 60%,
+                    #edf8ef 100%
+                );
+            border-bottom: 1px solid var(--border);
+        }
+
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            right: -100px;
+            bottom: -150px;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            border: 45px solid rgba(19, 136, 8, 0.07);
+        }
+
+        .hero-inner {
+            max-width: 1240px;
+            margin: auto;
+            padding: 52px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+
+        .breadcrumb a {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .hero-title {
+            margin: 0;
+            font-size: clamp(30px, 4vw, 46px);
+            color: var(--navy);
+            line-height: 1.12;
+        }
+
+        .hero-title span {
+            color: var(--green);
+        }
+
+        .hero-text {
+            max-width: 720px;
+            margin: 15px 0 0;
+            color: #596579;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .content {
+            max-width: 1240px;
+            margin: auto;
+            padding: 38px 24px 70px;
+        }
+
+        .status-banner {
+            background: white;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--green);
+            border-radius: 12px;
+            padding: 20px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 28px rgba(7, 26, 58, 0.06);
+            margin-bottom: 28px;
+        }
+
+        .status-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .status-value {
+            color: var(--navy);
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .active-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #ecfdf3;
+            color: #067647;
+            border: 1px solid #abefc6;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .active-dot {
+            width: 8px;
+            height: 8px;
+            background: #12b76a;
+            border-radius: 50%;
+        }
+
+        .section-title {
+            color: var(--navy);
+            font-size: 25px;
+            margin: 0 0 18px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(7, 26, 58, 0.05);
+        }
+
+        .card-header {
+            padding: 18px 20px;
+            background: linear-gradient(
+                90deg,
+                #f8fafc,
+                #ffffff
+            );
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h3 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 17px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 25px;
+            padding: 14px 0;
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: var(--text);
+            font-weight: 700;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .entitlement-card {
+            margin-top: 22px;
+        }
+
+        .entitlement {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .entitlement-box {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            background: #fbfdff;
+            text-align: center;
+        }
+
+        .entitlement-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .entitlement-number {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--navy);
+        }
+
+        .entitlement-label {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .actions {
+            margin-top: 28px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .primary-button,
+        .secondary-button {
+            border-radius: 8px;
+            padding: 12px 18px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .primary-button {
+            border: 1px solid var(--navy);
+            background: var(--navy);
+            color: white;
+        }
+
+        .primary-button:hover {
+            background: var(--navy-2);
+        }
+
+        .secondary-button {
+            border: 1px solid #cbd5e1;
+            background: white;
+            color: var(--navy);
+        }
+
+        .secondary-button:hover {
+            background: #f8fafc;
+        }
+
+        .loading {
+            padding: 35px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .error-box {
+            display: none;
+            margin-top: 20px;
+            background: #fff5f5;
+            border: 1px solid #f3b4b4;
+            color: var(--danger);
+            border-radius: 10px;
+            padding: 16px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: var(--navy);
+            color: #dbe4f0;
+            margin-top: 0;
+        }
+
+        .footer-inner {
+            max-width: 1240px;
+            margin: auto;
+            padding: 34px 24px;
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-title {
+            color: white;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .footer-text {
+            max-width: 560px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        @media (max-width: 850px) {
+            .brand-inner,
+            .gov-strip-inner,
+            .nav-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav-inner {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            .nav-links {
+                width: 100%;
+            }
+
+            .nav-links a {
+                padding: 10px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .entitlement {
+                grid-template-columns: 1fr;
+            }
+
+            .status-banner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .brand-title {
+                font-size: 20px;
+            }
+
+            .emblem {
+                width: 54px;
+                height: 54px;
+                font-size: 20px;
+            }
+
+            .hero-inner {
+                padding-top: 35px;
+                padding-bottom: 35px;
+            }
+
+            .content {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .detail-row {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .detail-value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="gov-strip">
+        <div class="gov-strip-inner">
+            <div class="gov-left">
+                Government of India
+            </div>
+
+            <div class="gov-right">
+                <span>Public Distribution System</span>
+                <span>Accessibility</span>
+                <span>English</span>
+            </div>
+        </div>
+    </div>
+
+    <header class="brand-header">
+        <div class="brand-inner">
+
+            <div class="brand">
+                <div class="emblem" aria-label="Government emblem placeholder">
+                    ☸
+                </div>
+
+                <div>
+                    <div class="brand-title">
+                        Public Distribution System
+                    </div>
+
+                    <div class="brand-subtitle">
+                        Citizen Ration Portal
+                    </div>
+                </div>
+            </div>
+
+            <div class="citizen-status">
+                <div class="user-badge">
+                    C
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    onclick="logoutCitizen()"
+                >
+                    Logout
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-inner">
+
+            <div class="nav-links">
+
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="citizen-dashboard.html">
+                    Citizen Portal
+                </a>
+
+                <a
+                    href="ration-card.html"
+                    class="active"
+                >
+                    My Ration Card
+                </a>
+
+                <a href="family.html">
+                    My Family
+                </a>
+
+                <a href="apply-ration-card.html">
+                    Apply
+                </a>
+
+                <a href="grievance.html">
+                    Grievance
+                </a>
+
+            </div>
+
+            <div class="nav-date" id="currentDate">
+                Loading...
+            </div>
+
+        </div>
+    </nav>
+
+    <section class="page-hero">
+
+        <div class="hero-inner">
+
+            <div class="breadcrumb">
+                <a href="citizen-dashboard.html">
+                    Citizen Portal
+                </a>
+                &nbsp; / &nbsp;
+                My Ration Card
+            </div>
+
+            <h1 class="hero-title">
+                My <span>Ration Card</span>
+            </h1>
+
+            <p class="hero-text">
+                View your registered ration card information,
+                household details and monthly food-grain entitlement
+                from the Citizen Portal.
+            </p>
+
+        </div>
+
+    </section>
+
+    <main class="content">
+
+        <div class="status-banner">
+
+            <div>
+                <div class="status-label">
+                    Ration Card Number
+                </div>
+
+                <div
+                    class="status-value"
+                    id="rationCardNumber"
+                >
+                    Loading...
+                </div>
+            </div>
+
+            <div>
+                <span
+                    class="active-pill"
+                    id="statusPill"
+                >
+                    <span class="active-dot"></span>
+                    Loading
+                </span>
+            </div>
+
+        </div>
+
+        <h2 class="section-title">
+            Ration Card Details
+        </h2>
+
+        <div
+            class="loading"
+            id="loadingBox"
+        >
+            Loading your ration card information...
+        </div>
+
+        <div
+            class="cards-grid"
+            id="detailsGrid"
+            style="display:none;"
+        >
+
+            <section class="info-card">
+
+                <div class="card-header">
+                    <h3>
+                        Card Information
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Ration Card Number
+                        </span>
+
+                        <span
+                            class="detail-value"
+                            id="detailCardNumber"
+                        >
+                            —
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Card Type
+                        </span>
+
+                        <span
+                            class="detail-value"
+                            id="cardType"
+                        >
+                            —
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Status
+                        </span>
+
+                        <span
+                            class="detail-value"
+                            id="cardStatus"
+                        >
+                            —
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Head of Family
+                        </span>
+
+                        <span
+                            class="detail-value"
+                            id="headOfFamily"
+                        >
+                            —
+                        </span>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="info-card">
+
+                <div class="card-header">
+                    <h3>
+                        Address
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Address
+                        </span>
+
+                        <span
+                            class="detail-value"
+                            id="address"
+                        >
+                            —
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            District
+                        </span>
+
+                        <span
+                            class="detail-value"
+                            id="district"
+                        >
+                            —
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            State
+                        </span>
+
+                        <span
+                            class="detail-value"
+                            id="state"
+                        >
+                            Telangana
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">
+                            Record Status
+                        </span>
+
+                        <span
+                            class="detail-value"
+                            id="recordStatus"
+                        >
+                            —
+                        </span>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <section
+            class="info-card entitlement-card"
+            id="entitlementSection"
+            style="display:none;"
+        >
+
+            <div class="card-header">
+                <h3>
+                    Monthly Entitlement
+                </h3>
+            </div>
+
+            <div class="card-body">
+
+                <div class="entitlement">
+
+                    <div class="entitlement-box">
+
+                        <div class="entitlement-icon">
+                            🌾
+                        </div>
+
+                        <div
+                            class="entitlement-number"
+                            id="adultRice"
+                        >
+                            0
+                        </div>
+
+                        <div class="entitlement-label">
+                            Adult Rice Quota
+                        </div>
+
+                    </div>
+
+                    <div class="entitlement-box">
+
+                        <div class="entitlement-icon">
+                            👶
+                        </div>
+
+                        <div
+                            class="entitlement-number"
+                            id="childRice"
+                        >
+                            0
+                        </div>
+
+                        <div class="entitlement-label">
+                            Child Rice Quota
+                        </div>
+
+                    </div>
+
+                    <div class="entitlement-box">
+
+                        <div class="entitlement-icon">
+                            🍚
+                        </div>
+
+                        <div
+                            class="entitlement-number"
+                            id="totalRice"
+                        >
+                            0
+                        </div>
+
+                        <div class="entitlement-label">
+                            Total Rice Quota
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <div
+            class="error-box"
+            id="errorBox"
+        ></div>
+
+        <div class="actions">
+
+            <a
+                href="e-ration-card.html"
+                class="primary-button"
+            >
+                View Digital Ration Card
+            </a>
+
+            <a
+                href="family.html"
+                class="secondary-button"
+            >
+                View My Family
+            </a>
+
+            <a
+                href="citizen-dashboard.html"
+                class="secondary-button"
+            >
+                Back to Citizen Portal
+            </a>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+
+        <div class="footer-inner">
+
+            <div>
+                <div class="footer-title">
+                    Public Distribution System
+                </div>
+
+                <div class="footer-text">
+                    Citizen Ration Portal for accessing
+                    ration card and food security services.
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="transparency.html">
+                    Transparency
+                </a>
+
+                <a href="grievance.html">
+                    Grievance
+                </a>
+
+                <a href="citizen-dashboard.html">
+                    Citizen Portal
+                </a>
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/auth-guard.js"></script>
+
+    <script>
+        "use strict";
+
+        const API_BASE =
+            window.RATION_API_BASE ||
+            "http://localhost:8080/api";
+
+        function getToken() {
+            return localStorage.getItem(
+                "rationPortalToken"
+            );
+        }
+
+        function authenticatedFetch(
+            url,
+            options = {}
+        ) {
+            const token = getToken();
+
+            const headers = {
+                ...(options.headers || {})
+            };
+
+            if (token) {
+                headers.Authorization =
+                    "Bearer " + token;
+            }
+
+            headers.Accept =
+                "application/json";
+
+            return fetch(url, {
+                ...options,
+                headers
+            });
+        }
+
+        function getCurrentUser() {
+            try {
+                return JSON.parse(
+                    localStorage.getItem(
+                        "rationPortalUser"
+                    ) || "null"
+                );
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function setText(
+            id,
+            value,
+            fallback = "—"
+        ) {
+            const element =
+                document.getElementById(id);
+
+            if (!element) {
+                return;
+            }
+
+            element.textContent =
+                value === null ||
+                value === undefined ||
+                value === ""
+                    ? fallback
+                    : value;
+        }
+
+        function firstValue(
+            object,
+            keys,
+            fallback = null
+        ) {
+            if (!object) {
+                return fallback;
+            }
+
+            for (const key of keys) {
+                if (
+                    object[key] !== undefined &&
+                    object[key] !== null &&
+                    object[key] !== ""
+                ) {
+                    return object[key];
+                }
+            }
+
+            return fallback;
+        }
+
+        function calculateRice(
+            data
+        ) {
+            const adult =
+                Number(
+                    firstValue(
+                        data,
+                        [
+                            "adultRice",
+                            "adultRiceQuota",
+                            "adultQuota"
+                        ],
+                        0
+                    )
+                ) || 0;
+
+            const child =
+                Number(
+                    firstValue(
+                        data,
+                        [
+                            "childRice",
+                            "childRiceQuota",
+                            "childQuota"
+                        ],
+                        0
+                    )
+                ) || 0;
+
+            const total =
+                Number(
+                    firstValue(
+                        data,
+                        [
+                            "totalRice",
+                            "totalRiceQuota",
+                            "riceQuota"
+                        ],
+                        adult + child
+                    )
+                ) || (adult + child);
+
+            setText(
+                "adultRice",
+                adult
+            );
+
+            setText(
+                "childRice",
+                child
+            );
+
+            setText(
+                "totalRice",
+                total
+            );
+        }
+
+        function showError(
+            message
+        ) {
+            const loading =
+                document.getElementById(
+                    "loadingBox"
+                );
+
+            const error =
+                document.getElementById(
+                    "errorBox"
+                );
+
+            if (loading) {
+                loading.style.display =
+                    "none";
+            }
+
+            if (error) {
+                error.textContent =
+                    message;
+
+                error.style.display =
+                    "block";
+            }
+        }
+
+        function showData() {
+            const loading =
+                document.getElementById(
+                    "loadingBox"
+                );
+
+            const grid =
+                document.getElementById(
+                    "detailsGrid"
+                );
+
+            const entitlement =
+                document.getElementById(
+                    "entitlementSection"
+                );
+
+            if (loading) {
+                loading.style.display =
+                    "none";
+            }
+
+            if (grid) {
+                grid.style.display =
+                    "grid";
+            }
+
+            if (entitlement) {
+                entitlement.style.display =
+                    "block";
+            }
+        }
+
+        function normalizeResponse(
+            response
+        ) {
+            if (!response) {
+                return null;
+            }
+
+            if (
+                response.rationCard
+            ) {
+                return response.rationCard;
+            }
+
+            if (
+                response.data
+            ) {
+                return response.data;
+            }
+
+            return response;
+        }
+
+        async function loadRationCard() {
+
+            const user =
+                getCurrentUser();
+
+            /*
+             * The backend is authoritative.
+             * We first try the logged-in user's
+             * ration-card identifier if one exists.
+             */
+            const rationCardNumber =
+                user
+                    ? firstValue(
+                        user,
+                        [
+                            "rationCardNumber",
+                            "ration_card_number",
+                            "cardNumber",
+                            "rationId",
+                            "ration_id"
+                        ]
+                    )
+                    : null;
+
+            const memberId =
+                user
+                    ? firstValue(
+                        user,
+                        [
+                            "memberId",
+                            "member_id"
+                        ]
+                    )
+                    : null;
+
+            let endpoint = null;
+
+            if (rationCardNumber) {
+
+                endpoint =
+                    API_BASE +
+                    "/ration-cards/" +
+                    encodeURIComponent(
+                        rationCardNumber
+                    );
+
+            } else if (memberId) {
+
+                endpoint =
+                    API_BASE +
+                    "/family-members/" +
+                    encodeURIComponent(
+                        memberId
+                    );
+
+            } else {
+
+                showError(
+                    "Your account does not currently contain a ration card number. Please contact the administrator or complete the ration card application."
+                );
+
+                return;
+            }
+
+            try {
+
+                const response =
+                    await authenticatedFetch(
+                        endpoint
+                    );
+
+                if (
+                    response.status === 401 ||
+                    response.status === 403
+                ) {
+                    if (
+                        window.authGuard &&
+                        typeof window.authGuard.logoutAndRedirect ===
+                            "function"
+                    ) {
+                        window.authGuard.logoutAndRedirect();
+                    }
+
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Unable to load ration card information."
+                    );
+                }
+
+                const raw =
+                    await response.json();
+
+                const data =
+                    normalizeResponse(
+                        raw
+                    );
+
+                if (!data) {
+                    throw new Error(
+                        "No ration card information was returned."
+                    );
+                }
+
+                populateCard(
+                    data
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Ration card loading error:",
+                    error
+                );
+
+                /*
+                 * If the backend endpoint is not yet
+                 * available for the current account,
+                 * keep the page usable and clearly
+                 * report the real situation.
+                 */
+                showError(
+                    "Ration card details could not be loaded from the server yet. Please make sure your ration card is registered in the system."
+                );
+            }
+        }
+
+        function populateCard(
+            data
+        ) {
+
+            const cardNumber =
+                firstValue(
+                    data,
+                    [
+                        "rationCardNumber",
+                        "ration_card_number",
+                        "cardNumber",
+                        "rationId",
+                        "ration_id"
+                    ]
+                );
+
+            const cardType =
+                firstValue(
+                    data,
+                    [
+                        "cardType",
+                        "card_type",
+                        "type"
+                    ]
+                );
+
+            const status =
+                firstValue(
+                    data,
+                    [
+                        "status",
+                        "cardStatus",
+                        "card_status"
+                    ],
+                    "Active"
+                );
+
+            const head =
+                firstValue(
+                    data,
+                    [
+                        "headOfFamily",
+                        "head_of_family",
+                        "headOfFamilyName",
+                        "name"
+                    ]
+                );
+
+            const address =
+                firstValue(
+                    data,
+                    [
+                        "address",
+                        "fullAddress"
+                    ]
+                );
+
+            const district =
+                firstValue(
+                    data,
+                    [
+                        "district"
+                    ]
+                );
+
+            const state =
+                firstValue(
+                    data,
+                    [
+                        "state"
+                    ],
+                    "Telangana"
+                );
+
+            setText(
+                "rationCardNumber",
+                cardNumber
+            );
+
+            setText(
+                "detailCardNumber",
+                cardNumber
+            );
+
+            setText(
+                "cardType",
+                cardType
+            );
+
+            setText(
+                "cardStatus",
+                status
+            );
+
+            setText(
+                "headOfFamily",
+                head
+            );
+
+            setText(
+                "address",
+                address
+            );
+
+            setText(
+                "district",
+                district
+            );
+
+            setText(
+                "state",
+                state
+            );
+
+            setText(
+                "recordStatus",
+                status
+            );
+
+            const pill =
+                document.getElementById(
+                    "statusPill"
+                );
+
+            if (pill) {
+                pill.innerHTML =
+                    '<span class="active-dot"></span>' +
+                    String(status);
+            }
+
+            calculateRice(
+                data
+            );
+
+            showData();
+        }
+
+        function updateDate() {
+
+            const element =
+                document.getElementById(
+                    "currentDate"
+                );
+
+            if (!element) {
+                return;
+            }
+
+            const now =
+                new Date();
+
+            element.textContent =
+                now.toLocaleDateString(
+                    "en-IN",
+                    {
+                        weekday: "short",
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+                    }
+                );
+        }
+
+        function logoutCitizen() {
+
+            if (
+                window.authGuard &&
+                typeof window.authGuard.logoutAndRedirect ===
+                    "function"
+            ) {
+                window.authGuard.logoutAndRedirect();
+                return;
+            }
+
+            localStorage.removeItem(
+                "rationPortalToken"
+            );
+
+            localStorage.removeItem(
+                "rationPortalUser"
+            );
+
+            window.location.href =
+                "login.html";
+        }
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                updateDate();
+
+                loadRationCard();
+
+            }
+        );
+    </script>
+
+</body>
+</html>
