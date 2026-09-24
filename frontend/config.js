@@ -35,7 +35,7 @@
      * with the default Spring Boot port 8080.
      */
     const LOCAL_API =
-        "http://localhost:8080/api";
+        "https://ration-portal-backend.onrender.com/api";
 
     /*
      * Detect whether the frontend is being opened
