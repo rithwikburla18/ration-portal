@@ -362,12 +362,24 @@
             line-height: 1.6;
         }
 
-        .declaration input {
-            width: 17px;
-            height: 17px;
-            flex-shrink: 0;
-            margin-top: 2px;
-            accent-color: #087fe5;
+        .declaration input[type="checkbox"] {
+        appearance: auto !important;
+        -webkit-appearance: checkbox !important;
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px !important;
+        min-height: 18px !important;
+        max-width: 18px !important;
+        max-height: 18px !important;
+        flex: 0 0 18px !important;
+        margin: 2px 0 0 0 !important;
+        padding: 0 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+        position: static !important;
+        accent-color: #087fe5 !important;
+        cursor: pointer !important;
         }
 
         .application-actions {

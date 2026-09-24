@@ -3,698 +3,913 @@
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
-        content="Digital e-Ration Card service - Ration Portal"
+        content="Digital e-Ration Card - Ration Portal"
     >
-
-    <meta name="theme-color" content="#06284a">
 
     <title>Digital e-Ration Card | Ration Portal</title>
 
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/redesign.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
+        href="../css/redesign.css"
     >
 
     <style>
-        .ecard-page {
-            min-height: 100vh;
-            background:
-                radial-gradient(
-                    circle at 5% 8%,
-                    rgba(245,130,32,.07),
-                    transparent 28%
-                ),
-                radial-gradient(
-                    circle at 95% 55%,
-                    rgba(19,136,8,.07),
-                    transparent 30%
-                ),
-                #f4f8fb;
+        :root {
+            --ration-navy: #082c5c;
+            --ration-navy-dark: #041d3d;
+            --ration-saffron: #ff9933;
+            --ration-green: #138808;
+            --ration-gold: #d9a441;
+            --ration-bg: #f4f7fb;
+            --ration-border: #d9e1ec;
+            --ration-text: #172033;
+            --ration-muted: #667085;
+            --ration-white: #ffffff;
+            --ration-danger: #b42318;
         }
 
-        .ecard-hero {
-            position: relative;
-            overflow: hidden;
-            padding: 44px 20px 74px;
-            color: #fff;
-            background:
-                linear-gradient(
-                    135deg,
-                    #041d38,
-                    #073d68 55%,
-                    #0b4775
-                );
+        * {
+            box-sizing: border-box;
         }
 
-        .ecard-hero::before {
-            content: "";
-            position: absolute;
-            width: 430px;
-            height: 430px;
-            right: -180px;
-            top: -235px;
-            border: 2px solid rgba(255,255,255,.09);
-            border-radius: 50%;
+        body {
+            margin: 0;
+            background: var(--ration-bg);
+            color: var(--ration-text);
+            font-family:
+                "Segoe UI",
+                Arial,
+                Helvetica,
+                sans-serif;
         }
 
-        .ecard-hero::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 4px;
+        a {
+            text-decoration: none;
+        }
+
+        .tricolor-line {
+            height: 5px;
             background:
                 linear-gradient(
                     90deg,
-                    #f58220 0 33.33%,
-                    #fff 33.33% 66.66%,
-                    #138808 66.66%
+                    var(--ration-saffron) 0 33.33%,
+                    #ffffff 33.33% 66.66%,
+                    var(--ration-green) 66.66% 100%
                 );
-            opacity: .85;
         }
 
-        .ecard-hero-inner {
-            position: relative;
-            z-index: 2;
-            width: min(1180px, 100%);
+        .gov-strip {
+            background: #f7f7f7;
+            border-bottom: 1px solid #e1e5ea;
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        .gov-strip-inner {
+            width: min(1200px, 94%);
             margin: auto;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
         }
 
-        .ecard-breadcrumb {
-            margin-bottom: 14px;
-            color: rgba(255,255,255,.68);
-            font-size: 12px;
+        .gov-left {
+            display: flex;
+            align-items: center;
+            gap: 9px;
         }
 
-        .ecard-breadcrumb a {
-            color: rgba(255,255,255,.92);
+        .flag-mini {
+            width: 23px;
+            height: 16px;
+            border: 1px solid #c7c7c7;
+            display: inline-block;
+            background:
+                linear-gradient(
+                    to bottom,
+                    #ff9933 0 33.33%,
+                    #ffffff 33.33% 66.66%,
+                    #138808 66.66% 100%
+                );
         }
 
-        .ecard-hero h1 {
-            margin: 0 0 8px;
-            color: #fff;
-            font-size: clamp(30px, 4vw, 43px);
-            font-weight: 850;
-            letter-spacing: -.8px;
+        .top-tools {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .ecard-hero p {
+        .brand-header {
+            background: #ffffff;
+            border-bottom: 1px solid #dce3eb;
+        }
+
+        .brand-inner {
+            width: min(1200px, 94%);
+            margin: auto;
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .emblem {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            border: 2px solid var(--ration-gold);
+            display: grid;
+            place-items: center;
+            background: #fffdf8;
+            color: var(--ration-navy);
+            font-size: 29px;
+            font-weight: 700;
+        }
+
+        .brand-text h1 {
+            margin: 0;
+            color: var(--ration-navy);
+            font-size: 23px;
+            line-height: 1.15;
+        }
+
+        .brand-text p {
+            margin: 5px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .accessibility {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .accessibility button {
+            border: 1px solid #cfd8e3;
+            background: #ffffff;
+            color: var(--ration-navy);
+            min-width: 32px;
+            height: 32px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .login-btn {
+            background: var(--ration-navy);
+            color: #ffffff;
+            border: 0;
+            padding: 10px 16px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .main-nav {
+            background: var(--ration-navy);
+            color: #ffffff;
+        }
+
+        .nav-inner {
+            width: min(1200px, 94%);
+            margin: auto;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            padding: 15px 13px;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(255,255,255,.08);
+            border-bottom-color: var(--ration-saffron);
+        }
+
+        .nav-date {
+            font-size: 13px;
+            opacity: .9;
+            white-space: nowrap;
+        }
+
+        .page-hero {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    circle at 80% 20%,
+                    rgba(255,153,51,.18),
+                    transparent 28%
+                ),
+                linear-gradient(
+                    135deg,
+                    #082c5c,
+                    #0a3c78 55%,
+                    #075f36
+                );
+            color: #ffffff;
+        }
+
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            right: -120px;
+            top: -150px;
+            border-radius: 50%;
+            border: 35px solid rgba(255,255,255,.06);
+        }
+
+        .hero-inner {
+            width: min(1200px, 94%);
+            margin: auto;
+            padding: 48px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-kicker {
+            color: #ffd19c;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .hero-inner h2 {
+            margin: 9px 0 8px;
+            font-size: clamp(28px, 4vw, 44px);
+            line-height: 1.1;
+        }
+
+        .hero-inner p {
             max-width: 720px;
             margin: 0;
-            color: rgba(255,255,255,.78);
-            font-size: 14px;
+            color: #e7eef8;
             line-height: 1.7;
         }
 
-        .ecard-content {
-            position: relative;
-            z-index: 3;
-            width: min(1080px, 100%);
-            margin: -40px auto 0;
-            padding: 0 20px 60px;
+        .page-container {
+            width: min(1200px, 94%);
+            margin: 30px auto 60px;
         }
 
-        .ecard-card {
-            overflow: hidden;
-            border: 1px solid #dce6ee;
-            border-radius: 20px;
-            background: #fff;
-            box-shadow: 0 22px 60px rgba(6,40,74,.11);
+        .search-panel {
+            background: #ffffff;
+            border: 1px solid var(--ration-border);
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, .06);
+            margin-bottom: 24px;
         }
 
-        .ecard-search {
-            padding: 25px 28px;
-            border-bottom: 1px solid #e5edf3;
-            background: #fbfdff;
-        }
-
-        .ecard-search h2 {
-            margin: 0 0 5px;
-            color: #062d56;
+        .search-panel h3 {
+            margin: 0 0 7px;
+            color: var(--ration-navy);
             font-size: 19px;
-            font-weight: 850;
         }
 
-        .ecard-search p {
-            margin: 0 0 17px;
-            color: #718398;
-            font-size: 11px;
-            line-height: 1.5;
+        .search-panel p {
+            margin: 0 0 16px;
+            color: var(--ration-muted);
+            font-size: 14px;
         }
 
-        .ecard-search-row {
+        .search-row {
             display: flex;
             gap: 10px;
         }
 
-        .ecard-input {
+        .search-row input {
             flex: 1;
-            min-height: 45px;
+            min-width: 0;
+            height: 46px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
             padding: 0 14px;
-            border: 1px solid #d4e0e9;
-            border-radius: 8px;
+            font-size: 15px;
             outline: none;
-            color: #24384b;
-            background: #fff;
-            font-size: 12px;
         }
 
-        .ecard-input:focus {
-            border-color: #087fe5;
-            box-shadow: 0 0 0 3px rgba(8,127,229,.08);
+        .search-row input:focus {
+            border-color: #3574b8;
+            box-shadow: 0 0 0 3px rgba(53,116,184,.12);
         }
 
-        .ecard-button {
-            min-height: 45px;
-            padding: 0 22px;
-            border: 0;
-            border-radius: 8px;
-            color: #fff;
+        .primary-btn,
+        .secondary-btn {
+            min-height: 46px;
+            border-radius: 6px;
+            padding: 0 18px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .primary-btn {
+            background: var(--ration-navy);
+            color: #ffffff;
+        }
+
+        .secondary-btn {
+            background: #ffffff;
+            color: var(--ration-navy);
+            border-color: #cbd5e1;
+        }
+
+        .status-message {
+            display: none;
+            margin-top: 13px;
+            border-radius: 7px;
+            padding: 11px 13px;
+            font-size: 14px;
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .status-message.error {
+            background: #fef3f2;
+            color: var(--ration-danger);
+            border: 1px solid #fecdca;
+        }
+
+        .status-message.info {
+            background: #eff8ff;
+            color: #175cd3;
+            border: 1px solid #b2ddff;
+        }
+
+        .card-section {
+            display: none;
+        }
+
+        .card-section.show {
+            display: block;
+        }
+
+        .digital-card {
+            background: #ffffff;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #cfd8e3;
+            box-shadow: 0 15px 45px rgba(15, 23, 42, .10);
+        }
+
+        .card-top-border {
+            height: 8px;
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--ration-saffron) 0 33.33%,
+                    #ffffff 33.33% 66.66%,
+                    var(--ration-green) 66.66%
+                );
+        }
+
+        .card-heading {
             background:
                 linear-gradient(
                     135deg,
-                    #0789ef,
-                    #086bc4
+                    #f8fbff,
+                    #ffffff
                 );
+            padding: 22px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-government {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .card-emblem {
+            width: 54px;
+            height: 54px;
+            border: 2px solid var(--ration-gold);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: var(--ration-navy);
+            background: #fffdf8;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .card-government strong {
+            display: block;
+            color: var(--ration-navy);
+            font-size: 18px;
+        }
+
+        .card-government span {
+            display: block;
+            margin-top: 3px;
+            color: var(--ration-muted);
             font-size: 12px;
-            font-weight: 800;
-            cursor: pointer;
         }
 
-        .ecard-button:disabled {
-            opacity: .7;
-            cursor: wait;
+        .record-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid #bad8c0;
+            background: #f0fdf4;
+            color: #166534;
+            border-radius: 999px;
+            padding: 7px 11px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        .ecard-message {
-            display: none;
-            margin: 20px 28px 0;
-            padding: 13px 15px;
+        .record-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #16a34a;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 245px;
+            gap: 28px;
+        }
+
+        .details-title {
+            margin: 0 0 17px;
+            color: var(--ration-navy);
+            font-size: 18px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            border: 1px solid #e1e7ef;
             border-radius: 9px;
+            overflow: hidden;
+        }
+
+        .detail-item {
+            padding: 14px 15px;
+            border-right: 1px solid #e1e7ef;
+            border-bottom: 1px solid #e1e7ef;
+        }
+
+        .detail-item:nth-child(even) {
+            border-right: 0;
+        }
+
+        .detail-label {
+            display: block;
+            color: #667085;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .55px;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #182230;
+            font-size: 15px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .quota-box {
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 1px solid #d7e2ee;
+            overflow: hidden;
+        }
+
+        .quota-heading {
+            background: #f5f8fc;
+            padding: 12px 15px;
+            color: var(--ration-navy);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .quota-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .quota-item {
+            padding: 17px 12px;
+            text-align: center;
+            border-right: 1px solid #e1e7ef;
+        }
+
+        .quota-item:last-child {
+            border-right: 0;
+        }
+
+        .quota-number {
+            display: block;
+            color: var(--ration-navy);
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        .quota-label {
+            color: var(--ration-muted);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .qr-panel {
+            border: 1px solid #e1e7ef;
+            border-radius: 10px;
+            padding: 17px;
+            text-align: center;
+            background: #fbfcfe;
+        }
+
+        .qr-panel h4 {
+            margin: 0 0 13px;
+            color: var(--ration-navy);
+            font-size: 15px;
+        }
+
+        #qrCanvas {
+            display: block;
+            width: 190px !important;
+            height: 190px !important;
+            margin: 0 auto 12px;
+            background: #ffffff;
+        }
+
+        .qr-help {
+            color: var(--ration-muted);
+            font-size: 11px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .card-footer {
+            border-top: 1px solid #e1e7ef;
+            background: #fbfcfe;
+            padding: 14px 25px;
+            color: #667085;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .family-section {
+            margin-top: 26px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .section-heading h3 {
+            margin: 0;
+            color: var(--ration-navy);
+            font-size: 19px;
+        }
+
+        .family-table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #dce3eb;
+            border-radius: 9px;
+            background: #ffffff;
+        }
+
+        .family-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        .family-table th {
+            background: var(--ration-navy);
+            color: #ffffff;
+            text-align: left;
+            padding: 12px 14px;
             font-size: 12px;
+        }
+
+        .family-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e8edf3;
+            font-size: 13px;
+        }
+
+        .family-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .family-table tr:nth-child(even) {
+            background: #fafcff;
+        }
+
+        .category-badge {
+            display: inline-block;
+            border-radius: 999px;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .category-adult {
+            background: #e8f1ff;
+            color: #175cd3;
+        }
+
+        .category-child {
+            background: #fff4e5;
+            color: #b54708;
+        }
+
+        .card-actions {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 35px 20px;
+            color: var(--ration-muted);
+            background: #ffffff;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .bottom-links {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .bottom-links a {
+            padding: 10px 15px;
+            background: #ffffff;
+            border: 1px solid #d5dde7;
+            border-radius: 6px;
+            color: var(--ration-navy);
+            font-size: 13px;
             font-weight: 600;
         }
 
-        .ecard-message.show {
-            display: block;
+        .site-footer {
+            background: var(--ration-navy-dark);
+            color: #dbe5f1;
+            margin-top: 60px;
         }
 
-        .ecard-message.error {
-            color: #8f1c1c;
-            border: 1px solid #f2c3c3;
-            background: #fff0f0;
-        }
-
-        .ecard-message.success {
-            color: #075b2b;
-            border: 1px solid #bce5c9;
-            background: #eaf8ef;
-        }
-
-        .ecard-loading {
-            display: none;
-            padding: 45px 20px;
+        .footer-inner {
+            width: min(1200px, 94%);
+            margin: auto;
+            padding: 32px 0;
             text-align: center;
         }
 
-        .ecard-loading.show {
-            display: block;
+        .footer-inner strong {
+            color: #ffffff;
         }
 
-        .ecard-spinner {
-            width: 35px;
-            height: 35px;
-            margin: 0 auto 12px;
-            border: 3px solid #dceaf4;
-            border-top-color: #087fe5;
+        .footer-inner p {
+            margin: 7px 0 0;
+            font-size: 12px;
+            color: #aebed1;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            gap: 9px;
+            color: var(--ration-navy);
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 13px;
+        }
+
+        .loading.show {
+            display: flex;
+        }
+
+        .spinner {
+            width: 17px;
+            height: 17px;
+            border: 2px solid #d7e2ee;
+            border-top-color: var(--ration-navy);
             border-radius: 50%;
-            animation: ecardSpin .8s linear infinite;
+            animation: spin .7s linear infinite;
         }
 
-        .ecard-loading p {
-            margin: 0;
-            color: #718398;
-            font-size: 11px;
-        }
-
-        @keyframes ecardSpin {
+        @keyframes spin {
             to {
                 transform: rotate(360deg);
             }
         }
 
-        .ecard-empty {
-            display: none;
-            padding: 48px 20px;
-            text-align: center;
-        }
-
-        .ecard-empty.show {
-            display: block;
-        }
-
-        .ecard-empty-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 14px;
-            display: grid;
-            place-items: center;
-            border-radius: 50%;
-            color: #0871c9;
-            background: #eaf5fd;
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .ecard-empty h3 {
-            margin: 0 0 7px;
-            color: #062d56;
-            font-size: 17px;
-        }
-
-        .ecard-empty p {
-            max-width: 470px;
-            margin: 0 auto;
-            color: #718398;
-            font-size: 11px;
-            line-height: 1.6;
-        }
-
-        .ecard-result {
-            display: none;
-            padding: 28px;
-        }
-
-        .ecard-result.show {
-            display: block;
-        }
-
-        .ecard-result-top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .ecard-result-title h2 {
-            margin: 0 0 5px;
-            color: #062d56;
-            font-size: 22px;
-            font-weight: 850;
-        }
-
-        .ecard-result-title p {
-            margin: 0;
-            color: #718398;
-            font-size: 11px;
-        }
-
-        .verified-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 13px;
-            border: 1px solid #bce5c9;
-            border-radius: 999px;
-            color: #075b2b;
-            background: #eaf8ef;
-            font-size: 10px;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-
-        .ration-card-preview {
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 25px;
-            border: 1px solid #cddbe5;
-            border-radius: 16px;
-            background: #fff;
-            box-shadow: 0 15px 35px rgba(6,40,74,.08);
-        }
-
-        .ration-card-topline {
-            height: 5px;
-            background:
-                linear-gradient(
-                    90deg,
-                    #f58220 0 33.33%,
-                    #fff 33.33% 66.66%,
-                    #138808 66.66%
-                );
-        }
-
-        .ration-card-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 19px 21px;
-            border-bottom: 1px solid #e5edf3;
-            background:
-                linear-gradient(
-                    180deg,
-                    #fff,
-                    #f8fbfd
-                );
-        }
-
-        .ration-card-emblem {
-            width: 55px;
-            height: 55px;
-            flex: 0 0 55px;
-            display: grid;
-            place-items: center;
-            border: 1px solid #d9e4ec;
-            border-radius: 50%;
-            color: #062d56;
-            background: #f7fafc;
-            font-size: 23px;
-            font-weight: 800;
-        }
-
-        .ration-card-government {
-            flex: 1;
-        }
-
-        .ration-card-government h3 {
-            margin: 0 0 3px;
-            color: #062d56;
-            font-size: 14px;
-            font-weight: 850;
-        }
-
-        .ration-card-government p {
-            margin: 0;
-            color: #718398;
-            font-size: 9px;
-            line-height: 1.5;
-        }
-
-        .ration-card-label {
-            padding: 8px 12px;
-            border-radius: 6px;
-            color: #fff;
-            background: #062d56;
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: .7px;
-        }
-
-        .ration-card-body {
-            display: grid;
-            grid-template-columns: 1fr 170px;
-            gap: 20px;
-            padding: 22px;
-        }
-
-        .ration-card-fields {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-        }
-
-        .ration-field {
-            padding-bottom: 10px;
-            border-bottom: 1px dashed #dbe5ec;
-        }
-
-        .ration-field.full {
-            grid-column: 1 / -1;
-        }
-
-        .ration-field-label {
-            margin-bottom: 4px;
-            color: #718398;
-            font-size: 8px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .4px;
-        }
-
-        .ration-field-value {
-            color: #18364f;
-            font-size: 11px;
-            font-weight: 700;
-            word-break: break-word;
-        }
-
-        .ration-card-qr {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            min-height: 145px;
-            border: 1px dashed #c9d7e1;
-            border-radius: 10px;
-            background: #fbfdff;
-        }
-
-        .qr-placeholder {
-            display: grid;
-            grid-template-columns: repeat(5, 8px);
-            grid-auto-rows: 8px;
-            gap: 3px;
-            padding: 9px;
-            border: 4px solid #18364f;
-            background: #fff;
-        }
-
-        .qr-placeholder span {
-            background: #18364f;
-        }
-
-        .qr-placeholder span:nth-child(2n) {
-            opacity: 0;
-        }
-
-        .qr-placeholder span:nth-child(5n) {
-            opacity: .45;
-        }
-
-        .qr-label {
-            margin-top: 9px;
-            color: #718398;
-            font-size: 8px;
-            font-weight: 700;
-        }
-
-        .ration-card-footer {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            padding: 12px 21px;
-            border-top: 1px solid #e5edf3;
-            color: #718398;
-            background: #f8fbfd;
-            font-size: 8px;
-        }
-
-        .members-section {
-            margin-top: 25px;
-        }
-
-        .members-section h3 {
-            margin: 0 0 13px;
-            color: #062d56;
-            font-size: 16px;
-            font-weight: 850;
-        }
-
-        .members-table-wrap {
-            overflow-x: auto;
-            border: 1px solid #dce6ee;
-            border-radius: 10px;
-        }
-
-        .members-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-        }
-
-        .members-table th {
-            padding: 11px 13px;
-            color: #526a80;
-            background: #f5f9fc;
-            border-bottom: 1px solid #dce6ee;
-            font-size: 9px;
-            font-weight: 800;
-            text-align: left;
-            text-transform: uppercase;
-            letter-spacing: .35px;
-        }
-
-        .members-table td {
-            padding: 11px 13px;
-            color: #344d63;
-            border-bottom: 1px solid #edf2f6;
-            font-size: 10px;
-        }
-
-        .members-table tbody tr:last-child td {
-            border-bottom: 0;
-        }
-
-        .member-badge {
-            display: inline-flex;
-            padding: 4px 8px;
-            border-radius: 999px;
-            font-size: 8px;
-            font-weight: 800;
-        }
-
-        .member-badge.adult {
-            color: #075b91;
-            background: #eaf5fd;
-        }
-
-        .member-badge.child {
-            color: #8a5700;
-            background: #fff5d8;
-        }
-
-        .ecard-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #e7eef4;
-        }
-
-        .ecard-actions button,
-        .ecard-actions a {
-            min-height: 40px;
-            padding: 0 17px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .ecard-back {
-            color: #526a80;
-            border: 1px solid #d4e0e9;
-            background: #fff;
-        }
-
-        .ecard-print {
-            border: 0;
-            color: #fff;
-            background: #086bc4;
-        }
-
-        .ecard-download {
-            border: 0;
-            color: #fff;
-            background: #138808;
-        }
-
-        @media print {
-            body * {
-                visibility: hidden !important;
+        @media (max-width: 850px) {
+            .brand-inner {
+                align-items: flex-start;
+                padding: 15px 0;
+                flex-direction: column;
             }
 
-            #printArea,
-            #printArea * {
-                visibility: visible !important;
+            .header-actions {
+                justify-content: flex-start;
             }
 
-            #printArea {
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                padding: 0;
-                margin: 0;
-                box-shadow: none;
+            .nav-inner {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 8px 0;
             }
 
-            .ration-card-preview {
-                border: 1px solid #999;
-                box-shadow: none;
+            .nav-date {
+                padding-bottom: 8px;
             }
-        }
 
-        @media (max-width: 720px) {
-            .ration-card-body {
+            .card-grid {
                 grid-template-columns: 1fr;
             }
 
-            .ration-card-qr {
-                min-height: 120px;
-            }
-
-            .ecard-result-top {
-                flex-direction: column;
+            .qr-panel {
+                max-width: 300px;
+                margin: auto;
             }
         }
 
-        @media (max-width: 560px) {
-            .ecard-content {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
-            .ecard-hero {
-                padding: 35px 15px 60px;
-            }
-
-            .ecard-search,
-            .ecard-result {
-                padding: 18px;
-            }
-
-            .ecard-message {
-                margin-left: 18px;
-                margin-right: 18px;
-            }
-
-            .ecard-search-row {
+        @media (max-width: 620px) {
+            .gov-strip-inner {
+                padding: 7px 0;
+                align-items: flex-start;
                 flex-direction: column;
+                gap: 6px;
             }
 
-            .ecard-button {
-                width: 100%;
-            }
-
-            .ration-card-header {
+            .brand {
                 align-items: flex-start;
             }
 
-            .ration-card-label {
-                display: none;
+            .emblem {
+                width: 50px;
+                height: 50px;
+                font-size: 23px;
             }
 
-            .ration-card-fields {
-                grid-template-columns: 1fr;
+            .brand-text h1 {
+                font-size: 19px;
             }
 
-            .ration-field.full {
-                grid-column: auto;
+            .nav-links {
+                width: 100%;
             }
 
-            .ecard-actions {
+            .nav-links a {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+
+            .hero-inner {
+                padding: 35px 0;
+            }
+
+            .search-row {
                 flex-direction: column;
             }
 
-            .ecard-actions button,
-            .ecard-actions a {
+            .search-row button {
                 width: 100%;
+            }
+
+            .card-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-item,
+            .detail-item:nth-child(even) {
+                border-right: 0;
+            }
+
+            .quota-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quota-item {
+                border-right: 0;
+                border-bottom: 1px solid #e1e7ef;
+            }
+
+            .quota-item:last-child {
+                border-bottom: 0;
+            }
+
+            .card-body,
+            .card-heading,
+            .card-footer {
+                padding-left: 17px;
+                padding-right: 17px;
+            }
+        }
+
+        @media print {
+            body {
+                background: #ffffff;
+            }
+
+            .gov-strip,
+            .brand-header,
+            .main-nav,
+            .page-hero,
+            .search-panel,
+            .bottom-links,
+            .site-footer,
+            .card-actions {
+                display: none !important;
+            }
+
+            .page-container {
+                width: 100%;
+                margin: 0;
+            }
+
+            .card-section {
+                display: block !important;
+            }
+
+            .digital-card {
+                box-shadow: none;
+                border: 1px solid #999;
+            }
+
+            .family-section {
+                break-inside: avoid;
             }
         }
     </style>
@@ -702,1253 +917,1368 @@
 
 <body>
 
-<div class="tricolour-line" aria-hidden="true"></div>
+<div class="tricolor-line"></div>
 
-<div class="gov-bar">
-    <div class="gov-bar-left">
-        <span>Government Service Portal</span>
-        <span aria-hidden="true">•</span>
-        <span>Digital Public Distribution System</span>
-    </div>
+<div class="gov-strip">
+    <div class="gov-strip-inner">
+        <div class="gov-left">
+            <span class="flag-mini" aria-hidden="true"></span>
+            <span>Government of India • Public Distribution System</span>
+        </div>
 
-    <div class="gov-bar-right">
-        <a href="../index.html">Home</a>
-        <span aria-hidden="true">|</span>
-        <span>English</span>
+        <div class="top-tools">
+            <span>Digital Public Service</span>
+        </div>
     </div>
 </div>
 
-
 <header class="brand-header">
+    <div class="brand-inner">
 
-    <div class="brand-header-inner">
-
-        <a href="../index.html" class="brand">
-
-            <div class="brand-emblem" aria-hidden="true">
-                <span
-                    style="
-                        font-size:31px;
-                        font-weight:800;
-                        line-height:1;
-                    "
-                >
-                    ✦
-                </span>
+        <div class="brand">
+            <div class="emblem" aria-label="Government emblem placeholder">
+                ✦
             </div>
 
-            <div>
-                <div class="brand-title">
-                    Ration Portal
-                </div>
-
-                <div class="brand-subtitle">
-                    Public Distribution System
-                </div>
+            <div class="brand-text">
+                <h1>Public Distribution System</h1>
+                <p>Ration Portal • Citizen Digital Services</p>
             </div>
-
-        </a>
-
-
-        <nav class="main-nav" aria-label="Main navigation">
-
-            <a href="../index.html">
-                Home
-            </a>
-
-            <a href="apply-ration-card.html">
-                Apply Online
-            </a>
-
-            <a href="applications.html">
-                My Applications
-            </a>
-
-            <a href="grievance.html">
-                Grievance
-            </a>
-
-            <a href="transparency.html">
-                Transparency
-            </a>
-
-        </nav>
-
+        </div>
 
         <div class="header-actions">
 
-            <a
-                href="applications.html"
-                class="btn btn-secondary"
-            >
-                My Applications
-            </a>
+            <div class="accessibility" aria-label="Text size controls">
+                <button
+                    type="button"
+                    id="fontSmall"
+                    title="Decrease text size"
+                >
+                    A-
+                </button>
 
+                <button
+                    type="button"
+                    id="fontNormal"
+                    title="Normal text size"
+                >
+                    A
+                </button>
+
+                <button
+                    type="button"
+                    id="fontLarge"
+                    title="Increase text size"
+                >
+                    A+
+                </button>
+            </div>
+
+            <a
+                class="login-btn"
+                href="citizen-dashboard.html"
+            >
+                Citizen Dashboard
+            </a>
+        </div>
+    </div>
+</header>
+
+<nav class="main-nav">
+    <div class="nav-inner">
+
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="citizen-dashboard.html">Dashboard</a>
+            <a href="ration-card.html">Ration Card</a>
+            <a href="family.html">Family</a>
+            <a
+                href="e-ration-card.html"
+                class="active"
+            >
+                e-Ration Card
+            </a>
+            <a href="distribution.html">Distribution</a>
+        </div>
+
+        <div class="nav-date" id="currentDate">
+            Loading date...
         </div>
 
     </div>
+</nav>
 
-</header>
+<section class="page-hero">
+    <div class="hero-inner">
 
+        <div class="hero-kicker">
+            Citizen Digital Service
+        </div>
 
-<main class="ecard-page">
+        <h2>Digital e-Ration Card</h2>
 
-    <section class="ecard-hero">
+        <p>
+            Access your ration card details, family information and
+            digitally generated QR code from the Ration Portal.
+        </p>
 
-        <div class="ecard-hero-inner">
+    </div>
+</section>
 
-            <div class="ecard-breadcrumb">
-                <a href="../index.html">Home</a>
-                &nbsp; / &nbsp;
-                Digital e-Ration Card
-            </div>
+<main class="page-container">
 
-            <h1>
-                Digital e-Ration Card
-            </h1>
+    <section class="search-panel">
 
-            <p>
-                Access your digital ration card details,
-                family information and ration entitlement
-                through the citizen portal.
-            </p>
+        <h3>Find Your Ration Card</h3>
+
+        <p>
+            Enter your ration card number, or use the ration card
+            associated with your signed-in citizen account.
+        </p>
+
+        <div class="search-row">
+
+            <input
+                type="text"
+                id="rationNumberInput"
+                placeholder="Enter ration card number"
+                autocomplete="off"
+                aria-label="Ration card number"
+            >
+
+            <button
+                type="button"
+                class="primary-btn"
+                id="loadCardButton"
+            >
+                View e-Ration Card
+            </button>
 
         </div>
 
+        <div
+            class="loading"
+            id="loadingMessage"
+        >
+            <span class="spinner"></span>
+            <span>Loading government record...</span>
+        </div>
+
+        <div
+            class="status-message"
+            id="statusMessage"
+            role="alert"
+        ></div>
+
     </section>
 
+    <section
+        class="card-section"
+        id="cardSection"
+    >
 
-    <section class="ecard-content">
+        <article class="digital-card">
 
-        <div class="ecard-card">
+            <div class="card-top-border"></div>
 
-            <div class="ecard-search">
+            <div class="card-heading">
 
-                <h2>
-                    Access Your Digital Card
-                </h2>
+                <div class="card-government">
 
-                <p>
-                    Enter your ration card number to retrieve
-                    the latest available card information.
-                </p>
+                    <div class="card-emblem">
+                        ✦
+                    </div>
 
-                <form id="ecardSearchForm">
+                    <div>
+                        <strong>
+                            Digital Ration Card
+                        </strong>
 
-                    <div class="ecard-search-row">
+                        <span>
+                            Public Distribution System
+                        </span>
+                    </div>
 
-                        <input
-                            type="text"
-                            id="rationNumber"
-                            class="ecard-input"
-                            placeholder="Enter ration card number"
-                            maxlength="100"
-                            autocomplete="off"
-                            required
-                        >
+                </div>
 
-                        <button
-                            type="submit"
-                            id="ecardSearchButton"
-                            class="ecard-button"
-                        >
-                            View e-Ration Card
-                        </button>
+                <div class="record-label">
+                    <span class="record-dot"></span>
+                    <span id="recordLabel">
+                        Government Record
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="card-grid">
+
+                    <div>
+
+                        <h3 class="details-title">
+                            Ration Card Details
+                        </h3>
+
+                        <div class="details-grid">
+
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    Ration Card Number
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="cardNumber"
+                                >
+                                    —
+                                </span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    Card Type
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="cardType"
+                                >
+                                    —
+                                </span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    Head of Family
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="headOfFamily"
+                                >
+                                    —
+                                </span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    Status
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="cardStatus"
+                                >
+                                    —
+                                </span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    Address
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="cardAddress"
+                                >
+                                    —
+                                </span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    District
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="cardDistrict"
+                                >
+                                    —
+                                </span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    State
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="cardState"
+                                >
+                                    —
+                                </span>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">
+                                    Record Status
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="recordStatus"
+                                >
+                                    —
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="quota-box">
+
+                            <div class="quota-heading">
+                                Rice Quota Summary
+                            </div>
+
+                            <div class="quota-grid">
+
+                                <div class="quota-item">
+                                    <span
+                                        class="quota-number"
+                                        id="adultRice"
+                                    >
+                                        —
+                                    </span>
+
+                                    <span class="quota-label">
+                                        Adult Rice
+                                    </span>
+                                </div>
+
+                                <div class="quota-item">
+                                    <span
+                                        class="quota-number"
+                                        id="childRice"
+                                    >
+                                        —
+                                    </span>
+
+                                    <span class="quota-label">
+                                        Child Rice
+                                    </span>
+                                </div>
+
+                                <div class="quota-item">
+                                    <span
+                                        class="quota-number"
+                                        id="totalRice"
+                                    >
+                                        —
+                                    </span>
+
+                                    <span class="quota-label">
+                                        Total Rice
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
-                </form>
+                    <aside class="qr-panel">
 
-            </div>
+                        <h4>
+                            Digital Verification QR
+                        </h4>
 
+                        <canvas
+                            id="qrCanvas"
+                            width="190"
+                            height="190"
+                        ></canvas>
 
-            <div
-                id="ecardMessage"
-                class="ecard-message"
-                role="alert"
-                aria-live="polite"
-            ></div>
-
-
-            <div
-                id="ecardLoading"
-                class="ecard-loading"
-            >
-                <div class="ecard-spinner"></div>
-
-                <p>
-                    Retrieving ration card details...
-                </p>
-            </div>
-
-
-            <div
-                id="ecardEmpty"
-                class="ecard-empty"
-            >
-
-                <div class="ecard-empty-icon">
-                    ?
-                </div>
-
-                <h3>
-                    Ration card not found
-                </h3>
-
-                <p>
-                    No ration card was found for the number
-                    entered. Please verify the card number
-                    and try again.
-                </p>
-
-            </div>
-
-
-            <div
-                id="ecardResult"
-                class="ecard-result"
-            >
-
-                <div class="ecard-result-top">
-
-                    <div class="ecard-result-title">
-
-                        <h2>
-                            Digital Ration Card
-                        </h2>
-
-                        <p id="resultCardNumber">
-                            Ration Card Number: —
+                        <p class="qr-help">
+                            Scan this QR code to open this digital
+                            ration card page for the loaded ration
+                            card number.
                         </p>
 
-                    </div>
-
-                    <div class="verified-badge">
-                        ✓ Verified Record
-                    </div>
+                    </aside>
 
                 </div>
 
-
-                <div
-                    id="printArea"
-                    class="ration-card-preview"
-                >
-
-                    <div class="ration-card-topline"></div>
-
-
-                    <div class="ration-card-header">
-
-                        <div class="ration-card-emblem">
-                            ✦
-                        </div>
-
-                        <div class="ration-card-government">
-
-                            <h3>
-                                Government Public Distribution System
-                            </h3>
-
-                            <p>
-                                Digital Ration Card • Citizen Service Portal
-                            </p>
-
-                        </div>
-
-                        <div class="ration-card-label">
-                            e-RATION CARD
-                        </div>
-
-                    </div>
-
-
-                    <div class="ration-card-body">
-
-                        <div class="ration-card-fields">
-
-                            <div class="ration-field">
-
-                                <div class="ration-field-label">
-                                    Ration Card Number
-                                </div>
-
-                                <div
-                                    id="cardNumber"
-                                    class="ration-field-value"
-                                >
-                                    —
-                                </div>
-
-                            </div>
-
-
-                            <div class="ration-field">
-
-                                <div class="ration-field-label">
-                                    Card Type
-                                </div>
-
-                                <div
-                                    id="cardType"
-                                    class="ration-field-value"
-                                >
-                                    —
-                                </div>
-
-                            </div>
-
-
-                            <div class="ration-field">
-
-                                <div class="ration-field-label">
-                                    Head of Family
-                                </div>
-
-                                <div
-                                    id="headOfFamily"
-                                    class="ration-field-value"
-                                >
-                                    —
-                                </div>
-
-                            </div>
-
-
-                            <div class="ration-field">
-
-                                <div class="ration-field-label">
-                                    District
-                                </div>
-
-                                <div
-                                    id="district"
-                                    class="ration-field-value"
-                                >
-                                    —
-                                </div>
-
-                            </div>
-
-
-                            <div class="ration-field full">
-
-                                <div class="ration-field-label">
-                                    Address
-                                </div>
-
-                                <div
-                                    id="address"
-                                    class="ration-field-value"
-                                >
-                                    —
-                                </div>
-
-                            </div>
-
-
-                            <div class="ration-field">
-
-                                <div class="ration-field-label">
-                                    Status
-                                </div>
-
-                                <div
-                                    id="cardStatus"
-                                    class="ration-field-value"
-                                >
-                                    —
-                                </div>
-
-                            </div>
-
-
-                            <div class="ration-field">
-
-                                <div class="ration-field-label">
-                                    Total Family Members
-                                </div>
-
-                                <div
-                                    id="memberCount"
-                                    class="ration-field-value"
-                                >
-                                    —
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="ration-card-qr">
-
-                            <div
-                                class="qr-placeholder"
-                                aria-hidden="true"
-                            >
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-
-                            <div class="qr-label">
-                                Digital verification
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="ration-card-footer">
-
-                        <span>
-                            Digitally generated citizen record
-                        </span>
-
-                        <span>
-                            Keep this card safe
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <section class="members-section">
-
-                    <h3>
-                        Family Members
-                    </h3>
-
-                    <div class="members-table-wrap">
-
-                        <table class="members-table">
-
-                            <thead>
-
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Name</th>
-                                    <th>Age</th>
-                                    <th>Gender</th>
-                                    <th>Relationship</th>
-                                    <th>Category</th>
-                                    <th>Rice Quota</th>
-                                </tr>
-
-                            </thead>
-
-                            <tbody id="membersBody">
-
-                                <tr>
-                                    <td colspan="7">
-                                        No family member data available.
-                                    </td>
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </section>
-
-
-                <div class="ecard-actions">
-
-                    <a
-                        href="../index.html"
-                        class="ecard-back"
-                    >
-                        ← Back to Home
-                    </a>
+                <div class="card-actions">
 
                     <button
                         type="button"
+                        class="secondary-btn"
                         id="printButton"
-                        class="ecard-print"
                     >
                         Print Card
                     </button>
 
                     <button
                         type="button"
-                        id="downloadButton"
-                        class="ecard-download"
+                        class="primary-btn"
+                        id="pdfButton"
                     >
-                        Download / Save PDF
+                        Save as PDF
                     </button>
 
                 </div>
 
             </div>
 
-        </div>
+            <div class="card-footer">
+                This digital card displays information returned by the
+                Ration Portal backend. The QR code opens the digital
+                card page and is not, by itself, a cryptographic
+                certificate or proof of identity.
+            </div>
+
+        </article>
+
+        <section class="family-section">
+
+            <div class="section-heading">
+                <h3>Family Members</h3>
+            </div>
+
+            <div
+                class="family-table-wrapper"
+                id="familyTableWrapper"
+            >
+
+                <table class="family-table">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Relationship</th>
+                            <th>Category</th>
+                            <th>Rice Quota</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="familyTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+            <div
+                class="empty-state"
+                id="familyEmpty"
+                style="display:none;"
+            >
+                No family-member information was returned for this
+                ration card.
+            </div>
+
+        </section>
 
     </section>
 
-</main>
+    <div class="bottom-links">
 
+        <a href="ration-card.html">
+            My Ration Card
+        </a>
+
+        <a href="family.html">
+            My Family
+        </a>
+
+        <a href="distribution.html">
+            Rice Distribution
+        </a>
+
+        <a href="citizen-dashboard.html">
+            Citizen Dashboard
+        </a>
+
+    </div>
+
+</main>
 
 <footer class="site-footer">
 
-    <div class="footer-grid">
+    <div class="footer-inner">
 
-        <div class="footer-brand">
+        <strong>
+            Public Distribution System • Ration Portal
+        </strong>
 
-            <div
-                class="footer-emblem"
-                aria-hidden="true"
-            >
-                ✦
-            </div>
-
-            <div>
-                <h3>
-                    Ration Portal
-                </h3>
-
-                <p>
-                    Public Distribution System
-                </p>
-            </div>
-
-        </div>
-
-
-        <div class="footer-links">
-
-            <a href="../index.html">
-                Home
-            </a>
-
-            <a href="apply-ration-card.html">
-                Apply
-            </a>
-
-            <a href="applications.html">
-                Applications
-            </a>
-
-            <a href="grievance.html">
-                Grievance
-            </a>
-
-        </div>
-
-
-        <div class="footer-disclaimer">
-
-            <div>
-                © <span id="currentYear"></span>
-                Ration Portal
-            </div>
-
-            <div>
-                Educational demonstration project.
-            </div>
-
-        </div>
+        <p>
+            Citizen digital service portal •
+            <span id="footerYear"></span>
+        </p>
 
     </div>
 
 </footer>
 
+<!-- QRCode.js: used only for client-side QR generation -->
+<script
+    src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"
+></script>
 
-<script src="../config.js"></script>
+<!-- Correct project config path -->
+<script src="../js/config.js"></script>
+
 <script src="../js/auth-guard.js"></script>
+
 <script src="../js/app.js"></script>
+
 <script src="../js/script.js"></script>
 
-
 <script>
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+(function () {
+    "use strict";
 
-        const form =
-            document.getElementById(
-                "ecardSearchForm"
-            );
+    const API_BASE =
+        window.RATION_API_BASE ||
+        "http://localhost:8080/api";
 
-        const input =
-            document.getElementById(
-                "rationNumber"
-            );
+    const tokenKey = "rationPortalToken";
+    const userKey = "rationPortalUser";
 
-        const button =
-            document.getElementById(
-                "ecardSearchButton"
-            );
+    const input =
+        document.getElementById("rationNumberInput");
 
-        const message =
-            document.getElementById(
-                "ecardMessage"
-            );
+    const loadButton =
+        document.getElementById("loadCardButton");
 
-        const loading =
-            document.getElementById(
-                "ecardLoading"
-            );
+    const loadingMessage =
+        document.getElementById("loadingMessage");
 
-        const empty =
-            document.getElementById(
-                "ecardEmpty"
-            );
+    const statusMessage =
+        document.getElementById("statusMessage");
 
-        const result =
-            document.getElementById(
-                "ecardResult"
-            );
+    const cardSection =
+        document.getElementById("cardSection");
 
+    const familyTableBody =
+        document.getElementById("familyTableBody");
 
-        function showMessage(
-            text,
-            type
+    const familyEmpty =
+        document.getElementById("familyEmpty");
+
+    const qrCanvas =
+        document.getElementById("qrCanvas");
+
+    function getToken() {
+        return localStorage.getItem(tokenKey) || "";
+    }
+
+    function getStoredUser() {
+        try {
+            const raw =
+                localStorage.getItem(userKey);
+
+            return raw ? JSON.parse(raw) : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function getUserRationNumber() {
+        const user = getStoredUser();
+
+        if (!user) {
+            return "";
+        }
+
+        return (
+            user.rationCardNumber ||
+            user.ration_card_number ||
+            user.rationNumber ||
+            user.ration_number ||
+            ""
+        );
+    }
+
+    function showStatus(message, type) {
+        statusMessage.textContent = message;
+        statusMessage.className =
+            "status-message show " + type;
+    }
+
+    function hideStatus() {
+        statusMessage.textContent = "";
+        statusMessage.className =
+            "status-message";
+    }
+
+    function setLoading(isLoading) {
+        loadingMessage.classList.toggle(
+            "show",
+            isLoading
+        );
+
+        loadButton.disabled = isLoading;
+
+        loadButton.textContent =
+            isLoading
+                ? "Loading..."
+                : "View e-Ration Card";
+    }
+
+    function cleanValue(value) {
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
         ) {
-
-            message.textContent =
-                text;
-
-            message.className =
-                "ecard-message show " +
-                type;
+            return "—";
         }
 
+        return String(value);
+    }
 
-        function resetView() {
+    function firstValue(object, keys) {
+        if (!object || typeof object !== "object") {
+            return null;
+        }
 
-            result.classList.remove(
-                "show"
+        for (const key of keys) {
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    object,
+                    key
+                ) &&
+                object[key] !== null &&
+                object[key] !== undefined &&
+                object[key] !== ""
+            ) {
+                return object[key];
+            }
+        }
+
+        return null;
+    }
+
+    function extractRecord(payload) {
+        if (!payload) {
+            return null;
+        }
+
+        if (payload.data) {
+            return payload.data;
+        }
+
+        if (payload.rationCard) {
+            return payload.rationCard;
+        }
+
+        if (payload.ration_card) {
+            return payload.ration_card;
+        }
+
+        return payload;
+    }
+
+    function extractMembers(record, payload) {
+        const possibleArrays = [
+            record && record.familyMembers,
+            record && record.family_members,
+            record && record.members,
+            payload && payload.familyMembers,
+            payload && payload.family_members,
+            payload && payload.members
+        ];
+
+        for (const value of possibleArrays) {
+            if (Array.isArray(value)) {
+                return value;
+            }
+        }
+
+        return [];
+    }
+
+    function normalizeCard(record) {
+        return {
+            id: firstValue(record, [
+                "id",
+                "rationCardId",
+                "ration_card_id"
+            ]),
+            number: firstValue(record, [
+                "rationCardNumber",
+                "ration_card_number",
+                "rationNumber",
+                "ration_number",
+                "cardNumber",
+                "card_number"
+            ]),
+
+            type: firstValue(record, [
+                "cardType",
+                "card_type",
+                "type"
+            ]),
+
+            head: firstValue(record, [
+                "headOfFamily",
+                "head_of_family",
+                "headName",
+                "head_name",
+                "name"
+            ]),
+
+            status: firstValue(record, [
+                "status",
+                "cardStatus",
+                "card_status"
+            ]),
+
+            address: firstValue(record, [
+                "address",
+                "fullAddress"
+            ]),
+
+            district: firstValue(record, [
+                "district",
+                "districtName",
+                "district_name"
+            ]),
+
+            state: firstValue(record, [
+                "state",
+                "stateName",
+                "state_name"
+            ]),
+
+            recordStatus: firstValue(record, [
+                "recordStatus",
+                "record_status"
+            ]),
+
+            adultRice: firstValue(record, [
+                "adultRice",
+                "adult_rice",
+                "adultRiceQuota",
+                "adult_rice_quota"
+            ]),
+
+            childRice: firstValue(record, [
+                "childRice",
+                "child_rice",
+                "childRiceQuota",
+                "child_rice_quota"
+            ]),
+
+            totalRice: firstValue(record, [
+                "totalRice",
+                "total_rice",
+                "rice",
+                "riceQuota",
+                "rice_quota"
+            ]),
+
+            verified: record && record.verified === true
+        };
+    }
+
+    function renderCard(card) {
+        document.getElementById("cardNumber").textContent =
+            cleanValue(card.number);
+
+        document.getElementById("cardType").textContent =
+            cleanValue(card.type);
+
+        document.getElementById("headOfFamily").textContent =
+            cleanValue(card.head);
+
+        document.getElementById("cardStatus").textContent =
+            cleanValue(card.status);
+
+        document.getElementById("cardAddress").textContent =
+            cleanValue(card.address);
+
+        document.getElementById("cardDistrict").textContent =
+            cleanValue(card.district);
+
+        document.getElementById("cardState").textContent =
+            cleanValue(card.state);
+
+        document.getElementById("recordStatus").textContent =
+            cleanValue(card.recordStatus);
+
+        document.getElementById("adultRice").textContent =
+            cleanValue(card.adultRice);
+
+        document.getElementById("childRice").textContent =
+            cleanValue(card.childRice);
+
+        document.getElementById("totalRice").textContent =
+            cleanValue(card.totalRice);
+
+        const recordLabel =
+            document.getElementById("recordLabel");
+
+        recordLabel.textContent =
+            card.verified
+                ? "Verified by Backend"
+                : "Government Record";
+    }
+
+    function calculateQuotaSummary(members) {
+        let adultRice = 0;
+        let childRice = 0;
+        let totalRice = 0;
+
+        if (!Array.isArray(members)) {
+            return { adultRice: null, childRice: null, totalRice: null };
+        }
+
+        members.forEach(function (member) {
+            const age = Number(firstValue(member, ["age"]));
+            const quotaValue = firstValue(member, [
+                "riceQuotaKg",
+                "rice_quota_kg",
+                "riceQuota",
+                "rice_quota",
+                "rice"
+            ]);
+            const quota = Number(quotaValue);
+
+            if (!Number.isFinite(quota)) {
+                return;
+            }
+
+            totalRice += quota;
+
+            if (Number.isFinite(age)) {
+                if (age >= 18) {
+                    adultRice += quota;
+                } else {
+                    childRice += quota;
+                }
+            }
+        });
+
+        return {
+            adultRice: adultRice.toFixed(2) + " kg",
+            childRice: childRice.toFixed(2) + " kg",
+            totalRice: totalRice.toFixed(2) + " kg"
+        };
+    }
+
+    function renderFamilyMembers(members) {
+        familyTableBody.replaceChildren();
+
+        if (!Array.isArray(members) || members.length === 0) {
+            familyEmpty.style.display = "block";
+            return;
+        }
+
+        familyEmpty.style.display = "none";
+
+        members.forEach(function (member) {
+            const name =
+                firstValue(member, [
+                    "name",
+                    "memberName",
+                    "member_name"
+                ]);
+
+            const age =
+                firstValue(member, [
+                    "age"
+                ]);
+
+            const gender =
+                firstValue(member, [
+                    "gender",
+                    "sex"
+                ]);
+
+            const relationship =
+                firstValue(member, [
+                    "relationship",
+                    "relation"
+                ]);
+
+            const rice =
+                firstValue(member, [
+                    "riceQuotaKg",
+                    "rice_quota_kg",
+                    "riceQuota",
+                    "rice_quota",
+                    "rice"
+                ]);
+
+            const numericAge =
+                Number(age);
+
+            let category = "—";
+
+            if (Number.isFinite(numericAge)) {
+                category =
+                    numericAge >= 18
+                        ? "Adult"
+                        : "Child";
+            }
+
+            const row =
+                document.createElement("tr");
+
+            const nameCell =
+                document.createElement("td");
+
+            nameCell.textContent =
+                cleanValue(name);
+
+            const ageCell =
+                document.createElement("td");
+
+            ageCell.textContent =
+                cleanValue(age);
+
+            const genderCell =
+                document.createElement("td");
+
+            genderCell.textContent =
+                cleanValue(gender);
+
+            const relationCell =
+                document.createElement("td");
+
+            relationCell.textContent =
+                cleanValue(relationship);
+
+            const categoryCell =
+                document.createElement("td");
+
+            const badge =
+                document.createElement("span");
+
+            badge.textContent = category;
+
+            badge.className =
+                category === "Adult"
+                    ? "category-badge category-adult"
+                    : category === "Child"
+                        ? "category-badge category-child"
+                        : "category-badge";
+
+            categoryCell.appendChild(badge);
+
+            const riceCell =
+                document.createElement("td");
+
+            riceCell.textContent =
+                cleanValue(rice);
+
+            row.appendChild(nameCell);
+            row.appendChild(ageCell);
+            row.appendChild(genderCell);
+            row.appendChild(relationCell);
+            row.appendChild(categoryCell);
+            row.appendChild(riceCell);
+
+            familyTableBody.appendChild(row);
+        });
+    }
+
+    async function authenticatedGet(url) {
+        const token = getToken();
+
+        if (!token) {
+            throw new Error(
+                "Your citizen session has expired. Please sign in again."
             );
+        }
 
-            empty.classList.remove(
-                "show"
+        const response =
+            await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization":
+                        "Bearer " + token
+                }
+            });
+
+        if (response.status === 401) {
+            localStorage.removeItem(tokenKey);
+            localStorage.removeItem(userKey);
+
+            window.location.href =
+                "login.html";
+
+            throw new Error(
+                "Your session has expired."
             );
-
-            message.className =
-                "ecard-message";
         }
 
+        if (!response.ok) {
+            let message =
+                "Unable to load the ration card.";
 
-        function formatValue(value) {
+            try {
+                const errorBody =
+                    await response.json();
 
-            if (
-                value === null ||
-                value === undefined ||
-                value === ""
-            ) {
-                return "—";
+                message =
+                    errorBody.message ||
+                    errorBody.error ||
+                    message;
+            } catch (error) {
+                // Keep default message.
             }
 
-            return String(value);
+            throw new Error(message);
         }
 
+        return response.json();
+    }
 
-        function getMembers(data) {
+    async function loadFamilyIfRequired(
+        rationCardId,
+        record,
+        payload
+    ) {
+        const embeddedMembers =
+            extractMembers(record, payload);
 
-            if (
-                Array.isArray(
-                    data.familyMembers
-                )
-            ) {
-                return data.familyMembers;
-            }
+        if (embeddedMembers.length > 0) {
+            return embeddedMembers;
+        }
 
-            if (
-                Array.isArray(
-                    data.members
-                )
-            ) {
-                return data.members;
-            }
-
-            if (
-                Array.isArray(
-                    data.family
-                )
-            ) {
-                return data.family;
-            }
-
-            if (
-                data.data &&
-                Array.isArray(
-                    data.data.familyMembers
-                )
-            ) {
-                return data.data.familyMembers;
-            }
-
+        if (rationCardId === null || rationCardId === undefined || rationCardId === "") {
             return [];
         }
 
+        try {
+            const url =
+                API_BASE +
+                "/family-members/ration-card/" +
+                encodeURIComponent(rationCardId);
 
-        function renderMembers(
-            members
-        ) {
+            const response =
+                await authenticatedGet(url);
 
-            const body =
-                document.getElementById(
-                    "membersBody"
-                );
-
+            if (Array.isArray(response)) {
+                return response;
+            }
 
             if (
-                !members ||
-                members.length === 0
+                response &&
+                Array.isArray(response.data)
             ) {
-
-                body.innerHTML =
-                    `
-                    <tr>
-                        <td colspan="7">
-                            No family member data available.
-                        </td>
-                    </tr>
-                    `;
-
-                return;
+                return response.data;
             }
 
+            if (
+                response &&
+                Array.isArray(response.members)
+            ) {
+                return response.members;
+            }
 
-            body.innerHTML =
-                members
-                    .map(
-                        function (
-                            member,
-                            index
-                        ) {
-
-                            const age =
-                                Number(
-                                    member.age ??
-                                    member.Ration_Age ??
-                                    0
-                                );
-
-
-                            const category =
-                                age >= 18
-                                    ? "Adult"
-                                    : "Child";
-
-
-                            const categoryClass =
-                                age >= 18
-                                    ? "adult"
-                                    : "child";
-
-
-                            const name =
-                                member.name ||
-                                member.Name ||
-                                member.memberName ||
-                                "—";
-
-
-                            const gender =
-                                member.gender ||
-                                member.Gender ||
-                                "—";
-
-
-                            const relationship =
-                                member.relationship ||
-                                member.relation ||
-                                "—";
-
-
-                            const quota =
-                                member.riceQuota ??
-                                member.rice ??
-                                member.Rice ??
-                                "—";
-
-
-                            return `
-                                <tr>
-                                    <td>
-                                        ${index + 1}
-                                    </td>
-
-                                    <td>
-                                        ${formatValue(name)}
-                                    </td>
-
-                                    <td>
-                                        ${formatValue(age)}
-                                    </td>
-
-                                    <td>
-                                        ${formatValue(gender)}
-                                    </td>
-
-                                    <td>
-                                        ${formatValue(relationship)}
-                                    </td>
-
-                                    <td>
-                                        <span class="member-badge ${categoryClass}">
-                                            ${category}
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        ${formatValue(quota)}
-                                    </td>
-                                </tr>
-                            `;
-
-                        }
-                    )
-                    .join("");
+            return [];
+        } catch (error) {
+            return [];
         }
+    }
 
+    function generateQr(rationNumber) {
+        const context =
+            window.location;
 
-        function renderCard(
-            rawData,
-            requestedNumber
+        const verificationUrl =
+            context.origin +
+            context.pathname +
+            "?rationNumber=" +
+            encodeURIComponent(rationNumber);
+
+        if (
+            typeof QRCode === "undefined" ||
+            typeof QRCode.toCanvas !== "function"
         ) {
+            const ctx =
+                qrCanvas.getContext("2d");
 
-            const data =
-                rawData &&
-                rawData.data &&
-                !Array.isArray(
-                    rawData.data
-                )
-                    ? rawData.data
-                    : rawData;
-
-
-            const rationNumber =
-                data.rationNumber ||
-                data.rationCardNumber ||
-                data.ration_id ||
-                data.rationId ||
-                data.Ration_id ||
-                requestedNumber;
-
-
-            const cardType =
-                data.cardType ||
-                data.type ||
-                "—";
-
-
-            const head =
-                data.headOfFamily ||
-                data.headOfFamilyName ||
-                data.name ||
-                data.Name ||
-                "—";
-
-
-            const district =
-                data.district ||
-                "—";
-
-
-            const address =
-                data.address ||
-                data.fullAddress ||
-                "—";
-
-
-            const status =
-                data.status ||
-                "ACTIVE";
-
-
-            const members =
-                getMembers(data);
-
-
-            document.getElementById(
-                "resultCardNumber"
-            ).textContent =
-                "Ration Card Number: " +
-                formatValue(rationNumber);
-
-
-            document.getElementById(
-                "cardNumber"
-            ).textContent =
-                formatValue(rationNumber);
-
-
-            document.getElementById(
-                "cardType"
-            ).textContent =
-                formatValue(cardType);
-
-
-            document.getElementById(
-                "headOfFamily"
-            ).textContent =
-                formatValue(head);
-
-
-            document.getElementById(
-                "district"
-            ).textContent =
-                formatValue(district);
-
-
-            document.getElementById(
-                "address"
-            ).textContent =
-                formatValue(address);
-
-
-            document.getElementById(
-                "cardStatus"
-            ).textContent =
-                formatValue(status);
-
-
-            document.getElementById(
-                "memberCount"
-            ).textContent =
-                String(
-                    members.length
-                );
-
-
-            renderMembers(
-                members
+            ctx.clearRect(
+                0,
+                0,
+                qrCanvas.width,
+                qrCanvas.height
             );
 
+            ctx.font =
+                "12px Segoe UI";
 
-            result.classList.add(
-                "show"
+            ctx.fillStyle =
+                "#667085";
+
+            ctx.textAlign =
+                "center";
+
+            ctx.fillText(
+                "QR library unavailable",
+                qrCanvas.width / 2,
+                qrCanvas.height / 2
             );
 
+            return;
         }
 
-
-        async function searchCard(
-            rationNumber
-        ) {
-
-            const token =
-                localStorage.getItem(
-                    "rationPortalToken"
-                );
-
-
-            if (!token) {
-
-                window.location.href =
-                    "login.html";
-
-                return;
-
-            }
-
-
-            resetView();
-
-
-            loading.classList.add(
-                "show"
-            );
-
-            button.disabled =
-                true;
-
-            button.textContent =
-                "Loading...";
-
-
-            try {
-
-                const apiBase =
-                    window.RATION_API_BASE ||
-                    "http://localhost:8080/api";
-
-
-                const encodedNumber =
-                    encodeURIComponent(
-                        rationNumber
+        QRCode.toCanvas(
+            qrCanvas,
+            verificationUrl,
+            {
+                width: 190,
+                margin: 2,
+                errorCorrectionLevel: "M"
+            },
+            function (error) {
+                if (error) {
+                    console.error(
+                        "QR generation failed:",
+                        error
                     );
-
-
-                const response =
-                    await fetch(
-                        apiBase +
-                        "/ration-cards/" +
-                        encodedNumber,
-                        {
-                            method: "GET",
-
-                            headers: {
-                                "Authorization":
-                                    "Bearer " +
-                                    token,
-
-                                "Accept":
-                                    "application/json"
-                            }
-                        }
-                    );
-
-
-                if (
-                    response.status === 401
-                ) {
-
-                    localStorage.removeItem(
-                        "rationPortalToken"
-                    );
-
-                    localStorage.removeItem(
-                        "rationPortalUser"
-                    );
-
-                    window.location.href =
-                        "login.html";
-
-                    return;
                 }
-
-
-                let data = null;
-
-
-                try {
-
-                    data =
-                        await response.json();
-
-                }
-                catch (error) {
-
-                    data = null;
-
-                }
-
-
-                if (!response.ok) {
-
-                    if (
-                        response.status === 404
-                    ) {
-
-                        empty.classList.add(
-                            "show"
-                        );
-
-                        return;
-
-                    }
-
-
-                    throw new Error(
-                        data &&
-                        (
-                            data.message ||
-                            data.error
-                        )
-                            ? (
-                                data.message ||
-                                data.error
-                            )
-                            : "Unable to retrieve ration card details."
-                    );
-
-                }
-
-
-                if (
-                    !data ||
-                    typeof data !== "object"
-                ) {
-
-                    empty.classList.add(
-                        "show"
-                    );
-
-                    return;
-
-                }
-
-
-                renderCard(
-                    data,
-                    rationNumber
-                );
-
-
-                showMessage(
-                    "Digital ration card details loaded successfully.",
-                    "success"
-                );
-
-            }
-            catch (error) {
-
-                console.error(
-                    "e-Ration Card error:",
-                    error
-                );
-
-
-                showMessage(
-                    error.message ||
-                    "Unable to retrieve ration card details.",
-                    "error"
-                );
-
-            }
-            finally {
-
-                loading.classList.remove(
-                    "show"
-                );
-
-                button.disabled =
-                    false;
-
-                button.textContent =
-                    "View e-Ration Card";
-
-            }
-
-        }
-
-
-        form.addEventListener(
-            "submit",
-            function (event) {
-
-                event.preventDefault();
-
-
-                const rationNumber =
-                    input.value.trim();
-
-
-                if (!rationNumber) {
-
-                    showMessage(
-                        "Please enter your ration card number.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                searchCard(
-                    rationNumber
-                );
-
             }
         );
+    }
 
+    async function loadCard(rationNumber) {
+        const number =
+            String(rationNumber || "").trim();
 
-        document
-            .getElementById(
-                "printButton"
-            )
-            .addEventListener(
-                "click",
-                function () {
-
-                    window.print();
-
-                }
+        if (!number) {
+            showStatus(
+                "Please enter a ration card number.",
+                "error"
             );
 
+            input.focus();
 
-        document
-            .getElementById(
-                "downloadButton"
-            )
-            .addEventListener(
-                "click",
-                function () {
+            return;
+        }
 
-                    /*
-                     * Browser print dialog provides
-                     * "Save as PDF" on modern browsers.
-                     */
-                    window.print();
+        hideStatus();
+        setLoading(true);
 
-                }
+        try {
+            const url =
+                API_BASE +
+                "/ration-cards/" +
+                encodeURIComponent(number);
+
+            const payload =
+                await authenticatedGet(url);
+
+            const record =
+                extractRecord(payload);
+
+            if (
+                !record ||
+                typeof record !== "object"
+            ) {
+                throw new Error(
+                    "The backend returned an invalid ration card record."
+                );
+            }
+
+            const card =
+                normalizeCard(record);
+
+            renderCard(card);
+
+            const members =
+                await loadFamilyIfRequired(
+                    card.id,
+                    record,
+                    payload
+                );
+
+            renderFamilyMembers(members);
+
+            const quotaSummary = calculateQuotaSummary(members);
+
+            if (card.adultRice === null || card.adultRice === undefined || card.adultRice === "") {
+                document.getElementById("adultRice").textContent =
+                    quotaSummary.adultRice || "—";
+            }
+
+            if (card.childRice === null || card.childRice === undefined || card.childRice === "") {
+                document.getElementById("childRice").textContent =
+                    quotaSummary.childRice || "—";
+            }
+
+            if (card.totalRice === null || card.totalRice === undefined || card.totalRice === "") {
+                document.getElementById("totalRice").textContent =
+                    quotaSummary.totalRice || "—";
+            }
+
+            generateQr(
+                card.number || number
             );
 
+            cardSection.classList.add("show");
 
+            showStatus(
+                "Ration card record loaded successfully.",
+                "info"
+            );
+
+            cardSection.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        } catch (error) {
+            cardSection.classList.remove("show");
+
+            familyTableBody.replaceChildren();
+
+            familyEmpty.style.display =
+                "block";
+
+            showStatus(
+                error.message ||
+                "Unable to load the ration card record.",
+                "error"
+            );
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    function initializeInput() {
         const params =
             new URLSearchParams(
                 window.location.search
             );
 
-
         const queryNumber =
-            params.get(
-                "rationNumber"
-            ) ||
-            params.get(
-                "ration"
-            );
+            params.get("rationNumber") ||
+            params.get("ration") ||
+            "";
 
+        const userNumber =
+            getUserRationNumber();
 
-        if (queryNumber) {
+        const initialNumber =
+            queryNumber || userNumber;
 
+        if (initialNumber) {
             input.value =
-                queryNumber;
+                initialNumber;
 
-            searchCard(
-                queryNumber
-            );
-
+            loadCard(initialNumber);
         }
-
-
-        const year =
-            document.getElementById(
-                "currentYear"
-            );
-
-        if (year) {
-
-            year.textContent =
-                new Date()
-                    .getFullYear();
-
-        }
-
     }
-);
+
+    function setupFontControls() {
+        const body =
+            document.body;
+
+        document
+            .getElementById("fontSmall")
+            .addEventListener(
+                "click",
+                function () {
+                    body.style.fontSize =
+                        "92%";
+                }
+            );
+
+        document
+            .getElementById("fontNormal")
+            .addEventListener(
+                "click",
+                function () {
+                    body.style.fontSize =
+                        "100%";
+                }
+            );
+
+        document
+            .getElementById("fontLarge")
+            .addEventListener(
+                "click",
+                function () {
+                    body.style.fontSize =
+                        "108%";
+                }
+            );
+    }
+
+    function setupDate() {
+        const dateElement =
+            document.getElementById(
+                "currentDate"
+            );
+
+        const now =
+            new Date();
+
+        dateElement.textContent =
+            now.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+    }
+
+    function setupButtons() {
+        loadButton.addEventListener(
+            "click",
+            function () {
+                loadCard(input.value);
+            }
+        );
+
+        input.addEventListener(
+            "keydown",
+            function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    loadCard(input.value);
+                }
+            }
+        );
+
+        document
+            .getElementById("printButton")
+            .addEventListener(
+                "click",
+                function () {
+                    window.print();
+                }
+            );
+
+        document
+            .getElementById("pdfButton")
+            .addEventListener(
+                "click",
+                function () {
+                    window.print();
+                }
+            );
+    }
+
+    function setupFooter() {
+        document.getElementById(
+            "footerYear"
+        ).textContent =
+            new Date().getFullYear();
+    }
+
+    setupDate();
+    setupFooter();
+    setupFontControls();
+    setupButtons();
+    initializeInput();
+
+})();
 </script>
 
 </body>
