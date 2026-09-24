@@ -46,12 +46,23 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
+                // CORS preflight
                 .requestMatchers(HttpMethod.OPTIONS, "/**")
                     .permitAll()
 
+                // Public backend endpoints
+                .requestMatchers(
+                        "/",
+                        "/api/health",
+                        "/error"
+                )
+                    .permitAll()
+
+                // Authentication endpoints
                 .requestMatchers("/api/auth/**")
                     .permitAll()
 
+                // Ration cards
                 .requestMatchers(
                         HttpMethod.GET,
                         "/api/ration-cards/**"
@@ -64,6 +75,7 @@ public class SecurityConfig {
                 )
                     .hasRole("ADMIN")
 
+                // Family members
                 .requestMatchers(
                         HttpMethod.GET,
                         "/api/family-members/**"
@@ -76,15 +88,19 @@ public class SecurityConfig {
                 )
                     .hasRole("ADMIN")
 
+                // Applications
                 .requestMatchers("/api/applications/**")
                     .hasAnyRole("CITIZEN", "ADMIN")
 
+                // Import
                 .requestMatchers("/api/import/**")
                     .hasRole("ADMIN")
 
+                // Distribution logs
                 .requestMatchers("/api/distribution-logs/**")
                     .hasRole("ADMIN")
 
+                // Grievances
                 .requestMatchers(
                         HttpMethod.POST,
                         "/api/grievances"
@@ -103,12 +119,15 @@ public class SecurityConfig {
                 )
                     .hasRole("ADMIN")
 
+                // Transparency
                 .requestMatchers("/api/transparency/**")
                     .hasAnyRole("CITIZEN", "ADMIN")
 
+                // Dashboard
                 .requestMatchers("/api/dashboard/**")
                     .hasAnyRole("CITIZEN", "ADMIN")
 
+                // Everything else requires authentication
                 .anyRequest()
                     .authenticated()
             )
