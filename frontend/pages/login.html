@@ -35,7 +35,7 @@
 
     <div class="gov-bar-left">
         <span>Government Service Portal</span>
-        <span aria-hidden="true">�</span>
+        <span aria-hidden="true">•</span>
         <span>Digital Public Distribution System</span>
     </div>
 
@@ -62,7 +62,7 @@
                         line-height:1;
                     "
                 >
-                    ?
+                    ⚖
                 </span>
             </div>
 
@@ -130,7 +130,7 @@
                 class="auth-logo"
                 aria-hidden="true"
             >
-                ?
+                ⚖
             </div>
 
             <h1 class="auth-title">
@@ -215,8 +215,9 @@
                         id="togglePassword"
                         class="password-toggle"
                         aria-label="Show password"
+                        title="Show password"
                     >
-                        Show
+                        👁
                     </button>
 
                 </div>
@@ -364,7 +365,7 @@
                 class="footer-emblem"
                 aria-hidden="true"
             >
-                ?
+                ⚖
             </div>
 
             <div>
@@ -406,7 +407,7 @@
         <div class="footer-disclaimer">
 
             <div>
-                �
+                ©
                 <span id="currentYear"></span>
                 Ration Portal
             </div>
@@ -562,24 +563,27 @@ document.addEventListener(
             function () {
 
                 const isPassword =
-                    passwordInput.type ===
-                    "password";
-
+                    passwordInput.type === "password";
 
                 passwordInput.type =
                     isPassword
                         ? "text"
                         : "password";
 
-
                 togglePassword.textContent =
                     isPassword
-                        ? "Hide"
-                        : "Show";
-
+                        ? "🙈"
+                        : "👁";
 
                 togglePassword.setAttribute(
                     "aria-label",
+                    isPassword
+                        ? "Hide password"
+                        : "Show password"
+                );
+
+                togglePassword.setAttribute(
+                    "title",
                     isPassword
                         ? "Hide password"
                         : "Show password"
