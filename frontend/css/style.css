@@ -1350,3 +1350,64 @@ REDUCED MOTION
         transition-duration: .01ms !important;
     }
 }
+/* =========================================================
+   LOGIN PASSWORD EYE ICON
+   ========================================================= */
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    margin: 0;
+
+    border: 0;
+    background: transparent;
+
+    color: #60758a;
+    cursor: pointer;
+
+    border-radius: 8px;
+
+    z-index: 5;
+}
+
+.password-toggle:hover {
+    color: #0871c9;
+    background: #f1f7fb;
+}
+
+.password-toggle:focus-visible {
+    outline: 3px solid rgba(8, 113, 201, 0.25);
+    outline-offset: 2px;
+}
+
+.password-eye-icon {
+    width: 21px;
+    height: 21px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    pointer-events: none;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .form-control {
+    padding-right: 54px;
+}
