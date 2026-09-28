@@ -9,7 +9,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @RestController
@@ -46,11 +48,14 @@ public class AuthController {
                 .trim()
                 .toLowerCase();
 
-        if (email.isBlank() || !EMAIL_PATTERN.matcher(email).matches()) {
+        if (email.isBlank()
+                || !EMAIL_PATTERN.matcher(email).matches()) {
+
             return ResponseEntity.badRequest().body(
                     Map.of(
                             "available", false,
-                            "message", "Please enter a valid email address."
+                            "message",
+                            "Please enter a valid email address."
                     )
             );
         }
@@ -59,10 +64,12 @@ public class AuthController {
                 userRepository.findByEmail(email).isPresent();
 
         if (exists) {
+
             return ResponseEntity.ok(
                     Map.of(
                             "available", false,
-                            "message", "Email already registered."
+                            "message",
+                            "Email already registered."
                     )
             );
         }
@@ -70,7 +77,8 @@ public class AuthController {
         return ResponseEntity.ok(
                 Map.of(
                         "available", true,
-                        "message", "Email is available."
+                        "message",
+                        "Email is available."
                 )
         );
     }
@@ -93,6 +101,7 @@ public class AuthController {
                 request.getOrDefault("password", "");
 
         if (name.isBlank()) {
+
             return ResponseEntity.badRequest().body(
                     Map.of(
                             "message",
@@ -113,6 +122,7 @@ public class AuthController {
         }
 
         if (password.length() < 8) {
+
             return ResponseEntity.badRequest().body(
                     Map.of(
                             "message",
@@ -203,5 +213,148 @@ public class AuthController {
                             )
                     );
         }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(
+            @RequestBody Map<String, String> request
+    ) {
+
+        String email =
+                request.getOrDefault("email", "")
+                        .trim()
+                        .toLowerCase();
+
+        if (email.isBlank()
+                || !EMAIL_PATTERN.matcher(email).matches()) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "message",
+                            "Please enter a valid email address."
+                    )
+            );
+        }
+
+        User user =
+                userRepository
+                        .findByEmail(email)
+                        .orElse(null);
+
+        /*
+         * Do not reveal whether an email is registered.
+         * This prevents account/email enumeration.
+         */
+        if (user == null) {
+
+            return ResponseEntity.ok(
+                    Map.of(
+                            "message",
+                            "If an account exists for this email, password reset instructions will be provided."
+                    )
+            );
+        }
+
+        String resetToken =
+                UUID.randomUUID().toString();
+
+        LocalDateTime expiry =
+                LocalDateTime.now().plusMinutes(15);
+
+        user.setResetPasswordToken(resetToken);
+        user.setResetPasswordTokenExpiry(expiry);
+
+        userRepository.save(user);
+
+        /*
+         * Email delivery will be connected in the next step.
+         * For now, the token is returned only so the reset flow
+         * can be tested end-to-end.
+         */
+        return ResponseEntity.ok(
+                Map.of(
+                        "message",
+                        "Password reset request created.",
+                        "resetToken",
+                        resetToken
+                )
+        );
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(
+            @RequestBody Map<String, String> request
+    ) {
+
+        String token =
+                request.getOrDefault("token", "")
+                        .trim();
+
+        String newPassword =
+                request.getOrDefault("newPassword", "");
+
+        if (token.isBlank()) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "message",
+                            "Reset token is required."
+                    )
+            );
+        }
+
+        if (newPassword.isBlank()
+                || newPassword.length() < 8) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "message",
+                            "Password must be at least 8 characters long."
+                    )
+            );
+        }
+
+        User user =
+                userRepository
+                        .findByResetPasswordToken(token)
+                        .orElse(null);
+
+        if (user == null) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "message",
+                            "Invalid or expired reset token."
+                    )
+            );
+        }
+
+        if (user.getResetPasswordTokenExpiry() == null
+                || user.getResetPasswordTokenExpiry()
+                        .isBefore(LocalDateTime.now())) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "message",
+                            "Invalid or expired reset token."
+                    )
+            );
+        }
+
+        user.setPasswordHash(
+                passwordEncoder.encode(newPassword)
+        );
+
+        user.setResetPasswordToken(null);
+        user.setResetPasswordTokenExpiry(null);
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "message",
+                        "Password reset successfully."
+                )
+        );
     }
 }

@@ -1,1024 +1,1607 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
         content="Secure citizen login for the Ration Portal."
     >
 
-    <meta name="theme-color" content="#06284a">
+    <meta
+        name="theme-color"
+        content="#06284a"
+    >
 
     <title>Citizen Login | Ration Portal</title>
 
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/redesign.css">
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        rel="stylesheet"
+        href="../css/redesign.css"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
+
 </head>
+
 
 <body>
 
-<div class="tricolour-line" aria-hidden="true"></div>
+    <!-- =========================================================
+         TRICOLOUR TOP LINE
+    ========================================================== -->
+
+    <div
+        class="tricolour-line"
+        aria-hidden="true"
+    ></div>
 
 
-<div class="gov-bar">
+    <!-- =========================================================
+         GOVERNMENT BAR
+    ========================================================== -->
 
-    <div class="gov-bar-left">
-        <span>Government Service Portal</span>
-        <span aria-hidden="true">•</span>
-        <span>Digital Public Distribution System</span>
-    </div>
+    <div class="gov-bar">
 
-    <div class="gov-bar-right">
-        <a href="../index.html">Home</a>
-        <span aria-hidden="true">|</span>
-        <span>English</span>
-    </div>
+        <div class="gov-bar-left">
 
-</div>
+            <span>
+                Government Service Portal
+            </span>
 
+            <span aria-hidden="true">
+                •
+            </span>
 
-<header class="brand-header">
+            <span>
+                Digital Public Distribution System
+            </span>
 
-    <div class="brand-header-inner">
-
-        <a href="../index.html" class="brand">
-
-            <div class="brand-emblem" aria-hidden="true">
-                <span
-                    style="
-                        font-size:31px;
-                        font-weight:800;
-                        line-height:1;
-                    "
-                >
-                    ⚖
-                </span>
-            </div>
-
-            <div>
-                <div class="brand-title">
-                    Ration Portal
-                </div>
-
-                <div class="brand-subtitle">
-                    Public Distribution System
-                </div>
-            </div>
-
-        </a>
+        </div>
 
 
-        <nav class="main-nav" aria-label="Main navigation">
+        <div class="gov-bar-right">
 
             <a href="../index.html">
                 Home
             </a>
 
-            <a href="apply-ration-card.html">
-                Apply Online
-            </a>
+            <span aria-hidden="true">
+                |
+            </span>
 
-            <a href="applications.html">
-                My Applications
-            </a>
-
-            <a href="grievance.html">
-                Grievance
-            </a>
-
-            <a href="transparency.html">
-                Transparency
-            </a>
-
-        </nav>
-
-
-        <div class="header-actions">
-
-            <a
-                href="register.html"
-                class="btn btn-secondary"
-            >
-                Register
-            </a>
+            <span>
+                English
+            </span>
 
         </div>
 
     </div>
 
-</header>
 
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
 
-<main class="auth-page">
+    <header class="brand-header">
 
-    <div class="auth-card">
+        <div class="brand-header-inner">
 
-        <div class="auth-header">
-
-            <div
-                class="auth-logo"
-                aria-hidden="true"
+            <a
+                href="../index.html"
+                class="brand"
             >
-                ⚖
-            </div>
-
-            <h1 class="auth-title">
-                Citizen Login
-            </h1>
-
-            <p class="auth-subtitle">
-                Sign in to access your Ration Portal services
-            </p>
-
-        </div>
-
-
-        <div
-            id="loginAlert"
-            class="alert"
-            style="display:none;"
-            role="alert"
-            aria-live="polite"
-        ></div>
-
-
-        <form
-            id="loginForm"
-            novalidate
-        >
-
-            <div class="form-group">
-
-                <label
-                    for="email"
-                    class="form-label"
-                >
-                    Email Address
-                </label>
-
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    class="form-control"
-                    placeholder="Enter your registered email"
-                    autocomplete="email"
-                    required
-                >
 
                 <div
-                    id="emailError"
-                    class="form-help"
-                    style="
-                        display:none;
-                        color:#b42318;
-                    "
-                ></div>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label
-                    for="password"
-                    class="form-label"
+                    class="brand-emblem"
+                    aria-hidden="true"
                 >
-                    Password
-                </label>
 
-                <div class="password-wrapper">
-
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        class="form-control"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        required
+                    <span
+                        style="
+                            font-size:31px;
+                            font-weight:800;
+                            line-height:1;
+                        "
                     >
-
-                    <button
-    type="button"
-    id="togglePassword"
-    class="password-toggle"
-    aria-label="Show password"
-    title="Show password"
->
-    <svg
-        id="eyeIcon"
-        class="password-eye-icon"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-    >
-        <path
-            d="M2.1 12s3.5-6 9.9-6 9.9 6 9.9 6-3.5 6-9.9 6-9.9-6-9.9-6Z"
-        ></path>
-        <circle
-            cx="12"
-            cy="12"
-            r="2.8"
-        ></circle>
-    </svg>
-
-    <svg
-        id="eyeOffIcon"
-        class="password-eye-icon"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        style="display:none;"
-    >
-        <path
-            d="M3 3l18 18"
-        ></path>
-        <path
-            d="M10.6 6.3A10.7 10.7 0 0 1 12 6c6.4 0 9.9 6 9.9 6a18.2 18.2 0 0 1-3.1 3.8"
-        ></path>
-        <path
-            d="M6.4 6.4C3.8 8.1 2.1 12 2.1 12s3.5 6 9.9 6c1.4 0 2.6-.3 3.7-.8"
-        ></path>
-    </svg>
-</button>
+                        ⚖
+                    </span>
 
                 </div>
 
-                <div
-                    id="passwordError"
-                    class="form-help"
-                    style="
-                        display:none;
-                        color:#b42318;
-                    "
-                ></div>
 
-            </div>
+                <div>
 
+                    <div class="brand-title">
+                        Ration Portal
+                    </div>
 
-            <div
-                style="
-                    display:flex;
-                    align-items:center;
-                    justify-content:space-between;
-                    gap:12px;
-                    margin:4px 0 18px;
-                    flex-wrap:wrap;
-                "
-            >
+                    <div class="brand-subtitle">
+                        Public Distribution System
+                    </div>
 
-                <label
-                    style="
-                        display:flex;
-                        align-items:center;
-                        gap:7px;
-                        color:#718398;
-                        font-size:9px;
-                        cursor:pointer;
-                    "
-                >
+                </div>
 
-                    <input
-                        type="checkbox"
-                        id="rememberMe"
-                        name="rememberMe"
-                    >
-
-                    Remember me
-
-                </label>
-
-
-                <span
-                    style="
-                        color:#8190a0;
-                        font-size:8px;
-                    "
-                >
-                    Secure citizen access
-                </span>
-
-            </div>
-
-
-            <div class="form-actions">
-
-                <button
-                    type="submit"
-                    id="loginButton"
-                    class="btn btn-primary"
-                    style="
-                        width:100%;
-                        justify-content:center;
-                    "
-                >
-                    Login
-                </button>
-
-            </div>
-
-        </form>
-
-
-        <div
-            style="
-                margin-top:22px;
-                padding-top:18px;
-                border-top:1px solid #e5edf3;
-                text-align:center;
-            "
-        >
-
-            <p
-                style="
-                    margin:0 0 8px;
-                    color:#8190a0;
-                    font-size:9px;
-                "
-            >
-                Don't have an account?
-            </p>
-
-            <a
-                href="register.html"
-                style="
-                    color:#0871c9;
-                    font-size:10px;
-                    font-weight:800;
-                    text-decoration:none;
-                "
-            >
-                Create Citizen Account
             </a>
 
-        </div>
 
+            <!-- =================================================
+                 MAIN NAVIGATION
+            ================================================== -->
 
-        <div
-            style="
-                margin-top:20px;
-                padding:12px 13px;
-                border:1px solid #dce8f0;
-                border-radius:10px;
-                background:#f7fafc;
-                color:#718398;
-                font-size:8px;
-                line-height:1.6;
-                text-align:center;
-            "
-        >
-            Your login credentials are used only to authenticate
-            your account and provide access to protected portal
-            services.
-        </div>
-
-    </div>
-
-</main>
-
-
-<footer class="site-footer">
-
-    <div class="footer-grid">
-
-        <div class="footer-brand">
-
-            <div
-                class="footer-emblem"
-                aria-hidden="true"
+            <nav
+                class="main-nav"
+                aria-label="Main navigation"
             >
-                ⚖
+
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="apply-ration-card.html">
+                    Apply Online
+                </a>
+
+                <a href="applications.html">
+                    My Applications
+                </a>
+
+                <a href="grievance.html">
+                    Grievance
+                </a>
+
+                <a href="transparency.html">
+                    Transparency
+                </a>
+
+            </nav>
+
+
+            <!-- =================================================
+                 HEADER ACTION
+            ================================================== -->
+
+            <div class="header-actions">
+
+                <a
+                    href="register.html"
+                    class="btn btn-secondary"
+                >
+                    Register
+                </a>
+
             </div>
 
-            <div>
+        </div>
 
-                <h3>
-                    Ration Portal
-                </h3>
+    </header>
 
-                <p>
-                    Public Distribution System
+
+    <!-- =========================================================
+         LOGIN PAGE
+    ========================================================== -->
+
+    <main class="auth-page">
+
+        <div class="auth-card">
+
+
+            <!-- =================================================
+                 LOGIN HEADER
+            ================================================== -->
+
+            <div class="auth-header">
+
+                <div
+                    class="auth-logo"
+                    aria-hidden="true"
+                >
+                    ⚖
+                </div>
+
+                <h1 class="auth-title">
+                    Citizen Login
+                </h1>
+
+                <p class="auth-subtitle">
+                    Sign in to access your Ration Portal services
                 </p>
 
             </div>
 
-        </div>
+
+            <!-- =================================================
+                 ALERT
+            ================================================== -->
+
+            <div
+                id="loginAlert"
+                class="alert"
+                style="display:none;"
+                role="alert"
+                aria-live="polite"
+            ></div>
 
 
-        <div class="footer-links">
+            <!-- =================================================
+                 LOGIN FORM
+            ================================================== -->
 
-            <a href="../index.html">
-                Home
-            </a>
-
-            <a href="register.html">
-                Register
-            </a>
-
-            <a href="grievance.html">
-                Grievance
-            </a>
-
-            <a href="transparency.html">
-                Transparency
-            </a>
-
-        </div>
+            <form
+                id="loginForm"
+                novalidate
+            >
 
 
-        <div class="footer-disclaimer">
+                <!-- =============================================
+                     EMAIL
+                ============================================== -->
 
-            <div>
-                ©
-                <span id="currentYear"></span>
-                Ration Portal
+                <div class="form-group">
+
+                    <label
+                        for="email"
+                        class="form-label"
+                    >
+                        Email Address
+                    </label>
+
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="Enter your registered email"
+                        autocomplete="email"
+                        required
+                    >
+
+
+                    <div
+                        id="emailError"
+                        class="form-help"
+                        style="
+                            display:none;
+                            color:#b42318;
+                        "
+                    ></div>
+
+                </div>
+
+
+                <!-- =============================================
+                     PASSWORD
+                ============================================== -->
+
+                <div class="form-group">
+
+                    <label
+                        for="password"
+                        class="form-label"
+                    >
+                        Password
+                    </label>
+
+
+                    <div class="password-wrapper">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+
+                        <!-- PASSWORD TOGGLE -->
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="password-toggle"
+                            aria-label="Show password"
+                            title="Show password"
+                        >
+
+                            <!-- EYE ICON -->
+
+                            <svg
+                                id="eyeIcon"
+                                class="password-eye-icon"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+
+                                <path
+                                    d="M2.1 12s3.5-6 9.9-6 9.9 6 9.9 6-3.5 6-9.9 6-9.9-6-9.9-6Z"
+                                ></path>
+
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="2.8"
+                                ></circle>
+
+                            </svg>
+
+
+                            <!-- EYE OFF ICON -->
+
+                            <svg
+                                id="eyeOffIcon"
+                                class="password-eye-icon"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                                style="display:none;"
+                            >
+
+                                <path
+                                    d="M3 3l18 18"
+                                ></path>
+
+                                <path
+                                    d="M10.6 6.3A10.7 10.7 0 0 1 12 6c6.4 0 9.9 6 9.9 6a18.2 18.2 0 0 1-3.1 3.8"
+                                ></path>
+
+                                <path
+                                    d="M6.4 6.4C3.8 8.1 2.1 12 2.1 12s3.5 6 9.9 6c1.4 0 2.6-.3 3.7-.8"
+                                ></path>
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="passwordError"
+                        class="form-help"
+                        style="
+                            display:none;
+                            color:#b42318;
+                        "
+                    ></div>
+
+                </div>
+
+
+                <!-- =============================================
+                     TERMS + FORGOT PASSWORD
+                ============================================== -->
+
+                <div
+                    style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:space-between;
+                        gap:12px;
+                        margin:4px 0 18px;
+                        flex-wrap:wrap;
+                    "
+                >
+
+                    <label
+                        for="termsAccepted"
+                        style="
+                            display:flex;
+                            align-items:center;
+                            gap:8px;
+                            color:#718398;
+                            font-size:9px;
+                            cursor:pointer;
+                            user-select:none;
+                        "
+                    >
+
+                        <input
+                            type="checkbox"
+                            id="termsAccepted"
+                            name="termsAccepted"
+                            style="
+                                width:15px;
+                                height:15px;
+                                margin:0;
+                                cursor:pointer;
+                                accent-color:#0871c9;
+                            "
+                        >
+
+                        <span>
+                            Terms &amp; Conditions accepted
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        href="forgot-password.html"
+                        style="
+                            color:#0871c9;
+                            font-size:9px;
+                            font-weight:700;
+                            text-decoration:none;
+                        "
+                    >
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- TERMS ERROR -->
+
+                <div
+                    id="termsError"
+                    class="form-help"
+                    style="
+                        display:none;
+                        color:#b42318;
+                        margin-top:-10px;
+                        margin-bottom:14px;
+                    "
+                ></div>
+
+
+                <!-- =============================================
+                     REMEMBER ME
+                ============================================== -->
+
+                <div
+                    style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:space-between;
+                        gap:12px;
+                        margin-bottom:18px;
+                        flex-wrap:wrap;
+                    "
+                >
+
+                    <label
+                        style="
+                            display:flex;
+                            align-items:center;
+                            gap:7px;
+                            color:#718398;
+                            font-size:9px;
+                            cursor:pointer;
+                        "
+                    >
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                            name="rememberMe"
+                        >
+
+                        Remember me
+
+                    </label>
+
+
+                    <span
+                        style="
+                            color:#8190a0;
+                            font-size:8px;
+                        "
+                    >
+                        Secure citizen access
+                    </span>
+
+                </div>
+
+
+                <!-- =============================================
+                     LOGIN BUTTON
+                ============================================== -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        id="loginButton"
+                        class="btn btn-primary"
+                        style="
+                            width:100%;
+                            justify-content:center;
+                        "
+                    >
+                        Login
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <!-- =================================================
+                 REGISTER
+            ================================================== -->
+
+            <div
+                style="
+                    margin-top:22px;
+                    padding-top:18px;
+                    border-top:1px solid #e5edf3;
+                    text-align:center;
+                "
+            >
+
+                <p
+                    style="
+                        margin:0 0 8px;
+                        color:#8190a0;
+                        font-size:9px;
+                    "
+                >
+                    Don't have an account?
+                </p>
+
+
+                <a
+                    href="register.html"
+                    style="
+                        color:#0871c9;
+                        font-size:10px;
+                        font-weight:800;
+                        text-decoration:none;
+                    "
+                >
+                    Create Citizen Account
+                </a>
+
             </div>
 
-            <div>
-                Educational demonstration project.
+
+            <!-- =================================================
+                 SECURITY INFORMATION
+            ================================================== -->
+
+            <div
+                style="
+                    margin-top:20px;
+                    padding:12px 13px;
+                    border:1px solid #dce8f0;
+                    border-radius:10px;
+                    background:#f7fafc;
+                    color:#718398;
+                    font-size:8px;
+                    line-height:1.6;
+                    text-align:center;
+                "
+            >
+                Your login credentials are used only to authenticate
+                your account and provide access to protected portal
+                services.
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="footer-grid">
+
+
+            <div class="footer-brand">
+
+                <div
+                    class="footer-emblem"
+                    aria-hidden="true"
+                >
+                    ⚖
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Ration Portal
+                    </h3>
+
+                    <p>
+                        Public Distribution System
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="register.html">
+                    Register
+                </a>
+
+                <a href="grievance.html">
+                    Grievance
+                </a>
+
+                <a href="transparency.html">
+                    Transparency
+                </a>
+
+            </div>
+
+
+            <div class="footer-disclaimer">
+
+                <div>
+                    ©
+                    <span id="currentYear"></span>
+                    Ration Portal
+                </div>
+
+                <div>
+                    Educational demonstration project.
+                </div>
+
             </div>
 
         </div>
 
-    </div>
-
-</footer>
+    </footer>
 
 
-<script src="../config.js"></script>
-<script src="../js/auth-guard.js"></script>
-<script src="../js/app.js"></script>
-<script src="../js/script.js"></script>
+    <!-- =========================================================
+         GLOBAL JAVASCRIPT FILES
+    ========================================================== -->
+
+    <script src="../config.js"></script>
+
+    <script src="../js/auth-guard.js"></script>
+
+    <script src="../js/app.js"></script>
+
+    <script src="../js/script.js"></script>
 
 
-<script>
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+    <!-- =========================================================
+         LOGIN JAVASCRIPT
+    ========================================================== -->
 
-        const form =
-            document.getElementById(
-                "loginForm"
-            );
+    <script>
 
-        const emailInput =
-            document.getElementById(
-                "email"
-            );
-
-        const passwordInput =
-            document.getElementById(
-                "password"
-            );
-
-        const loginButton =
-            document.getElementById(
-                "loginButton"
-            );
-
-        const alertBox =
-            document.getElementById(
-                "loginAlert"
-            );
-
-        const togglePassword =
-            document.getElementById(
-                "togglePassword"
-            );
-
-
-        const apiBase =
-            window.RATION_API_BASE ||
-            "https://ration-portal-backend.onrender.com/api";
-
-
-        function showAlert(
-            message,
-            type
-        ) {
-
-            alertBox.textContent =
-                message;
-
-            alertBox.className =
-                "alert alert-" +
-                type;
-
-            alertBox.style.display =
-                "block";
-
-        }
-
-
-        function hideAlert() {
-
-            alertBox.textContent =
-                "";
-
-            alertBox.style.display =
-                "none";
-
-        }
-
-
-        function showFieldError(
-            elementId,
-            message
-        ) {
-
-            const element =
-                document.getElementById(
-                    elementId
-                );
-
-
-            if (!element) {
-                return;
-            }
-
-
-            element.textContent =
-                message;
-
-            element.style.display =
-                "block";
-
-        }
-
-
-        function hideFieldError(
-            elementId
-        ) {
-
-            const element =
-                document.getElementById(
-                    elementId
-                );
-
-
-            if (!element) {
-                return;
-            }
-
-
-            element.textContent =
-                "";
-
-            element.style.display =
-                "none";
-
-        }
-
-
-        function validateEmail(
-            email
-        ) {
-
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                .test(email);
-
-        }
-        const eyeIcon =
-    document.getElementById(
-        "eyeIcon"
-    );
-
-const eyeOffIcon =
-    document.getElementById(
-        "eyeOffIcon"
-    );
-
-
-togglePassword.addEventListener(
-    "click",
-    function () {
-
-        const isPassword =
-            passwordInput.type === "password";
-
-
-        passwordInput.type =
-            isPassword
-                ? "text"
-                : "password";
-
-
-        eyeIcon.style.display =
-            isPassword
-                ? "none"
-                : "block";
-
-
-        eyeOffIcon.style.display =
-            isPassword
-                ? "block"
-                : "none";
-
-
-        togglePassword.setAttribute(
-            "aria-label",
-            isPassword
-                ? "Hide password"
-                : "Show password"
-        );
-
-
-        togglePassword.setAttribute(
-            "title",
-            isPassword
-                ? "Hide password"
-                : "Show password"
-        );
-
-    }
-);
-
-
-        emailInput.addEventListener(
-            "input",
+        document.addEventListener(
+            "DOMContentLoaded",
             function () {
 
-                hideFieldError(
-                    "emailError"
-                );
 
-                hideAlert();
+                /* =================================================
+                   GET FORM ELEMENTS
+                ================================================== */
 
-            }
-        );
-
-
-        passwordInput.addEventListener(
-            "input",
-            function () {
-
-                hideFieldError(
-                    "passwordError"
-                );
-
-                hideAlert();
-
-            }
-        );
-
-
-        form.addEventListener(
-            "submit",
-            async function (
-                event
-            ) {
-
-                event.preventDefault();
-
-
-                hideAlert();
-
-                hideFieldError(
-                    "emailError"
-                );
-
-                hideFieldError(
-                    "passwordError"
-                );
-
-
-                const email =
-                    emailInput.value
-                        .trim();
-
-                const password =
-                    passwordInput.value;
-
-
-                let valid =
-                    true;
-
-
-                if (!email) {
-
-                    showFieldError(
-                        "emailError",
-                        "Please enter your email address."
+                const form =
+                    document.getElementById(
+                        "loginForm"
                     );
 
-                    valid = false;
 
-                }
-                else if (
-                    !validateEmail(
-                        email
-                    )
+                const emailInput =
+                    document.getElementById(
+                        "email"
+                    );
+
+
+                const passwordInput =
+                    document.getElementById(
+                        "password"
+                    );
+
+
+                const loginButton =
+                    document.getElementById(
+                        "loginButton"
+                    );
+
+
+                const alertBox =
+                    document.getElementById(
+                        "loginAlert"
+                    );
+
+
+                const togglePassword =
+                    document.getElementById(
+                        "togglePassword"
+                    );
+
+
+                /*
+                 * STEP 2:
+                 * Terms & Conditions checkbox
+                 */
+
+                const termsAccepted =
+                    document.getElementById(
+                        "termsAccepted"
+                    );
+
+
+                const termsError =
+                    document.getElementById(
+                        "termsError"
+                    );
+
+
+                const rememberMe =
+                    document.getElementById(
+                        "rememberMe"
+                    );
+
+
+                /* =================================================
+                   API BASE URL
+                ================================================== */
+
+                const apiBase =
+                    window.RATION_API_BASE ||
+                    "https://ration-portal-backend.onrender.com/api";
+
+
+                /* =================================================
+                   SHOW ALERT
+                ================================================== */
+
+                function showAlert(
+                    message,
+                    type
                 ) {
 
-                    showFieldError(
-                        "emailError",
-                        "Please enter a valid email address."
-                    );
+                    if (!alertBox) {
+                        return;
+                    }
 
-                    valid = false;
+
+                    alertBox.textContent =
+                        message;
+
+
+                    alertBox.className =
+                        "alert alert-" +
+                        type;
+
+
+                    alertBox.style.display =
+                        "block";
 
                 }
 
 
-                if (!password) {
+                /* =================================================
+                   HIDE ALERT
+                ================================================== */
 
-                    showFieldError(
-                        "passwordError",
-                        "Please enter your password."
-                    );
+                function hideAlert() {
 
-                    valid = false;
+                    if (!alertBox) {
+                        return;
+                    }
+
+
+                    alertBox.textContent =
+                        "";
+
+
+                    alertBox.style.display =
+                        "none";
 
                 }
 
 
-                if (!valid) {
-                    return;
+                /* =================================================
+                   SHOW FIELD ERROR
+                ================================================== */
+
+                function showFieldError(
+                    elementId,
+                    message
+                ) {
+
+                    const element =
+                        document.getElementById(
+                            elementId
+                        );
+
+
+                    if (!element) {
+                        return;
+                    }
+
+
+                    element.textContent =
+                        message;
+
+
+                    element.style.display =
+                        "block";
+
                 }
 
 
-                const originalText =
-                    loginButton.textContent;
+                /* =================================================
+                   HIDE FIELD ERROR
+                ================================================== */
 
+                function hideFieldError(
+                    elementId
+                ) {
 
-                loginButton.disabled =
-                    true;
-
-                loginButton.textContent =
-                    "Signing in...";
-
-
-                try {
-
-                    const response =
-                        await fetch(
-                            apiBase +
-                            "/auth/login",
-                            {
-                                method: "POST",
-
-                                headers: {
-                                    "Content-Type":
-                                        "application/json",
-
-                                    "Accept":
-                                        "application/json"
-                                },
-
-                                body:
-                                    JSON.stringify(
-                                        {
-                                            email:
-                                                email,
-
-                                            password:
-                                                password
-                                        }
-                                    )
-                            }
+                    const element =
+                        document.getElementById(
+                            elementId
                         );
 
 
-                    let data =
-                        null;
-
-
-                    try {
-
-                        data =
-                            await response.json();
-
-                    }
-                    catch (
-                        jsonError
-                    ) {
-
-                        data =
-                            null;
-
+                    if (!element) {
+                        return;
                     }
 
 
-                    if (!response.ok) {
+                    element.textContent =
+                        "";
 
-                        const message =
-                            data &&
-                            (
-                                data.message ||
-                                data.error
-                            )
-                                ? (
-                                    data.message ||
-                                    data.error
-                                )
-                                : response.status === 401
-                                    ? "Invalid email or password."
-                                    : "Login failed. Please try again.";
 
-                        throw new Error(
-                            message
-                        );
+                    element.style.display =
+                        "none";
 
+                }
+
+
+                /* =================================================
+                   SHOW TERMS ERROR
+                   
+                   This is the important STEP 2 addition.
+                ================================================== */
+
+                function showTermsError(
+                    message
+                ) {
+
+                    if (!termsError) {
+                        return;
                     }
 
 
-                    /*
-                     * Accept common response formats:
-                     *
-                     * { token: "..." }
-                     *
-                     * { accessToken: "..." }
-                     *
-                     * { data: { token: "..." } }
-                     *
-                     * { data: { accessToken: "..." } }
-                     */
-
-                    const responseData =
-                        data &&
-                        data.data &&
-                        typeof data.data ===
-                            "object"
-                            ? data.data
-                            : data || {};
+                    termsError.textContent =
+                        message;
 
 
-                    const token =
-                        responseData.token ||
-                        responseData.accessToken ||
-                        data.token ||
-                        data.accessToken;
+                    termsError.style.display =
+                        "block";
+
+                }
 
 
-                    if (!token) {
+                /* =================================================
+                   HIDE TERMS ERROR
+                ================================================== */
 
-                        throw new Error(
-                            "Login succeeded, but the server did not return an authentication token."
-                        );
+                function hideTermsError() {
 
+                    if (!termsError) {
+                        return;
                     }
 
 
-                    const user =
-                        responseData.user ||
-                        responseData.profile ||
-                        data.user ||
-                        null;
+                    termsError.textContent =
+                        "";
 
 
-                    localStorage.setItem(
-                        "rationPortalToken",
-                        token
+                    termsError.style.display =
+                        "none";
+
+                }
+
+
+                /* =================================================
+                   EMAIL VALIDATION
+                ================================================== */
+
+                function validateEmail(
+                    email
+                ) {
+
+                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                        .test(email);
+
+                }
+
+
+                /* =================================================
+                   PASSWORD EYE ICON
+                ================================================== */
+
+                const eyeIcon =
+                    document.getElementById(
+                        "eyeIcon"
                     );
 
 
-                    if (user) {
-
-                        localStorage.setItem(
-                            "rationPortalUser",
-                            JSON.stringify(
-                                user
-                            )
-                        );
-
-                    }
-
-
-                    /*
-                     * Keep the login session persistent.
-                     * The current portal authentication system
-                     * uses localStorage for the JWT session.
-                     */
-
-                    showAlert(
-                        "Login successful. Redirecting...",
-                        "success"
+                const eyeOffIcon =
+                    document.getElementById(
+                        "eyeOffIcon"
                     );
 
 
-                    loginButton.textContent =
-                        "Login successful";
+                if (togglePassword) {
 
-
-                    /*
-                     * Allow the page to remember where the
-                     * citizen originally wanted to go.
-                     */
-
-                    const redirect =
-                        sessionStorage.getItem(
-                            "rationPortalRedirect"
-                        );
-
-
-                    sessionStorage.removeItem(
-                        "rationPortalRedirect"
-                    );
-
-
-                    setTimeout(
+                    togglePassword.addEventListener(
+                        "click",
                         function () {
 
-                            if (
-                                redirect &&
-                                redirect !==
-                                    "login.html"
-                            ) {
 
-                                window.location.href =
-                                    redirect;
+                            const isPassword =
+                                passwordInput.type ===
+                                "password";
+
+
+                            passwordInput.type =
+                                isPassword
+                                    ? "text"
+                                    : "password";
+
+
+                            if (eyeIcon) {
+
+                                eyeIcon.style.display =
+                                    isPassword
+                                        ? "none"
+                                        : "block";
 
                             }
-                            else {
 
-                                window.location.href = "citizen-dashboard.html";
+
+                            if (eyeOffIcon) {
+
+                                eyeOffIcon.style.display =
+                                    isPassword
+                                        ? "block"
+                                        : "none";
 
                             }
 
-                        },
-                        500
+
+                            togglePassword.setAttribute(
+                                "aria-label",
+                                isPassword
+                                    ? "Hide password"
+                                    : "Show password"
+                            );
+
+
+                            togglePassword.setAttribute(
+                                "title",
+                                isPassword
+                                    ? "Hide password"
+                                    : "Show password"
+                            );
+
+                        }
                     );
 
                 }
-                catch (
-                    error
-                ) {
 
-                    console.error(
-                        "Login error:",
-                        error
+
+                /* =================================================
+                   EMAIL INPUT EVENT
+                ================================================== */
+
+                if (emailInput) {
+
+                    emailInput.addEventListener(
+                        "input",
+                        function () {
+
+                            hideFieldError(
+                                "emailError"
+                            );
+
+                            hideAlert();
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   PASSWORD INPUT EVENT
+                ================================================== */
+
+                if (passwordInput) {
+
+                    passwordInput.addEventListener(
+                        "input",
+                        function () {
+
+                            hideFieldError(
+                                "passwordError"
+                            );
+
+                            hideAlert();
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   TERMS CHECKBOX EVENT
+                   
+                   When the citizen checks the checkbox,
+                   the Terms error disappears.
+                ================================================== */
+
+                if (termsAccepted) {
+
+                    termsAccepted.addEventListener(
+                        "change",
+                        function () {
+
+                            hideTermsError();
+
+                            hideAlert();
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   LOGIN FORM SUBMIT
+                ================================================== */
+
+                if (form) {
+
+                    form.addEventListener(
+                        "submit",
+                        async function (
+                            event
+                        ) {
+
+                            event.preventDefault();
+
+
+                            /* =====================================
+                               CLEAR OLD ERRORS
+                            ====================================== */
+
+                            hideAlert();
+
+
+                            hideFieldError(
+                                "emailError"
+                            );
+
+
+                            hideFieldError(
+                                "passwordError"
+                            );
+
+
+                            hideTermsError();
+
+
+                            /* =====================================
+                               GET VALUES
+                            ====================================== */
+
+                            const email =
+                                emailInput.value
+                                    .trim();
+
+
+                            const password =
+                                passwordInput.value;
+
+
+                            let valid =
+                                true;
+
+
+                            /* =====================================
+                               EMAIL VALIDATION
+                            ====================================== */
+
+                            if (!email) {
+
+                                showFieldError(
+                                    "emailError",
+                                    "Please enter your email address."
+                                );
+
+
+                                valid =
+                                    false;
+
+                            }
+
+                            else if (
+                                !validateEmail(
+                                    email
+                                )
+                            ) {
+
+                                showFieldError(
+                                    "emailError",
+                                    "Please enter a valid email address."
+                                );
+
+
+                                valid =
+                                    false;
+
+                            }
+
+
+                            /* =====================================
+                               PASSWORD VALIDATION
+                            ====================================== */
+
+                            if (!password) {
+
+                                showFieldError(
+                                    "passwordError",
+                                    "Please enter your password."
+                                );
+
+
+                                valid =
+                                    false;
+
+                            }
+
+
+                            /* =====================================
+                               TERMS & CONDITIONS VALIDATION
+                               
+                               IMPORTANT:
+                               Login will NOT continue unless
+                               this checkbox is checked.
+                            ====================================== */
+
+                            if (
+                                !termsAccepted ||
+                                !termsAccepted.checked
+                            ) {
+
+                                showTermsError(
+                                    "Please accept the Terms & Conditions before logging in."
+                                );
+
+
+                                valid =
+                                    false;
+
+                            }
+
+
+                            /* =====================================
+                               STOP LOGIN IF ANY VALIDATION FAILED
+                            ====================================== */
+
+                            if (!valid) {
+                                return;
+                            }
+
+
+                            /* =====================================
+                               SAVE ORIGINAL BUTTON TEXT
+                            ====================================== */
+
+                            const originalText =
+                                loginButton.textContent;
+
+
+                            loginButton.disabled =
+                                true;
+
+
+                            loginButton.textContent =
+                                "Signing in...";
+
+
+                            /* =====================================
+                               LOGIN API REQUEST
+                            ====================================== */
+
+                            try {
+
+                                const response =
+                                    await fetch(
+                                        apiBase +
+                                        "/auth/login",
+                                        {
+                                            method:
+                                                "POST",
+
+                                            headers:
+                                                {
+                                                    "Content-Type":
+                                                        "application/json",
+
+                                                    "Accept":
+                                                        "application/json"
+                                                },
+
+                                            body:
+                                                JSON.stringify(
+                                                    {
+                                                        email:
+                                                            email,
+
+                                                        password:
+                                                            password
+                                                    }
+                                                )
+                                        }
+                                    );
+
+
+                                /* =================================
+                                   READ RESPONSE
+                                ================================== */
+
+                                let data =
+                                    null;
+
+
+                                try {
+
+                                    data =
+                                        await response.json();
+
+                                }
+
+                                catch (
+                                    jsonError
+                                ) {
+
+                                    data =
+                                        null;
+
+                                }
+
+
+                                /* =================================
+                                   HANDLE LOGIN FAILURE
+                                ================================== */
+
+                                if (!response.ok) {
+
+                                    const message =
+                                        data &&
+                                        (
+                                            data.message ||
+                                            data.error
+                                        )
+                                            ? (
+                                                data.message ||
+                                                data.error
+                                            )
+                                            : response.status === 401
+                                                ? "Invalid email or password."
+                                                : "Login failed. Please try again.";
+
+
+                                    throw new Error(
+                                        message
+                                    );
+
+                                }
+
+
+                                /* =================================
+                                   ACCEPT COMMON RESPONSE FORMATS
+
+                                   {
+                                       token: "..."
+                                   }
+
+                                   OR
+
+                                   {
+                                       accessToken: "..."
+                                   }
+
+                                   OR
+
+                                   {
+                                       data: {
+                                           token: "..."
+                                       }
+                                   }
+
+                                   OR
+
+                                   {
+                                       data: {
+                                           accessToken: "..."
+                                       }
+                                   }
+                                ================================== */
+
+                                const responseData =
+                                    data &&
+                                    data.data &&
+                                    typeof data.data ===
+                                        "object"
+                                        ? data.data
+                                        : data || {};
+
+
+                                const token =
+                                    responseData.token ||
+                                    responseData.accessToken ||
+                                    data.token ||
+                                    data.accessToken;
+
+
+                                /* =================================
+                                   TOKEN CHECK
+                                ================================== */
+
+                                if (!token) {
+
+                                    throw new Error(
+                                        "Login succeeded, but the server did not return an authentication token."
+                                    );
+
+                                }
+
+
+                                /* =================================
+                                   GET USER INFORMATION
+                                ================================== */
+
+                                const user =
+                                    responseData.user ||
+                                    responseData.profile ||
+                                    data.user ||
+                                    null;
+
+
+                                /* =================================
+                                   STORE TOKEN
+                                ================================== */
+
+                                localStorage.setItem(
+                                    "rationPortalToken",
+                                    token
+                                );
+
+
+                                /* =================================
+                                   STORE USER
+                                ================================== */
+
+                                if (user) {
+
+                                    localStorage.setItem(
+                                        "rationPortalUser",
+                                        JSON.stringify(
+                                            user
+                                        )
+                                    );
+
+                                }
+
+
+                                /* =================================
+                                   REMEMBER ME
+                                ================================== */
+
+                                if (
+                                    rememberMe &&
+                                    rememberMe.checked
+                                ) {
+
+                                    localStorage.setItem(
+                                        "rationPortalRememberMe",
+                                        "true"
+                                    );
+
+                                }
+
+                                else {
+
+                                    localStorage.removeItem(
+                                        "rationPortalRememberMe"
+                                    );
+
+                                }
+
+
+                                /* =================================
+                                   SUCCESS MESSAGE
+                                ================================== */
+
+                                showAlert(
+                                    "Login successful. Redirecting...",
+                                    "success"
+                                );
+
+
+                                loginButton.textContent =
+                                    "Login successful";
+
+
+                                /* =================================
+                                   REDIRECT DESTINATION
+                                ================================== */
+
+                                const redirect =
+                                    sessionStorage.getItem(
+                                        "rationPortalRedirect"
+                                    );
+
+
+                                sessionStorage.removeItem(
+                                    "rationPortalRedirect"
+                                );
+
+
+                                /* =================================
+                                   REDIRECT AFTER LOGIN
+                                ================================== */
+
+                                setTimeout(
+                                    function () {
+
+                                        if (
+                                            redirect &&
+                                            redirect !==
+                                                "login.html"
+                                        ) {
+
+                                            window.location.href =
+                                                redirect;
+
+                                        }
+
+                                        else {
+
+                                            window.location.href =
+                                                "citizen-dashboard.html";
+
+                                        }
+
+                                    },
+                                    500
+                                );
+
+                            }
+
+
+                            /* =====================================
+                               LOGIN ERROR
+                            ====================================== */
+
+                            catch (
+                                error
+                            ) {
+
+                                console.error(
+                                    "Login error:",
+                                    error
+                                );
+
+
+                                showAlert(
+                                    error.message ||
+                                    "Unable to connect to the authentication service.",
+                                    "danger"
+                                );
+
+
+                                loginButton.disabled =
+                                    false;
+
+
+                                loginButton.textContent =
+                                    originalText;
+
+                            }
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   CURRENT YEAR
+                ================================================== */
+
+                const currentYear =
+                    document.getElementById(
+                        "currentYear"
                     );
 
 
-                    showAlert(
-                        error.message ||
-                        "Unable to connect to the authentication service.",
-                        "danger"
+                if (currentYear) {
+
+                    currentYear.textContent =
+                        new Date()
+                            .getFullYear();
+
+                }
+
+
+                /* =================================================
+                   ALREADY LOGGED-IN USER
+                   
+                   If a token already exists, send the citizen
+                   directly to the dashboard.
+                ================================================== */
+
+                const existingToken =
+                    localStorage.getItem(
+                        "rationPortalToken"
                     );
 
 
-                    loginButton.disabled =
-                        false;
+                if (existingToken) {
 
-                    loginButton.textContent =
-                        originalText;
+                    window.location.href =
+                        "citizen-dashboard.html";
 
                 }
 
             }
+
         );
 
-
-        /*
-         * If a previous page stored a requested destination,
-         * preserve it until successful login.
-         */
-
-        const currentYear =
-            document.getElementById(
-                "currentYear"
-            );
-
-
-        if (currentYear) {
-
-            currentYear.textContent =
-                new Date()
-                    .getFullYear();
-
-        }
-
-
-        /*
-         * If the user is already logged in,
-         * avoid displaying the login form unnecessarily.
-         */
-
-        const existingToken =
-            localStorage.getItem(
-                "rationPortalToken"
-            );
-
-
-        if (existingToken) {
-
-            window.location.href = "citizen-dashboard.html";
-
-        }
-
-    }
-);
-</script>
+    </script>
 
 </body>
+
 </html>
+```
