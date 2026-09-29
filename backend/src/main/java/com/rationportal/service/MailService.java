@@ -22,20 +22,24 @@ public class MailService {
     private final ObjectMapper objectMapper;
     private final HttpClient httpClient;
 
-    @Value("${resend.api-key:}")
+    /*
+     * These names intentionally match the environment variables
+     * configured in Render.
+     */
+    @Value("${RESEND_API_KEY:}")
     private String resendApiKey;
 
-    @Value("${resend.from:onboarding@resend.dev}")
+    @Value("${RESEND_FROM_EMAIL:onboarding@resend.dev}")
     private String resendFrom;
 
-    @Value("${app.frontend-url:https://ration-portal-frontend.onrender.com}")
+    @Value("${FRONTEND_URL:https://ration-portal-frontend.onrender.com}")
     private String frontendUrl;
 
     public MailService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
 
         this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
+                .connectTimeout(Duration.ofSeconds(15))
                 .build();
     }
 
@@ -45,13 +49,13 @@ public class MailService {
 
         if (resendApiKey == null || resendApiKey.isBlank()) {
             throw new IllegalStateException(
-                    "Password reset email service is not configured."
+                    "RESEND_API_KEY is not configured on the server."
             );
         }
 
         if (resendFrom == null || resendFrom.isBlank()) {
             throw new IllegalStateException(
-                    "Password reset sender is not configured."
+                    "RESEND_FROM_EMAIL is not configured on the server."
             );
         }
 
@@ -68,7 +72,6 @@ public class MailService {
         }
 
         String resetUrl = buildResetUrl(resetToken);
-
         String html = buildEmailHtml(resetUrl);
 
         try {
@@ -86,7 +89,7 @@ public class MailService {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(RESEND_API_URL))
-                    .timeout(Duration.ofSeconds(20))
+                    .timeout(Duration.ofSeconds(30))
                     .header(
                             "Authorization",
                             "Bearer " + resendApiKey
@@ -96,8 +99,7 @@ public class MailService {
                             "application/json"
                     )
                     .POST(
-                            HttpRequest.BodyPublishers
-                                    .ofString(json)
+                            HttpRequest.BodyPublishers.ofString(json)
                     )
                     .build();
 
@@ -108,10 +110,14 @@ public class MailService {
                     );
 
             int statusCode = response.statusCode();
+            String responseBody = response.body();
 
             if (statusCode < 200 || statusCode >= 300) {
                 throw new IllegalStateException(
-                        "Password reset email could not be sent."
+                        "Resend API rejected the email. HTTP "
+                                + statusCode
+                                + " Response: "
+                                + responseBody
                 );
             }
 
@@ -120,13 +126,16 @@ public class MailService {
             Thread.currentThread().interrupt();
 
             throw new IllegalStateException(
-                    "Password reset email request was interrupted."
+                    "Password reset email request was interrupted.",
+                    exception
             );
 
         } catch (Exception exception) {
 
             throw new IllegalStateException(
-                    "Password reset email could not be sent."
+                    "Password reset email could not be sent: "
+                            + exception.getMessage(),
+                    exception
             );
         }
     }
@@ -134,6 +143,11 @@ public class MailService {
     private String buildResetUrl(String resetToken) {
 
         String baseUrl = frontendUrl;
+
+        if (baseUrl == null || baseUrl.isBlank()) {
+            baseUrl =
+                    "https://ration-portal-frontend.onrender.com";
+        }
 
         if (baseUrl.endsWith("/")) {
             baseUrl = baseUrl.substring(
@@ -182,6 +196,7 @@ public class MailService {
                         padding:24px;
                         text-align:center;
                     ">
+
                         <h1 style="
                             margin:0;
                             font-size:24px;
@@ -195,6 +210,7 @@ public class MailService {
                         ">
                             Public Distribution System
                         </p>
+
                     </div>
 
                     <div style="padding:30px;">
@@ -227,13 +243,13 @@ public class MailService {
 
                             <a href="%s"
                                style="
-                                   display:inline-block;
-                                   background:#0b5ed7;
-                                   color:#ffffff;
-                                   text-decoration:none;
-                                   padding:14px 24px;
-                                   border-radius:6px;
-                                   font-weight:bold;
+                               display:inline-block;
+                               background:#0b5ed7;
+                               color:#ffffff;
+                               text-decoration:none;
+                               padding:14px 24px;
+                               border-radius:6px;
+                               font-weight:bold;
                                ">
                                 Reset Password
                             </a>
