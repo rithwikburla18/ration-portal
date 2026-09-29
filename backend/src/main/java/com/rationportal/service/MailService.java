@@ -22,10 +22,10 @@ public class MailService {
     private final ObjectMapper objectMapper;
     private final HttpClient httpClient;
 
-    @Value("${resend.api-key:}")
+    @Value("${RESEND_API_KEY:}")
     private String resendApiKey;
 
-    @Value("${resend.from:onboarding@resend.dev}")
+    @Value("${MAIL_FROM:onboarding@resend.dev}")
     private String resendFrom;
 
     @Value("${app.frontend-url:https://ration-portal-frontend.onrender.com}")
