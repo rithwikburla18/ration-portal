@@ -48,7 +48,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(
                 List.of(
-                        "https://ration-portal-web.onrender.com"
+                        "https://ration-portal-frontend.onrender.com"
                 )
         );
 
