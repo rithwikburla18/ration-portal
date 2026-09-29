@@ -2,6 +2,7 @@ package com.rationportal.controller;
 
 import com.rationportal.model.User;
 import com.rationportal.repository.UserRepository;
+import com.rationportal.service.MailService;
 import com.rationportal.security.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final MailService mailService;
 
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
@@ -30,12 +32,14 @@ public class AuthController {
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            MailService mailService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.mailService = mailService;
     }
 
     @PostMapping("/check-email")
@@ -266,17 +270,12 @@ public class AuthController {
 
         userRepository.save(user);
 
-        /*
-         * Email delivery will be connected in the next step.
-         * For now, the token is returned only so the reset flow
-         * can be tested end-to-end.
-         */
+        mailService.sendPasswordResetEmail(email, resetToken);
+
         return ResponseEntity.ok(
                 Map.of(
                         "message",
-                        "Password reset request created.",
-                        "resetToken",
-                        resetToken
+                        "Password reset request created."
                 )
         );
     }
