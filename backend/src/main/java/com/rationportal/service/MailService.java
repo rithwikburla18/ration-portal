@@ -22,17 +22,13 @@ public class MailService {
     private final ObjectMapper objectMapper;
     private final HttpClient httpClient;
 
-    /*
-     * These names intentionally match the environment variables
-     * configured in Render.
-     */
-    @Value("${RESEND_API_KEY:}")
+    @Value("${resend.api-key:}")
     private String resendApiKey;
 
-    @Value("${RESEND_FROM_EMAIL:onboarding@resend.dev}")
+    @Value("${resend.from:onboarding@resend.dev}")
     private String resendFrom;
 
-    @Value("${FRONTEND_URL:https://ration-portal-frontend.onrender.com}")
+    @Value("${app.frontend-url:https://ration-portal-frontend.onrender.com}")
     private String frontendUrl;
 
     public MailService(ObjectMapper objectMapper) {
@@ -49,13 +45,13 @@ public class MailService {
 
         if (resendApiKey == null || resendApiKey.isBlank()) {
             throw new IllegalStateException(
-                    "RESEND_API_KEY is not configured on the server."
+                    "RESEND_API_KEY is not configured."
             );
         }
 
         if (resendFrom == null || resendFrom.isBlank()) {
             throw new IllegalStateException(
-                    "RESEND_FROM_EMAIL is not configured on the server."
+                    "RESEND_FROM is not configured."
             );
         }
 
@@ -72,9 +68,11 @@ public class MailService {
         }
 
         String resetUrl = buildResetUrl(resetToken);
+
         String html = buildEmailHtml(resetUrl);
 
         try {
+
             Map<String, Object> payload = new HashMap<>();
 
             payload.put("from", resendFrom);
@@ -85,23 +83,26 @@ public class MailService {
             );
             payload.put("html", html);
 
-            String json = objectMapper.writeValueAsString(payload);
+            String json =
+                    objectMapper.writeValueAsString(payload);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(RESEND_API_URL))
-                    .timeout(Duration.ofSeconds(30))
-                    .header(
-                            "Authorization",
-                            "Bearer " + resendApiKey
-                    )
-                    .header(
-                            "Content-Type",
-                            "application/json"
-                    )
-                    .POST(
-                            HttpRequest.BodyPublishers.ofString(json)
-                    )
-                    .build();
+            HttpRequest request =
+                    HttpRequest.newBuilder()
+                            .uri(URI.create(RESEND_API_URL))
+                            .timeout(Duration.ofSeconds(30))
+                            .header(
+                                    "Authorization",
+                                    "Bearer " + resendApiKey
+                            )
+                            .header(
+                                    "Content-Type",
+                                    "application/json"
+                            )
+                            .POST(
+                                    HttpRequest.BodyPublishers
+                                            .ofString(json)
+                            )
+                            .build();
 
             HttpResponse<String> response =
                     httpClient.send(
@@ -110,27 +111,46 @@ public class MailService {
                     );
 
             int statusCode = response.statusCode();
+
             String responseBody = response.body();
 
+            System.out.println(
+                    "RESEND HTTP STATUS: " + statusCode
+            );
+
+            System.out.println(
+                    "RESEND RESPONSE BODY: " + responseBody
+            );
+
             if (statusCode < 200 || statusCode >= 300) {
+
                 throw new IllegalStateException(
-                        "Resend API rejected the email. HTTP "
+                        "Resend rejected email. HTTP "
                                 + statusCode
                                 + " Response: "
                                 + responseBody
                 );
             }
 
+            System.out.println(
+                    "PASSWORD RESET EMAIL SENT SUCCESSFULLY."
+            );
+
         } catch (InterruptedException exception) {
 
             Thread.currentThread().interrupt();
 
             throw new IllegalStateException(
-                    "Password reset email request was interrupted.",
+                    "Resend email request was interrupted.",
                     exception
             );
 
         } catch (Exception exception) {
+
+            System.err.println(
+                    "RESEND EMAIL ERROR: "
+                            + exception.getMessage()
+            );
 
             throw new IllegalStateException(
                     "Password reset email could not be sent: "
@@ -143,11 +163,6 @@ public class MailService {
     private String buildResetUrl(String resetToken) {
 
         String baseUrl = frontendUrl;
-
-        if (baseUrl == null || baseUrl.isBlank()) {
-            baseUrl =
-                    "https://ration-portal-frontend.onrender.com";
-        }
 
         if (baseUrl.endsWith("/")) {
             baseUrl = baseUrl.substring(
@@ -166,6 +181,7 @@ public class MailService {
         return """
                 <!DOCTYPE html>
                 <html lang="en">
+
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport"
@@ -293,7 +309,9 @@ public class MailService {
 
                 </body>
                 </html>
-                """.formatted(escapeHtml(resetUrl));
+                """.formatted(
+                escapeHtml(resetUrl)
+        );
     }
 
     private String escapeHtml(String value) {
