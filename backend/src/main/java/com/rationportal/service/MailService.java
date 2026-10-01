@@ -32,6 +32,7 @@ public class MailService {
     private String frontendUrl;
 
     public MailService(ObjectMapper objectMapper) {
+
         this.objectMapper = objectMapper;
 
         this.httpClient = HttpClient.newBuilder()
@@ -41,27 +42,32 @@ public class MailService {
 
     public void sendPasswordResetEmail(
             String email,
-            String resetToken) {
+            String resetToken
+    ) {
 
         if (brevoApiKey == null || brevoApiKey.isBlank()) {
+
             throw new IllegalStateException(
                     "BREVO_API_KEY is not configured."
             );
         }
 
         if (brevoFromEmail == null || brevoFromEmail.isBlank()) {
+
             throw new IllegalStateException(
                     "BREVO_FROM_EMAIL is not configured."
             );
         }
 
         if (email == null || email.isBlank()) {
+
             throw new IllegalArgumentException(
                     "Recipient email is required."
             );
         }
 
         if (resetToken == null || resetToken.isBlank()) {
+
             throw new IllegalArgumentException(
                     "Password reset token is required."
             );
@@ -73,29 +79,59 @@ public class MailService {
         try {
 
             Map<String, Object> sender = new HashMap<>();
-            sender.put("name", "Ration Portal");
-            sender.put("email", brevoFromEmail);
+
+            sender.put(
+                    "name",
+                    "Ration Portal"
+            );
+
+            sender.put(
+                    "email",
+                    brevoFromEmail
+            );
 
             Map<String, Object> recipient = new HashMap<>();
-            recipient.put("email", email);
+
+            recipient.put(
+                    "email",
+                    email
+            );
 
             Map<String, Object> payload = new HashMap<>();
 
-            payload.put("sender", sender);
-            payload.put("to", List.of(recipient));
+            payload.put(
+                    "sender",
+                    sender
+            );
+
+            payload.put(
+                    "to",
+                    List.of(recipient)
+            );
+
             payload.put(
                     "subject",
                     "Ration Portal - Password Reset"
             );
-            payload.put("htmlContent", html);
+
+            payload.put(
+                    "htmlContent",
+                    html
+            );
 
             String json =
                     objectMapper.writeValueAsString(payload);
 
             HttpRequest request =
                     HttpRequest.newBuilder()
-                            .uri(URI.create(BREVO_API_URL))
-                            .timeout(Duration.ofSeconds(30))
+                            .uri(
+                                    URI.create(
+                                            BREVO_API_URL
+                                    )
+                            )
+                            .timeout(
+                                    Duration.ofSeconds(30)
+                            )
                             .header(
                                     "api-key",
                                     brevoApiKey
@@ -117,21 +153,30 @@ public class MailService {
             HttpResponse<String> response =
                     httpClient.send(
                             request,
-                            HttpResponse.BodyHandlers.ofString()
+                            HttpResponse.BodyHandlers
+                                    .ofString()
                     );
 
-            int statusCode = response.statusCode();
-            String responseBody = response.body();
+            int statusCode =
+                    response.statusCode();
+
+            String responseBody =
+                    response.body();
 
             System.out.println(
-                    "BREVO HTTP STATUS: " + statusCode
+                    "BREVO HTTP STATUS: "
+                            + statusCode
             );
 
             System.out.println(
-                    "BREVO RESPONSE BODY: " + responseBody
+                    "BREVO RESPONSE BODY: "
+                            + responseBody
             );
 
-            if (statusCode < 200 || statusCode >= 300) {
+            if (
+                    statusCode < 200
+                            || statusCode >= 300
+            ) {
 
                 throw new IllegalStateException(
                         "Brevo rejected email. HTTP "
@@ -169,11 +214,14 @@ public class MailService {
         }
     }
 
-    private String buildResetUrl(String resetToken) {
+    private String buildResetUrl(
+            String resetToken
+    ) {
 
         String baseUrl = frontendUrl;
 
         if (baseUrl.endsWith("/")) {
+
             baseUrl = baseUrl.substring(
                     0,
                     baseUrl.length() - 1
@@ -185,17 +233,28 @@ public class MailService {
                 + resetToken;
     }
 
-    private String buildEmailHtml(String resetUrl) {
+    private String buildEmailHtml(
+            String resetUrl
+    ) {
 
         return """
                 <!DOCTYPE html>
+
                 <html lang="en">
 
                 <head>
+
                     <meta charset="UTF-8">
-                    <meta name="viewport"
-                          content="width=device-width, initial-scale=1.0">
-                    <title>Ration Portal Password Reset</title>
+
+                    <meta
+                        name="viewport"
+                        content="width=device-width, initial-scale=1.0"
+                    >
+
+                    <title>
+                        Ration Portal Password Reset
+                    </title>
+
                 </head>
 
                 <body style="
@@ -238,7 +297,9 @@ public class MailService {
 
                     </div>
 
-                    <div style="padding:30px;">
+                    <div style="
+                        padding:30px;
+                    ">
 
                         <h2 style="
                             margin-top:0;
@@ -266,16 +327,18 @@ public class MailService {
                             margin:30px 0;
                         ">
 
-                            <a href="%s"
-                               style="
-                               display:inline-block;
-                               background:#0b5ed7;
-                               color:#ffffff;
-                               text-decoration:none;
-                               padding:14px 24px;
-                               border-radius:6px;
-                               font-weight:bold;
-                               ">
+                            <a
+                                href="%s"
+                                style="
+                                    display:inline-block;
+                                    background:#0b5ed7;
+                                    color:#ffffff;
+                                    text-decoration:none;
+                                    padding:14px 24px;
+                                    border-radius:6px;
+                                    font-weight:bold;
+                                "
+                            >
                                 Reset Password
                             </a>
 
@@ -314,21 +377,37 @@ public class MailService {
                         </p>
 
                     </div>
+
                 </div>
 
                 </body>
+
                 </html>
                 """.formatted(
                 escapeHtml(resetUrl)
         );
     }
 
-    private String escapeHtml(String value) {
+    private String escapeHtml(
+            String value
+    ) {
 
         return value
-                .replace("&", "&amp;")
-                .replace("\"", "&quot;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;");
+                .replace(
+                        "&",
+                        "&amp;"
+                )
+                .replace(
+                        "\"",
+                        "&quot;"
+                )
+                .replace(
+                        "<",
+                        "&lt;"
+                )
+                .replace(
+                        ">",
+                        "&gt;"
+                );
     }
 }
