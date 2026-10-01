@@ -16,19 +16,19 @@ import java.util.Map;
 @Service
 public class MailService {
 
-    private static final String RESEND_API_URL =
-            "https://api.resend.com/emails";
+    private static final String BREVO_API_URL =
+            "https://api.brevo.com/v3/smtp/email";
 
     private final ObjectMapper objectMapper;
     private final HttpClient httpClient;
 
-    @Value("${RESEND_API_KEY:}")
-    private String resendApiKey;
+    @Value("${BREVO_API_KEY:}")
+    private String brevoApiKey;
 
-    @Value("${MAIL_FROM:onboarding@resend.dev}")
-    private String resendFrom;
+    @Value("${BREVO_FROM_EMAIL:}")
+    private String brevoFromEmail;
 
-    @Value("${app.frontend-url:https://ration-portal-frontend.onrender.com}")
+    @Value("${FRONTEND_URL:https://ration-portal-frontend.onrender.com}")
     private String frontendUrl;
 
     public MailService(ObjectMapper objectMapper) {
@@ -43,15 +43,15 @@ public class MailService {
             String email,
             String resetToken) {
 
-        if (resendApiKey == null || resendApiKey.isBlank()) {
+        if (brevoApiKey == null || brevoApiKey.isBlank()) {
             throw new IllegalStateException(
-                    "RESEND_API_KEY is not configured."
+                    "BREVO_API_KEY is not configured."
             );
         }
 
-        if (resendFrom == null || resendFrom.isBlank()) {
+        if (brevoFromEmail == null || brevoFromEmail.isBlank()) {
             throw new IllegalStateException(
-                    "RESEND_FROM is not configured."
+                    "BREVO_FROM_EMAIL is not configured."
             );
         }
 
@@ -68,31 +68,41 @@ public class MailService {
         }
 
         String resetUrl = buildResetUrl(resetToken);
-
         String html = buildEmailHtml(resetUrl);
 
         try {
 
+            Map<String, Object> sender = new HashMap<>();
+            sender.put("name", "Ration Portal");
+            sender.put("email", brevoFromEmail);
+
+            Map<String, Object> recipient = new HashMap<>();
+            recipient.put("email", email);
+
             Map<String, Object> payload = new HashMap<>();
 
-            payload.put("from", resendFrom);
-            payload.put("to", List.of(email));
+            payload.put("sender", sender);
+            payload.put("to", List.of(recipient));
             payload.put(
                     "subject",
                     "Ration Portal - Password Reset"
             );
-            payload.put("html", html);
+            payload.put("htmlContent", html);
 
             String json =
                     objectMapper.writeValueAsString(payload);
 
             HttpRequest request =
                     HttpRequest.newBuilder()
-                            .uri(URI.create(RESEND_API_URL))
+                            .uri(URI.create(BREVO_API_URL))
                             .timeout(Duration.ofSeconds(30))
                             .header(
-                                    "Authorization",
-                                    "Bearer " + resendApiKey
+                                    "api-key",
+                                    brevoApiKey
+                            )
+                            .header(
+                                    "accept",
+                                    "application/json"
                             )
                             .header(
                                     "Content-Type",
@@ -111,21 +121,20 @@ public class MailService {
                     );
 
             int statusCode = response.statusCode();
-
             String responseBody = response.body();
 
             System.out.println(
-                    "RESEND HTTP STATUS: " + statusCode
+                    "BREVO HTTP STATUS: " + statusCode
             );
 
             System.out.println(
-                    "RESEND RESPONSE BODY: " + responseBody
+                    "BREVO RESPONSE BODY: " + responseBody
             );
 
             if (statusCode < 200 || statusCode >= 300) {
 
                 throw new IllegalStateException(
-                        "Resend rejected email. HTTP "
+                        "Brevo rejected email. HTTP "
                                 + statusCode
                                 + " Response: "
                                 + responseBody
@@ -141,14 +150,14 @@ public class MailService {
             Thread.currentThread().interrupt();
 
             throw new IllegalStateException(
-                    "Resend email request was interrupted.",
+                    "Brevo email request was interrupted.",
                     exception
             );
 
         } catch (Exception exception) {
 
             System.err.println(
-                    "RESEND EMAIL ERROR: "
+                    "BREVO EMAIL ERROR: "
                             + exception.getMessage()
             );
 
