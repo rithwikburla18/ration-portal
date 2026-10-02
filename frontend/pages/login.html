@@ -48,6 +48,50 @@
         rel="stylesheet"
     >
 
+    <!-- =========================================================
+         TERMS CHECKBOX VISIBILITY FIX
+    ========================================================== -->
+
+    <style>
+
+        .terms-checkbox-visible {
+            appearance: auto !important;
+            -webkit-appearance: checkbox !important;
+            -moz-appearance: checkbox !important;
+
+            display: inline-block !important;
+
+            width: 18px !important;
+            height: 18px !important;
+
+            min-width: 18px !important;
+            min-height: 18px !important;
+
+            margin: 0 !important;
+            padding: 0 !important;
+
+            opacity: 1 !important;
+            visibility: visible !important;
+
+            position: static !important;
+
+            cursor: pointer !important;
+
+            accent-color: #0871c9 !important;
+
+            flex-shrink: 0 !important;
+
+            transform: none !important;
+
+            pointer-events: auto !important;
+        }
+
+        .terms-checkbox-visible:checked {
+            accent-color: #0871c9 !important;
+        }
+
+    </style>
+
 </head>
 
 
@@ -418,7 +462,7 @@
                             align-items:center;
                             gap:8px;
                             color:#718398;
-                            font-size:9px;
+                            font-size:12px;
                             cursor:pointer;
                             user-select:none;
                         "
@@ -430,14 +474,7 @@
                             name="termsAccepted"
                             required
                             aria-required="true"
-                            style="
-                                width:18px;
-                                height:18px;
-                                margin:0;
-                                cursor:pointer;
-                                accent-color:#0871c9;
-                                flex-shrink:0;
-                            "
+                            class="terms-checkbox-visible"
                         >
 
                         <span>
@@ -451,7 +488,7 @@
                         href="forgot-password.html"
                         style="
                             color:#0871c9;
-                            font-size:9px;
+                            font-size:12px;
                             font-weight:700;
                             text-decoration:none;
                         "
@@ -1198,9 +1235,6 @@
 
                             /* =====================================
                                TERMS & CONDITIONS VALIDATION
-
-                               LOGIN WILL NOT CONTINUE UNTIL
-                               THE CHECKBOX IS SELECTED.
                             ====================================== */
 
                             if (
@@ -1220,7 +1254,7 @@
 
 
                             /* =====================================
-                               STOP LOGIN IF VALIDATION FAILED
+                               STOP LOGIN IF INVALID
                             ====================================== */
 
                             if (!valid) {
@@ -1336,32 +1370,6 @@
 
                                 /* =================================
                                    ACCEPT COMMON RESPONSE FORMATS
-
-                                   {
-                                       token: "..."
-                                   }
-
-                                   OR
-
-                                   {
-                                       accessToken: "..."
-                                   }
-
-                                   OR
-
-                                   {
-                                       data: {
-                                           token: "..."
-                                       }
-                                   }
-
-                                   OR
-
-                                   {
-                                       data: {
-                                           accessToken: "..."
-                                       }
-                                   }
                                 ================================== */
 
                                 const responseData =
@@ -1432,7 +1440,7 @@
 
                                 /* =================================
                                    REMEMBER ME
-                                ================================= */
+                                ================================== */
 
                                 if (
                                     rememberMe &&
@@ -1573,9 +1581,6 @@
 
                 /* =================================================
                    ALREADY LOGGED-IN USER
-
-                   If a token already exists, send the citizen
-                   directly to the dashboard.
                 ================================================== */
 
                 const existingToken =
