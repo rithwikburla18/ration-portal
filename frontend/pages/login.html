@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,50 +48,6 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-
-    <!-- =========================================================
-         TERMS CHECKBOX VISIBILITY FIX
-    ========================================================== -->
-
-    <style>
-
-        .terms-checkbox-visible {
-            appearance: auto !important;
-            -webkit-appearance: checkbox !important;
-            -moz-appearance: checkbox !important;
-
-            display: inline-block !important;
-
-            width: 18px !important;
-            height: 18px !important;
-
-            min-width: 18px !important;
-            min-height: 18px !important;
-
-            margin: 0 !important;
-            padding: 0 !important;
-
-            opacity: 1 !important;
-            visibility: visible !important;
-
-            position: static !important;
-
-            cursor: pointer !important;
-
-            accent-color: #0871c9 !important;
-
-            flex-shrink: 0 !important;
-
-            transform: none !important;
-
-            pointer-events: auto !important;
-        }
-
-        .terms-checkbox-visible:checked {
-            accent-color: #0871c9 !important;
-        }
-
-    </style>
 
 </head>
 
@@ -462,7 +419,7 @@
                             align-items:center;
                             gap:8px;
                             color:#718398;
-                            font-size:12px;
+                            font-size:9px;
                             cursor:pointer;
                             user-select:none;
                         "
@@ -472,13 +429,17 @@
                             type="checkbox"
                             id="termsAccepted"
                             name="termsAccepted"
-                            required
-                            aria-required="true"
-                            class="terms-checkbox-visible"
+                            style="
+                                width:15px;
+                                height:15px;
+                                margin:0;
+                                cursor:pointer;
+                                accent-color:#0871c9;
+                            "
                         >
 
                         <span>
-                            I agree to the Terms &amp; Conditions
+                            Terms &amp; Conditions accepted
                         </span>
 
                     </label>
@@ -488,7 +449,7 @@
                         href="forgot-password.html"
                         style="
                             color:#0871c9;
-                            font-size:12px;
+                            font-size:9px;
                             font-weight:700;
                             text-decoration:none;
                         "
@@ -536,7 +497,6 @@
                             color:#718398;
                             font-size:9px;
                             cursor:pointer;
-                            user-select:none;
                         "
                     >
 
@@ -753,7 +713,7 @@
 
                 /* =================================================
                    GET FORM ELEMENTS
-                ================================================= */
+                ================================================== */
 
                 const form =
                     document.getElementById(
@@ -791,9 +751,10 @@
                     );
 
 
-                /* =================================================
-                   TERMS & CONDITIONS
-                ================================================= */
+                /*
+                 * STEP 2:
+                 * Terms & Conditions checkbox
+                 */
 
                 const termsAccepted =
                     document.getElementById(
@@ -815,7 +776,7 @@
 
                 /* =================================================
                    API BASE URL
-                ================================================= */
+                ================================================== */
 
                 const apiBase =
                     window.RATION_API_BASE ||
@@ -824,7 +785,7 @@
 
                 /* =================================================
                    SHOW ALERT
-                ================================================= */
+                ================================================== */
 
                 function showAlert(
                     message,
@@ -853,7 +814,7 @@
 
                 /* =================================================
                    HIDE ALERT
-                ================================================= */
+                ================================================== */
 
                 function hideAlert() {
 
@@ -874,7 +835,7 @@
 
                 /* =================================================
                    SHOW FIELD ERROR
-                ================================================= */
+                ================================================== */
 
                 function showFieldError(
                     elementId,
@@ -904,7 +865,7 @@
 
                 /* =================================================
                    HIDE FIELD ERROR
-                ================================================= */
+                ================================================== */
 
                 function hideFieldError(
                     elementId
@@ -933,7 +894,9 @@
 
                 /* =================================================
                    SHOW TERMS ERROR
-                ================================================= */
+                   
+                   This is the important STEP 2 addition.
+                ================================================== */
 
                 function showTermsError(
                     message
@@ -956,7 +919,7 @@
 
                 /* =================================================
                    HIDE TERMS ERROR
-                ================================================= */
+                ================================================== */
 
                 function hideTermsError() {
 
@@ -977,7 +940,7 @@
 
                 /* =================================================
                    EMAIL VALIDATION
-                ================================================= */
+                ================================================== */
 
                 function validateEmail(
                     email
@@ -991,7 +954,7 @@
 
                 /* =================================================
                    PASSWORD EYE ICON
-                ================================================= */
+                ================================================== */
 
                 const eyeIcon =
                     document.getElementById(
@@ -1066,7 +1029,7 @@
 
                 /* =================================================
                    EMAIL INPUT EVENT
-                ================================================= */
+                ================================================== */
 
                 if (emailInput) {
 
@@ -1088,7 +1051,7 @@
 
                 /* =================================================
                    PASSWORD INPUT EVENT
-                ================================================= */
+                ================================================== */
 
                 if (passwordInput) {
 
@@ -1110,7 +1073,10 @@
 
                 /* =================================================
                    TERMS CHECKBOX EVENT
-                ================================================= */
+                   
+                   When the citizen checks the checkbox,
+                   the Terms error disappears.
+                ================================================== */
 
                 if (termsAccepted) {
 
@@ -1130,7 +1096,7 @@
 
                 /* =================================================
                    LOGIN FORM SUBMIT
-                ================================================= */
+                ================================================== */
 
                 if (form) {
 
@@ -1235,6 +1201,10 @@
 
                             /* =====================================
                                TERMS & CONDITIONS VALIDATION
+                               
+                               IMPORTANT:
+                               Login will NOT continue unless
+                               this checkbox is checked.
                             ====================================== */
 
                             if (
@@ -1254,7 +1224,7 @@
 
 
                             /* =====================================
-                               STOP LOGIN IF INVALID
+                               STOP LOGIN IF ANY VALIDATION FAILED
                             ====================================== */
 
                             if (!valid) {
@@ -1282,7 +1252,55 @@
                                LOGIN API REQUEST
                             ====================================== */
 
+                            let timeoutId = null;
+                            let countdownId = null;
+
                             try {
+
+                                /* =====================================
+                                   30-SECOND LOGIN TIMEOUT
+                                   
+                                   If the backend does not respond within
+                                   30 seconds, cancel the request and show
+                                   a clear timeout message.
+                                ====================================== */
+
+                                const controller =
+                                    new AbortController();
+
+                                let secondsRemaining = 30;
+
+                                loginButton.textContent =
+                                    "Signing in... (30s)";
+
+                                countdownId =
+                                    window.setInterval(
+                                        function () {
+
+                                            secondsRemaining -= 1;
+
+                                            if (secondsRemaining > 0) {
+
+                                                loginButton.textContent =
+                                                    "Signing in... (" +
+                                                    secondsRemaining +
+                                                    "s)";
+
+                                            }
+
+                                        },
+                                        1000
+                                    );
+
+                                timeoutId =
+                                    window.setTimeout(
+                                        function () {
+
+                                            controller.abort();
+
+                                        },
+                                        30000
+                                    );
 
                                 const response =
                                     await fetch(
@@ -1310,7 +1328,10 @@
                                                         password:
                                                             password
                                                     }
-                                                )
+                                                ),
+
+                                            signal:
+                                                controller.signal
                                         }
                                     );
 
@@ -1370,6 +1391,32 @@
 
                                 /* =================================
                                    ACCEPT COMMON RESPONSE FORMATS
+
+                                   {
+                                       token: "..."
+                                   }
+
+                                   OR
+
+                                   {
+                                       accessToken: "..."
+                                   }
+
+                                   OR
+
+                                   {
+                                       data: {
+                                           token: "..."
+                                       }
+                                   }
+
+                                   OR
+
+                                   {
+                                       data: {
+                                           accessToken: "..."
+                                       }
+                                   }
                                 ================================== */
 
                                 const responseData =
@@ -1538,11 +1585,27 @@
                                 );
 
 
-                                showAlert(
-                                    error.message ||
-                                    "Unable to connect to the authentication service.",
-                                    "danger"
-                                );
+                                if (
+                                    error &&
+                                    error.name === "AbortError"
+                                ) {
+
+                                    showAlert(
+                                        "Login request timed out after 30 seconds. The authentication server may be starting or responding slowly. Please try again.",
+                                        "danger"
+                                    );
+
+                                }
+
+                                else {
+
+                                    showAlert(
+                                        error.message ||
+                                        "Unable to connect to the authentication service.",
+                                        "danger"
+                                    );
+
+                                }
 
 
                                 loginButton.disabled =
@@ -1551,6 +1614,18 @@
 
                                 loginButton.textContent =
                                     originalText;
+
+                            }
+
+                            finally {
+
+                                if (timeoutId) {
+                                    window.clearTimeout(timeoutId);
+                                }
+
+                                if (countdownId) {
+                                    window.clearInterval(countdownId);
+                                }
 
                             }
 
@@ -1581,6 +1656,9 @@
 
                 /* =================================================
                    ALREADY LOGGED-IN USER
+                   
+                   If a token already exists, send the citizen
+                   directly to the dashboard.
                 ================================================== */
 
                 const existingToken =
@@ -1605,3 +1683,4 @@
 </body>
 
 </html>
+```
