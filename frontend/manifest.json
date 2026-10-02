@@ -1,0 +1,33 @@
+﻿{
+  "id": "./index.html",
+  "name": "Ration Portal - Government of India",
+  "short_name": "Ration Portal",
+  "description": "Digital Public Distribution System and Ration Card Services Portal",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#ff9933",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "categories": [
+    "government",
+    "utilities",
+    "public-services"
+  ],
+  "icons": [
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
