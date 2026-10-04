@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rationportal.model.RationCardApplication;
 import com.rationportal.repository.RationCardApplicationRepository;
+import com.rationportal.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -22,13 +24,24 @@ public class RationCardApplicationController {
 
     private final RationCardApplicationRepository repository;
     private final ObjectMapper objectMapper;
+    private final NotificationService notificationService;
+
+    private static final Set<String> ALLOWED_STATUSES = Set.of(
+            "SUBMITTED",
+            "PENDING",
+            "VERIFIED",
+            "APPROVED",
+            "REJECTED"
+    );
 
     public RationCardApplicationController(
             RationCardApplicationRepository repository,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            NotificationService notificationService) {
 
         this.repository = repository;
         this.objectMapper = objectMapper;
+        this.notificationService = notificationService;
     }
 
     @PostMapping
@@ -113,6 +126,37 @@ public class RationCardApplicationController {
             RationCardApplication savedApplication =
                     repository.save(application);
 
+            try {
+
+                notificationService.sendApplicationSubmittedEmail(
+                        savedApplication.getEmail(),
+                        savedApplication.getApplicantName(),
+                        savedApplication.getApplicationNumber()
+                );
+
+            } catch (Exception notificationException) {
+
+                System.err.println(
+                        "APPLICATION SUBMITTED EMAIL NOTIFICATION FAILED: "
+                                + notificationException.getMessage()
+                );
+            }
+
+            try {
+
+                notificationService.sendApplicationSubmittedSms(
+                        savedApplication.getMobile(),
+                        savedApplication.getApplicationNumber()
+                );
+
+            } catch (Exception notificationException) {
+
+                System.err.println(
+                        "APPLICATION SUBMITTED SMS NOTIFICATION FAILED: "
+                                + notificationException.getMessage()
+                );
+            }
+
             return ResponseEntity.ok(savedApplication);
 
         } catch (JsonProcessingException e) {
@@ -137,11 +181,7 @@ public class RationCardApplicationController {
     public ResponseEntity<List<RationCardApplication>> getApplications(
             Authentication authentication) {
 
-        boolean isAdmin = authentication.getAuthorities()
-                .stream()
-                .anyMatch(authority ->
-                        "ROLE_ADMIN".equals(authority.getAuthority())
-                );
+        boolean isAdmin = isAdmin(authentication);
 
         List<RationCardApplication> applications;
 
@@ -174,11 +214,7 @@ public class RationCardApplicationController {
                     ));
         }
 
-        boolean isAdmin = authentication.getAuthorities()
-                .stream()
-                .anyMatch(authority ->
-                        "ROLE_ADMIN".equals(authority.getAuthority())
-                );
+        boolean isAdmin = isAdmin(authentication);
 
         if (!isAdmin
                 && !authentication.getName()
@@ -192,6 +228,132 @@ public class RationCardApplicationController {
         }
 
         return ResponseEntity.ok(application);
+    }
+
+    @PutMapping("/{applicationNumber}/status")
+    public ResponseEntity<?> updateApplicationStatus(
+            @PathVariable @NonNull String applicationNumber,
+            @RequestBody @NonNull Map<String, Object> request,
+            Authentication authentication) {
+
+        if (!isAdmin(authentication)) {
+
+            return ResponseEntity.status(403)
+                    .body(Map.of(
+                            "message",
+                            "Only administrators can update application status."
+                    ));
+        }
+
+        String requestedStatus = getString(request, "status");
+
+        if (requestedStatus.isBlank()) {
+
+            return ResponseEntity.badRequest()
+                    .body(Map.of(
+                            "message",
+                            "Application status is required."
+                    ));
+        }
+
+        String normalizedStatus =
+                requestedStatus.trim().toUpperCase();
+
+        if (!ALLOWED_STATUSES.contains(normalizedStatus)) {
+
+            return ResponseEntity.badRequest()
+                    .body(Map.of(
+                            "message",
+                            "Invalid application status.",
+                            "allowedStatuses",
+                            ALLOWED_STATUSES
+                    ));
+        }
+
+        RationCardApplication application =
+                repository.findByApplicationNumber(applicationNumber)
+                        .orElse(null);
+
+        if (application == null) {
+
+            return ResponseEntity.status(404)
+                    .body(Map.of(
+                            "message",
+                            "Application not found."
+                    ));
+        }
+
+        String previousStatus = application.getStatus();
+
+        application.setStatus(normalizedStatus);
+
+        RationCardApplication savedApplication =
+                repository.save(application);
+
+        try {
+
+            notificationService.sendApplicationStatusEmail(
+                    savedApplication.getEmail(),
+                    savedApplication.getApplicantName(),
+                    savedApplication.getApplicationNumber(),
+                    savedApplication.getStatus()
+            );
+
+        } catch (Exception notificationException) {
+
+            System.err.println(
+                    "APPLICATION STATUS EMAIL NOTIFICATION FAILED: "
+                            + notificationException.getMessage()
+            );
+        }
+
+        try {
+
+            notificationService.sendApplicationStatusSms(
+                    savedApplication.getMobile(),
+                    savedApplication.getApplicationNumber(),
+                    savedApplication.getStatus()
+            );
+
+        } catch (Exception notificationException) {
+
+            System.err.println(
+                    "APPLICATION STATUS SMS NOTIFICATION FAILED: "
+                            + notificationException.getMessage()
+            );
+        }
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "message",
+                        "Application status updated successfully.",
+                        "applicationNumber",
+                        savedApplication.getApplicationNumber(),
+                        "previousStatus",
+                        previousStatus == null ? "" : previousStatus,
+                        "status",
+                        savedApplication.getStatus(),
+                        "emailNotification",
+                        "ATTEMPTED",
+                        "smsNotification",
+                        "ATTEMPTED",
+                        "application",
+                        savedApplication
+                )
+        );
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+
+        if (authentication == null) {
+            return false;
+        }
+
+        return authentication.getAuthorities()
+                .stream()
+                .anyMatch(authority ->
+                        "ROLE_ADMIN".equals(authority.getAuthority())
+                );
     }
 
     private String getString(
