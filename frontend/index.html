@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
     <meta
         name="description"
-        content="Ration Portal â€” a modern educational Public Distribution System portal for ration card, family, application, fair price shop, grievance and citizen services."
+        content="Ration Portal — a modern educational Public Distribution System portal for ration card, family, application, fair price shop, grievance and citizen services."
     >
 
     <meta
@@ -1882,7 +1882,7 @@
         }
 
         .rp-feature-card {
-            min-height: 145px;
+            min-height: 175px;
             padding: 18px;
             border-radius: 17px;
             border: 1px solid #dce7ee;
@@ -1937,7 +1937,7 @@
         .rp-feature-banner {
             position: relative;
             overflow: hidden;
-            min-height: 145px;
+            min-height: 175px;
             padding: 18px 20px;
             border-radius: 17px;
             background: linear-gradient(135deg, #eef6ff, #fffaf4 46%, #eff9ef);
@@ -2005,13 +2005,15 @@
         }
 
         .rp-jaihind {
-            position: absolute;
-            right: 22px;
-            bottom: 16px;
-            color: var(--rp-green-dark);
-            font-size: 13px;
-            font-weight: 900;
-        }
+    position: relative;
+    z-index: 2;
+    margin-top: 12px;
+    padding-right: 92px;
+    color: var(--rp-green-dark);
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 900;
+}
 
         /* =========================================================
            IMPORTANT NOTICE
@@ -2489,7 +2491,23 @@
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#ff9933">
     <link rel="icon" type="image/png" href="./favicon.png">
-</head>
+    <script src="./js/i18n.js?v=20261004"></script>
+<style id="stage17-5-logo-chakra-fix">
+/* Stage 17.5.2 — single clean flags + correctly centered Ashoka Chakras */
+.rp-brand-mark{position:relative!important;width:66px!important;height:66px!important;border-radius:18px!important;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important}
+.rp-brand-mark::before{content:""!important;position:absolute!important;left:6px!important;top:16px!important;width:54px!important;height:34px!important;border-radius:5px!important;border:1px solid #cfd9e2!important;background:linear-gradient(to bottom,#ff9933 0 33.33%,#ffffff 33.33% 66.66%,#138808 66.66% 100%)!important;box-shadow:0 4px 10px rgba(6,40,74,.10)!important}
+.rp-brand-mark::after{content:""!important;position:absolute!important;left:50%!important;top:50%!important;width:13px!important;height:13px!important;transform:translate(-50%,-50%)!important;border:1.5px solid #15508b!important;border-radius:50%!important;background:radial-gradient(circle,#15508b 0 1.8px,transparent 2.2px),repeating-conic-gradient(#15508b 0deg 2deg,transparent 2deg 15deg)!important;box-sizing:border-box!important}
+.rp-brand-mark-inner{display:none!important}
+.rp-flag-mini{background:linear-gradient(to bottom,var(--rp-saffron) 0 33.33%,#ffffff 33.33% 66.66%,var(--rp-green) 66.66% 100%)!important}
+.rp-flag-mini::after{content:""!important;position:absolute!important;left:50%!important;top:50%!important;width:13px!important;height:13px!important;transform:translate(-50%,-50%)!important;border:1.5px solid #15508b!important;border-radius:50%!important;background:radial-gradient(circle,#15508b 0 1.8px,transparent 2.2px),repeating-conic-gradient(#15508b 0deg 2deg,transparent 2deg 15deg)!important;box-sizing:border-box!important}
+.rp-feature-flag{background:linear-gradient(to bottom,var(--rp-saffron) 0 33.33%,#ffffff 33.33% 66.66%,var(--rp-green) 66.66% 100%)!important}
+.rp-feature-flag::after{content:""!important;position:absolute!important;left:50%!important;top:50%!important;width:15px!important;height:15px!important;transform:translate(-50%,-50%)!important;border:1.5px solid #15508b!important;border-radius:50%!important;background:radial-gradient(circle,#15508b 0 2px,transparent 2.5px),repeating-conic-gradient(#15508b 0deg 2deg,transparent 2deg 15deg)!important;box-sizing:border-box!important}
+.rp-chakra{animation:none!important;font-size:0!important;border:3px solid rgba(21,80,139,.25)!important;background:repeating-conic-gradient(#15508b 0deg 2deg,transparent 2deg 15deg)!important;box-shadow:0 0 0 8px rgba(21,80,139,.04),0 0 35px rgba(21,80,139,.06)!important;opacity:.32!important}
+.rp-chakra::before{content:""!important;position:absolute!important;left:50%!important;top:50%!important;width:62%!important;height:62%!important;transform:translate(-50%,-50%)!important;border:2px solid rgba(21,80,139,.5)!important;border-radius:50%!important;background:transparent!important}
+.rp-chakra::after{content:""!important;position:absolute!important;left:50%!important;top:50%!important;width:10px!important;height:10px!important;transform:translate(-50%,-50%)!important;border-radius:50%!important;background:#15508b!important}
+.rp-family-chakra{font-size:0!important;animation:none!important;border-color:rgba(9,78,143,.3)!important;background:radial-gradient(circle,#15508b 0 3px,transparent 3.5px),repeating-conic-gradient(#15508b 0deg 2deg,transparent 2deg 15deg)!important}
+.rp-family-chakra::after{content:""!important;position:absolute!important;inset:7px!important;border:1px solid rgba(9,78,143,.4)!important;border-radius:50%!important}
+</style></head>
 
 <body>
 
@@ -2585,13 +2603,13 @@
 
     <div class="rp-access-bar">
         <div class="rp-access-left">
-            <strong>Government Service Portal</strong>
-            <span aria-hidden="true">â€¢</span>
-            <span>Digital Public Distribution System</span>
+            <strong data-i18n="access.government">Government Service Portal</strong>
+            <span aria-hidden="true">•</span>
+            <span data-i18n="access.digitalPds">Digital Public Distribution System</span>
         </div>
 
         <div class="rp-access-right">
-            <a class="rp-access-link" href="#main-content">Skip to main content</a>
+            <a class="rp-access-link" href="#main-content" data-i18n="access.skip">Skip to main content</a>
 
             <span aria-hidden="true">|</span>
 
@@ -2624,7 +2642,7 @@
 
             <span aria-hidden="true">|</span>
 
-            <span>English</span>
+            <label class="rp-language-switcher" aria-label="Language"><span class="sr-only">Language</span><select id="languageSelector" aria-label="Select Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="te">తెలుగు</option></select></label>
         </div>
     </div>
 
@@ -2651,41 +2669,25 @@
                 </div>
 
                 <div class="rp-brand-text">
-                    <div class="rp-gov-small">
+                    <div class="rp-gov-small" data-i18n="brand.gov">
                         Government-style citizen service portal
                     </div>
 
-                    <div class="rp-brand-title">
+                    <div class="rp-brand-title" data-i18n="brand.name">
                         Ration Portal
                     </div>
 
-                    <div class="rp-brand-subtitle">
+                    <div class="rp-brand-subtitle" data-i18n="brand.pds">
                         Public Distribution System
                     </div>
 
-                    <div class="rp-brand-tagline">
-                        Food Security â€¢ Empowerment â€¢ Prosperity
+                    <div class="rp-brand-tagline" data-i18n="brand.tagline">
+                        Food Security • Empowerment • Prosperity
                     </div>
                 </div>
             </a>
 
-            <div class="rp-header-message">
-
-                <div class="rp-flag-mini" aria-label="Indian tricolour"></div>
-
-                <div class="rp-header-slogan">
-                    <strong>Har Ghar Ann, Har Ghar Suraksha</strong>
-                    <span>Serving citizens through digital public distribution services</span>
-                </div>
-
-                <div class="rp-paddy-mini" aria-hidden="true">
-                    <div class="rp-paddy-stem"></div>
-                    <div class="rp-paddy-head"></div>
-                </div>
-
-            </div>
-
-            <div class="rp-header-actions">
+<div class="rp-header-actions">
 
                 <a
                     href="pages/login.html"
@@ -2694,7 +2696,7 @@
                     <svg class="rp-icon-sm" aria-hidden="true">
                         <use href="#icon-user"></use>
                     </svg>
-                    Citizen Login
+                    <span data-i18n="auth.login">Citizen Login</span>
                 </a>
 
                 <a
@@ -2725,42 +2727,42 @@
                     href="index.html"
                     class="rp-nav-link active"
                 >
-                    <span>Home</span>
+                    <span data-i18n="nav.home">Home</span>
                 </a>
 
                 <a
                     href="#services"
                     class="rp-nav-link"
                 >
-                    <span>Services</span>
+                    <span data-i18n="nav.services">Services</span>
                 </a>
 
                 <a
                     href="pages/e-ration-card.html"
                     class="rp-nav-link"
                 >
-                    <span>Ration Card</span>
+                    <span data-i18n="nav.rationCard">Ration Card</span>
                 </a>
 
                 <a
                     href="pages/fair-price-shop.html"
                     class="rp-nav-link"
                 >
-                    <span>FPS</span>
+                    <span data-i18n="nav.fps">FPS</span>
                 </a>
 
                 <a
                     href="pages/grievance.html"
                     class="rp-nav-link"
                 >
-                    <span>Help</span>
+                    <span data-i18n="nav.help">Help</span>
                 </a>
 
                 <a
                     href="pages/transparency.html"
                     class="rp-nav-link"
                 >
-                    <span>Transparency</span>
+                    <span data-i18n="nav.transparency">Transparency</span>
                 </a>
 
             </div>
@@ -2851,14 +2853,7 @@
                 â˜¸
             </div>
 
-            <div
-                class="rp-birds"
-                aria-hidden="true"
-            >
-                ï¸µ ï¸¶
-            </div>
-
-            <div
+<div
                 class="rp-monument"
                 aria-hidden="true"
             ></div>
@@ -2869,23 +2864,23 @@
 
                     <div class="rp-hero-kicker">
                         <span class="rp-kicker-dot" aria-hidden="true"></span>
-                        Citizen Digital Service Portal
+                        <span data-i18n="hero.kicker">Citizen Digital Service Portal</span>
                     </div>
 
                     <h1
                         class="rp-hero-title"
                         id="hero-title"
                     >
-                        <span class="rp-title-saffron">Right Food</span><br>
-                        <span class="rp-title-blue">Right People</span><br>
-                        <span class="rp-title-green">Right Time</span>
+                        <span class="rp-title-saffron" data-i18n="hero.rightFood">Right Food</span><br>
+                        <span class="rp-title-blue" data-i18n="hero.rightPeople">Right People</span><br>
+                        <span class="rp-title-green" data-i18n="hero.rightTime">Right Time</span>
                     </h1>
 
-                    <div class="rp-hero-subtitle">
+                    <div class="rp-hero-subtitle" data-i18n="hero.subtitle">
                         Public Distribution System â€“ Government-inspired digital service experience
                     </div>
 
-                    <p class="rp-hero-tagline">
+                    <p class="rp-hero-tagline" data-i18n="hero.tagline">
                         Ensuring Food Security for Every Citizen through accessible,
                         transparent and citizen-centric digital services.
                     </p>
@@ -2923,7 +2918,7 @@
                                 class="rp-search-input"
                                 type="text"
                                 maxlength="40"
-                                placeholder="Enter Ration Card Number / Ration ID / Member ID"
+                                placeholder="Enter Ration Card Number / Ration ID / Member ID" data-i18n-placeholder="search.placeholder"
                                 aria-describedby="rationSearchHelp rationSearchResult"
                             >
 
@@ -2987,11 +2982,11 @@
                     <div class="rp-hero-message">
 
                         <span class="rp-hero-message-small">
-                            Citizen-first public distribution
+                            <span data-i18n="hero.familySmall">Citizen-first public distribution</span>
                         </span>
 
                         <strong>
-                            Mera Ration
+                            <span data-i18n="hero.familyMera">Mera Ration</span>
                             <span class="rp-saffron-text">Mera</span>
                             <span class="rp-green-text">Adhikar</span>
                         </strong>
@@ -3060,14 +3055,14 @@
 
                     <div>
                         <div class="rp-section-kicker">
-                            Citizen services
+                            <span data-i18n="services.kicker">Citizen services</span>
                         </div>
 
                         <h2
                             class="rp-section-title"
                             id="services-title"
                         >
-                            Essential Services at One Place
+                            <span data-i18n="services.title">Essential Services at One Place</span>
                         </h2>
 
                         <p class="rp-section-description">
@@ -3105,7 +3100,7 @@
                         </div>
 
                         <h3>
-                            Apply New Ration Card
+                            <span data-i18n="service.apply.title">Apply New Ration Card</span>
                         </h3>
 
                         <p>
@@ -3138,7 +3133,7 @@
                         </div>
 
                         <h3>
-                            Download e-Ration Card
+                            <span data-i18n="service.download.title">Download e-Ration Card</span>
                         </h3>
 
                         <p>
@@ -3171,7 +3166,7 @@
                         </div>
 
                         <h3>
-                            Locate FPS
+                            <span data-i18n="service.fps.title">Locate FPS</span>
                         </h3>
 
                         <p>
@@ -3204,7 +3199,7 @@
                         </div>
 
                         <h3>
-                            Lodge Grievance
+                            <span data-i18n="service.grievance.title">Lodge Grievance</span>
                         </h3>
 
                         <p>
@@ -3281,7 +3276,7 @@
                     </div>
 
                     <h2 id="dashboard-title">
-                        Public Distribution System Overview
+                        <span data-i18n="dashboard.title">Public Distribution System Overview</span>
                     </h2>
 
                     <p>
@@ -3301,7 +3296,7 @@
                             </div>
 
                             <div class="rp-stat-label">
-                                Total Ration Cards
+                                <span data-i18n="dashboard.cards">Total Ration Cards</span>
                             </div>
 
                             <div class="rp-stat-value">
@@ -3327,7 +3322,7 @@
                             </div>
 
                             <div class="rp-stat-label">
-                                Rice Distributed (Quintals)
+                                <span data-i18n="dashboard.rice">Rice Distributed</span> (Quintals)
                             </div>
 
                             <div class="rp-stat-value">
@@ -3353,7 +3348,7 @@
                             </div>
 
                             <div class="rp-stat-label">
-                                Active FPS
+                                <span data-i18n="dashboard.fps">Active FPS</span>
                             </div>
 
                             <div class="rp-stat-value">
@@ -3385,22 +3380,11 @@
                     <div class="rp-family-topline">
 
                         <div>
-                            <div class="rp-section-kicker">
-                                National food security
-                            </div>
+                            <div class="rp-section-kicker"><span data-i18n="family.kicker">National food security</span></div>
 
-                            <h3>
-                                Food for a
-                                <span style="color:var(--rp-green-dark);">
-                                    Stronger India
-                                </span>
-                            </h3>
+                            <h3><span data-i18n="family.title">Food for a</span> <span style="color:var(--rp-green-dark);" data-i18n="family.titleStrong">Stronger India</span></h3>
 
-                            <p>
-                                A citizen-first digital experience connecting
-                                ration services, family information and
-                                public distribution workflows.
-                            </p>
+                            <p><span data-i18n="family.description">A citizen-first digital experience connecting ration services, family information and public distribution workflows.</span></p>
                         </div>
 
                         <div
@@ -3414,9 +3398,7 @@
 
                     </div>
 
-                    <div class="rp-family-slogan">
-                        Food for a <span>Stronger India</span>
-                    </div>
+                    <div class="rp-family-slogan"><span data-i18n="family.slogan">Food for a <span>Stronger India</span></span></div>
 
                     <div
                         class="rp-family-chakra"
@@ -3463,63 +3445,82 @@
              ===================================================== -->
 
         <section
-            class="rp-announcement"
-            aria-label="Latest announcements"
-        >
+    class="rp-announcement"
+    aria-label="Latest announcements"
+>
 
-            <div class="rp-announcement-shell">
+    <div class="rp-announcement-shell">
 
-                <div class="rp-announcement-title">
-                    <svg class="rp-icon-sm" aria-hidden="true">
-                        <use href="#icon-bell"></use>
-                    </svg>
-                    Announcements
+        <div class="rp-announcement-title">
+            <svg class="rp-icon-sm" aria-hidden="true">
+                <use href="#icon-bell"></use>
+            </svg>
+
+            <span data-i18n="announcement.title">Announcements</span>
+        </div>
+
+        <div class="rp-announcement-viewport">
+
+            <div
+                class="rp-announcement-track"
+                aria-live="off"
+            >
+
+                <div
+                    class="rp-announcement-item"
+                    data-i18n="announcement.verify"
+                >
+                    Citizens are encouraged to verify their family
+                    details before submitting service applications.
                 </div>
 
-                <div class="rp-announcement-viewport">
+                <div
+                    class="rp-announcement-item"
+                    data-i18n="announcement.check"
+                >
+                    Check your ration entitlements and application
+                    status through the citizen portal.
+                </div>
 
-                    <div
-                        class="rp-announcement-track"
-                        aria-live="off"
-                    >
+                <div
+                    class="rp-announcement-item"
+                    data-i18n="announcement.verify"
+                >
+                    Citizens are encouraged to verify their family
+                    details before submitting service applications.
+                </div>
 
-                        <div class="rp-announcement-item">
-                            à¤¸à¤­à¥€ à¤¨à¤¾à¤—à¤°à¤¿à¤•à¥‹à¤‚ à¤¸à¥‡ à¤…à¤¨à¥à¤°à¥‹à¤§ à¤¹à¥ˆ à¤•à¤¿ à¤…à¤ªà¤¨à¥‡ à¤°à¤¾à¤¶à¤¨ à¤•à¤¾à¤°à¥à¤¡ à¤•à¤¾
-                            à¤¸à¤®à¤¯ à¤ªà¤° à¤¨à¤µà¥€à¤¨à¥€à¤•à¤°à¤£ à¤•à¤°à¤¾à¤à¤‚à¥¤
-                        </div>
+                <div
+                    class="rp-announcement-item"
+                    data-i18n="announcement.check"
+                >
+                    Check your ration entitlements and application
+                    status through the citizen portal.
+                </div>
 
-                        <div class="rp-announcement-item">
-                            Citizens are encouraged to verify their family
-                            details before submitting service applications.
-                        </div>
+                <div
+                    class="rp-announcement-item"
+                    data-i18n="announcement.verify"
+                >
+                    Citizens are encouraged to verify their family
+                    details before submitting service applications.
+                </div>
 
-                        <div class="rp-announcement-item">
-                            Check your ration entitlements and application
-                            status through the citizen portal.
-                        </div>
-
-                        <div class="rp-announcement-item">
-                            à¤¸à¤­à¥€ à¤¨à¤¾à¤—à¤°à¤¿à¤•à¥‹à¤‚ à¤¸à¥‡ à¤…à¤¨à¥à¤°à¥‹à¤§ à¤¹à¥ˆ à¤•à¤¿ à¤…à¤ªà¤¨à¥‡ à¤°à¤¾à¤¶à¤¨ à¤•à¤¾à¤°à¥à¤¡ à¤•à¤¾
-                            à¤¸à¤®à¤¯ à¤ªà¤° à¤¨à¤µà¥€à¤¨à¥€à¤•à¤°à¤£ à¤•à¤°à¤¾à¤à¤‚à¥¤
-                        </div>
-
-                        <div class="rp-announcement-item">
-                            Citizens are encouraged to verify their family
-                            details before submitting service applications.
-                        </div>
-
-                        <div class="rp-announcement-item">
-                            Check your ration entitlements and application
-                            status through the citizen portal.
-                        </div>
-
-                    </div>
-
+                <div
+                    class="rp-announcement-item"
+                    data-i18n="announcement.check"
+                >
+                    Check your ration entitlements and application
+                    status through the citizen portal.
                 </div>
 
             </div>
 
-        </section>
+        </div>
+
+    </div>
+
+</section>
 
         <!-- =====================================================
              FEATURE CARDS
@@ -3544,14 +3545,9 @@
                         </svg>
                     </div>
 
-                    <h3>
-                        Transparent & Accountable
-                    </h3>
+                    <h3 data-i18n="feature.transparent.title">Transparent &amp; Accountable</h3>
 
-                    <p>
-                        Clear service journeys, status visibility and
-                        responsible digital workflows.
-                    </p>
+                    <p data-i18n="feature.transparent.description">Clear service journeys, status visibility and responsible digital workflows.</p>
 
                 </div>
 
@@ -3567,14 +3563,9 @@
                         </svg>
                     </div>
 
-                    <h3>
-                        Digital India
-                    </h3>
+                    <h3 data-i18n="feature.digital.title">Digital India</h3>
 
-                    <p>
-                        Modern web services designed for simple and
-                        accessible citizen interactions.
-                    </p>
+                    <p data-i18n="feature.digital.description">Modern web services designed for simple and accessible citizen interactions.</p>
 
                 </div>
 
@@ -3617,37 +3608,47 @@
                         Garib Kalyan Our Priority
                     </h3>
 
-                    <p>
-                        The design emphasizes food security and
-                        citizen-centric public services.
-                    </p>
+                    <p data-i18n="feature.garib.description">The design emphasizes food security and citizen-centric public services.</p>
 
                 </div>
 
                 <!-- Banner -->
                 <div class="rp-feature-banner">
 
-                    <div class="rp-feature-flag" aria-hidden="true"></div>
+    <div
+        class="rp-feature-flag"
+        aria-hidden="true"
+    ></div>
 
-                    <div class="rp-section-kicker">
-                        Together for food security
-                    </div>
+    <div
+        class="rp-section-kicker"
+        data-i18n="feature.bannerKicker"
+    >
+        Together for food security
+    </div>
 
-                    <h3>
-                        Jai Hind
-                    </h3>
+    <h3
+        data-i18n="feature.jaiHind"
+    >
+        Jai Hind
+    </h3>
 
-                    <p>
-                        A modern digital experience inspired by
-                        India's tricolour, rice cultivation and
-                        citizen-first public service values.
-                    </p>
+    <p
+        data-i18n="feature.bannerDescription"
+    >
+        A modern digital experience inspired by India's
+        tricolour, rice cultivation and citizen-first public
+        service values.
+    </p>
 
-                    <div class="rp-jaihind">
-                        ðŸ‡®ðŸ‡³ Food â€¢ Family â€¢ Future
-                    </div>
+    <div
+        class="rp-jaihind"
+        data-i18n="feature.bannerBottom"
+    >
+        🇮🇳 Food • Family • Future
+    </div>
 
-                </div>
+</div>
 
             </div>
 
@@ -3668,14 +3669,10 @@
                     class="rp-notice-title"
                     id="notice-title"
                 >
-                    Important Notice
+                    <span data-i18n="notice.title">Important Notice</span>
                 </h2>
 
-                <p class="rp-notice-text">
-                    This portal is an educational software project designed
-                    to demonstrate a modern Public Distribution System
-                    experience using web technologies.
-                </p>
+                <p class="rp-notice-text" data-i18n="notice.text">This portal is an educational software project designed to demonstrate a modern Public Distribution System experience using web technologies.</p>
 
                 <div class="rp-notice-alert">
                     This project is
@@ -3712,38 +3709,24 @@
                 </div>
 
                 <div>
-                    <h3>
-                        Ration Portal
-                    </h3>
+                    <h3 data-i18n="footer.name">Ration Portal</h3>
 
-                    <p>
-                        Public Distribution System
-                    </p>
+                    <p data-i18n="footer.pds">Public Distribution System</p>
                 </div>
 
             </div>
 
             <div class="rp-footer-links">
 
-                <a href="#">
-                    About Us
-                </a>
+                <a href="#"><span data-i18n="footer.about">About Us</span></a>
 
-                <a href="#">
-                    Privacy Policy
-                </a>
+                <a href="#"><span data-i18n="footer.privacy">Privacy Policy</span></a>
 
-                <a href="#">
-                    Terms & Conditions
-                </a>
+                <a href="#" data-i18n="footer.terms">Terms &amp; Conditions</a>
 
-                <a href="pages/grievance.html">
-                    Contact Us
-                </a>
+                <a href="pages/grievance.html"><span data-i18n="footer.contact">Contact Us</span></a>
 
-                <a href="pages/transparency.html">
-                    Transparency
-                </a>
+                <a href="pages/transparency.html"><span data-i18n="footer.transparency">Transparency</span></a>
 
             </div>
 
@@ -3751,17 +3734,14 @@
 
         <div class="rp-footer-bottom">
 
-            <div>
-                Â© <span id="currentYear">2026</span>
-                Ration Portal
-            </div>
+            <div>© <span id="currentYear">2026</span> <span data-i18n="footer.name">Ration Portal</span></div>
 
             <div class="rp-footer-india">
 
                 <span class="rp-footer-flag" aria-hidden="true"></span>
 
                 <span>
-                    Designed with ðŸ‡®ðŸ‡³ for a Food Secure India
+                    <span data-i18n="footer.designed">Designed with 🇮🇳 for a Food Secure India</span>
                 </span>
 
             </div>
