@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Secure Ration Portal Administrator Dashboard."
+    >
+
+    <meta
+        name="theme-color"
+        content="#06284a"
+    >
+
+    <title>Admin Portal | Ration Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/redesign.css"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="../js/i18n.js?v=20261005"></script>
+
+
+    <style>
+
+        :root {
+            --admin-navy: #06284a;
+            --admin-blue: #0871c9;
+            --admin-saffron: #ff9933;
+            --admin-green: #138808;
+            --admin-bg: #f4f7fb;
+            --admin-white: #ffffff;
+            --admin-border: #dbe3ec;
+            --admin-text: #172033;
+            --admin-muted: #64748b;
+            --admin-danger: #b42318;
+            --admin-success: #067647;
+            --admin-warning: #b54708;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            background:
+                linear-gradient(
+                    180deg,
+                    #ffffff 0%,
+                    var(--admin-bg) 100%
+                );
+            color: var(--admin-text);
+            font-family: Inter, Arial, Helvetica, sans-serif;
+        }
+
+
+        .admin-top-line {
+            height: 5px;
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--admin-saffron) 0 33.33%,
+                    #ffffff 33.33% 66.66%,
+                    var(--admin-green) 66.66% 100%
+                );
+        }
+
+
+        .admin-header {
+            background: var(--admin-navy);
+            color: white;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+
+        .admin-header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+
+        .admin-emblem {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            background: white;
+            color: #0871c9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+
+        .admin-brand-title {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+
+        .admin-brand-subtitle {
+            margin-top: 3px;
+            font-size: 12px;
+            opacity: 0.82;
+        }
+
+
+        .admin-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .admin-role-badge {
+            padding: 8px 13px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+
+        .admin-logout {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+
+        .admin-logout:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 24px 60px;
+        }
+
+
+        .admin-login-wrapper {
+            min-height: calc(100vh - 100px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .admin-login-card {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border: 1px solid var(--admin-border);
+            border-radius: 18px;
+            padding: 38px;
+            box-shadow: 0 18px 45px rgba(6, 40, 74, 0.12);
+        }
+
+
+        .admin-login-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 18px;
+            border-radius: 18px;
+            background: #eaf4ff;
+            color: var(--admin-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+        }
+
+
+        .admin-login-title {
+            text-align: center;
+            margin: 0;
+            color: var(--admin-navy);
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+
+        .admin-login-subtitle {
+            text-align: center;
+            color: var(--admin-muted);
+            margin: 10px 0 28px;
+            line-height: 1.6;
+        }
+
+
+        .admin-alert {
+            display: none;
+            padding: 13px 15px;
+            border-radius: 9px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+
+        .admin-alert.show {
+            display: block;
+        }
+
+
+        .admin-alert.error {
+            background: #fff1f0;
+            border: 1px solid #f4b8b4;
+            color: var(--admin-danger);
+        }
+
+
+        .admin-alert.success {
+            background: #ecfdf3;
+            border: 1px solid #a6e5c1;
+            color: var(--admin-success);
+        }
+
+
+        .admin-form-group {
+            margin-bottom: 18px;
+        }
+
+
+        .admin-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--admin-text);
+        }
+
+
+        .admin-input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+
+        .admin-input:focus {
+            border-color: var(--admin-blue);
+            box-shadow: 0 0 0 3px rgba(8, 113, 201, 0.12);
+        }
+
+
+        .admin-login-button {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            padding: 14px;
+            background: var(--admin-navy);
+            color: white;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+
+        .admin-login-button:hover {
+            background: #0a3a68;
+        }
+
+
+        .admin-login-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+
+        .admin-back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: var(--admin-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+
+        .admin-dashboard {
+            display: none;
+        }
+
+
+        .admin-dashboard.show {
+            display: block;
+        }
+
+
+        .admin-page-title {
+            margin-bottom: 6px;
+            color: var(--admin-navy);
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+
+        .admin-page-subtitle {
+            margin-top: 0;
+            color: var(--admin-muted);
+        }
+
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin: 28px 0;
+        }
+
+
+        .admin-stat-card {
+            background: white;
+            border: 1px solid var(--admin-border);
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+        }
+
+
+        .admin-stat-label {
+            color: var(--admin-muted);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+
+        .admin-stat-value {
+            margin-top: 8px;
+            color: var(--admin-navy);
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+
+        .admin-panel {
+            background: white;
+            border: 1px solid var(--admin-border);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+        }
+
+
+        .admin-panel-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--admin-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+
+        .admin-panel-title {
+            margin: 0;
+            font-size: 19px;
+            color: var(--admin-navy);
+        }
+
+
+        .admin-refresh {
+            border: 1px solid #cbd5e1;
+            background: white;
+            color: var(--admin-navy);
+            border-radius: 8px;
+            padding: 9px 14px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+
+        .admin-refresh:hover {
+            background: #f8fafc;
+        }
+
+
+        .admin-loading {
+            padding: 30px;
+            text-align: center;
+            color: var(--admin-muted);
+        }
+
+
+        .admin-table-wrapper {
+            overflow-x: auto;
+        }
+
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+
+        .admin-table th {
+            background: #f8fafc;
+            color: #475569;
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid var(--admin-border);
+        }
+
+
+        .admin-table td {
+            padding: 15px 16px;
+            border-bottom: 1px solid #edf1f5;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+
+        .admin-table tr:hover td {
+            background: #fbfdff;
+        }
+
+
+        .application-number {
+            color: var(--admin-blue);
+            font-weight: 800;
+        }
+
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+
+        .status-submitted {
+            background: #eaf4ff;
+            color: #075985;
+        }
+
+
+        .status-pending {
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+
+        .status-verified {
+            background: #ecfdf3;
+            color: #047857;
+        }
+
+
+        .status-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+
+        .status-rejected {
+            background: #fff1f2;
+            color: #be123c;
+        }
+
+
+        .status-select {
+            min-width: 130px;
+            padding: 8px 9px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            background: white;
+            font-size: 13px;
+        }
+
+
+        .status-update-button {
+            margin-top: 6px;
+            border: none;
+            background: var(--admin-blue);
+            color: white;
+            border-radius: 7px;
+            padding: 8px 11px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .status-update-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+
+        .admin-empty {
+            display: none;
+            padding: 40px;
+            text-align: center;
+            color: var(--admin-muted);
+        }
+
+
+        .admin-empty.show {
+            display: block;
+        }
+
+
+        .admin-message {
+            display: none;
+            margin: 18px 22px 0;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+
+        .admin-message.show {
+            display: block;
+        }
+
+
+        .admin-message.success {
+            background: #ecfdf3;
+            color: #067647;
+        }
+
+
+        .admin-message.error {
+            background: #fff1f0;
+            color: #b42318;
+        }
+
+
+        @media (max-width: 1000px) {
+
+            .admin-stats {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .admin-header-inner {
+                padding: 15px;
+            }
+
+            .admin-container {
+                padding: 22px 14px 45px;
+            }
+
+            .admin-login-card {
+                padding: 26px 20px;
+            }
+
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-brand-subtitle {
+                display: none;
+            }
+
+            .admin-role-badge {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="admin-top-line"></div>
+
+
+<header class="admin-header">
+
+    <div class="admin-header-inner">
+
+        <div class="admin-brand">
+
+            <div class="admin-emblem">
+                ⚖
+            </div>
+
+            <div>
+
+                <div class="admin-brand-title">
+                    Ration Portal
+                </div>
+
+                <div class="admin-brand-subtitle">
+                    Government Administrator Portal
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="adminHeaderActions"
+            class="admin-header-right"
+            style="display:none;"
+        >
+
+            <span
+                id="adminRoleBadge"
+                class="admin-role-badge"
+            >
+                ADMIN
+            </span>
+
+            <button
+                id="logoutButton"
+                class="admin-logout"
+                type="button"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="admin-container">
+
+
+    <!-- =====================================================
+         ADMIN LOGIN
+    ====================================================== -->
+
+    <section
+        id="adminLoginSection"
+        class="admin-login-wrapper"
+    >
+
+        <div class="admin-login-card">
+
+            <div class="admin-login-icon">
+                🛡️
+            </div>
+
+            <h1 class="admin-login-title">
+                Administrator Login
+            </h1>
+
+            <p class="admin-login-subtitle">
+                Secure access for authorized Ration Portal administrators.
+            </p>
+
+
+            <div
+                id="adminLoginAlert"
+                class="admin-alert"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+
+            <form id="adminLoginForm">
+
+                <div class="admin-form-group">
+
+                    <label for="adminEmail">
+                        Administrator Email
+                    </label>
+
+                    <input
+                        id="adminEmail"
+                        class="admin-input"
+                        type="email"
+                        autocomplete="username"
+                        placeholder="Enter administrator email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label for="adminPassword">
+                        Password
+                    </label>
+
+                    <input
+                        id="adminPassword"
+                        class="admin-input"
+                        type="password"
+                        autocomplete="current-password"
+                        placeholder="Enter administrator password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    id="adminLoginButton"
+                    class="admin-login-button"
+                    type="submit"
+                >
+                    Administrator Sign In
+                </button>
+
+            </form>
+
+
+            <a
+                class="admin-back-link"
+                href="../index.html"
+            >
+                ← Back to Citizen Portal
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ADMIN DASHBOARD
+    ====================================================== -->
+
+    <section
+        id="adminDashboard"
+        class="admin-dashboard"
+    >
+
+        <h1 class="admin-page-title">
+            Administrator Dashboard
+        </h1>
+
+        <p class="admin-page-subtitle">
+            Manage ration card applications and monitor application status.
+        </p>
+
+
+        <div class="admin-stats">
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-label">
+                    Total Applications
+                </div>
+
+                <div
+                    id="totalApplications"
+                    class="admin-stat-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-label">
+                    Submitted
+                </div>
+
+                <div
+                    id="submittedApplications"
+                    class="admin-stat-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-label">
+                    Approved
+                </div>
+
+                <div
+                    id="approvedApplications"
+                    class="admin-stat-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-label">
+                    Rejected
+                </div>
+
+                <div
+                    id="rejectedApplications"
+                    class="admin-stat-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-panel">
+
+            <div class="admin-panel-header">
+
+                <h2 class="admin-panel-title">
+                    Ration Card Applications
+                </h2>
+
+                <button
+                    id="refreshApplications"
+                    class="admin-refresh"
+                    type="button"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+
+            <div
+                id="adminMessage"
+                class="admin-message"
+                role="alert"
+            ></div>
+
+
+            <div
+                id="adminLoading"
+                class="admin-loading"
+            >
+                Loading applications...
+            </div>
+
+
+            <div
+                id="adminEmpty"
+                class="admin-empty"
+            >
+                No ration card applications found.
+            </div>
+
+
+            <div
+                id="adminTableWrapper"
+                class="admin-table-wrapper"
+                style="display:none;"
+            >
+
+                <table class="admin-table">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>
+                            Application Number
+                        </th>
+
+                        <th>
+                            Applicant
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Mobile
+                        </th>
+
+                        <th>
+                            Card Type
+                        </th>
+
+                        <th>
+                            District
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Update
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="applicationsTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+(function () {
+
+    "use strict";
+
+
+    const API_BASE =
+        window.RATION_API_BASE ||
+        "https://ration-portal-backend.onrender.com/api";
+
+
+    const loginSection =
+        document.getElementById(
+            "adminLoginSection"
+        );
+
+
+    const dashboard =
+        document.getElementById(
+            "adminDashboard"
+        );
+
+
+    const loginForm =
+        document.getElementById(
+            "adminLoginForm"
+        );
+
+
+    const emailInput =
+        document.getElementById(
+            "adminEmail"
+        );
+
+
+    const passwordInput =
+        document.getElementById(
+            "adminPassword"
+        );
+
+
+    const loginButton =
+        document.getElementById(
+            "adminLoginButton"
+        );
+
+
+    const loginAlert =
+        document.getElementById(
+            "adminLoginAlert"
+        );
+
+
+    const headerActions =
+        document.getElementById(
+            "adminHeaderActions"
+        );
+
+
+    const logoutButton =
+        document.getElementById(
+            "logoutButton"
+        );
+
+
+    const totalApplications =
+        document.getElementById(
+            "totalApplications"
+        );
+
+
+    const submittedApplications =
+        document.getElementById(
+            "submittedApplications"
+        );
+
+
+    const approvedApplications =
+        document.getElementById(
+            "approvedApplications"
+        );
+
+
+    const rejectedApplications =
+        document.getElementById(
+            "rejectedApplications"
+        );
+
+
+    const refreshApplications =
+        document.getElementById(
+            "refreshApplications"
+        );
+
+
+    const adminLoading =
+        document.getElementById(
+            "adminLoading"
+        );
+
+
+    const adminEmpty =
+        document.getElementById(
+            "adminEmpty"
+        );
+
+
+    const adminTableWrapper =
+        document.getElementById(
+            "adminTableWrapper"
+        );
+
+
+    const applicationsTableBody =
+        document.getElementById(
+            "applicationsTableBody"
+        );
+
+
+    const adminMessage =
+        document.getElementById(
+            "adminMessage"
+        );
+
+
+    function showLoginAlert(
+        message,
+        type
+    ) {
+
+        loginAlert.textContent =
+            message;
+
+        loginAlert.className =
+            "admin-alert show " +
+            (type || "error");
+
+    }
+
+
+    function clearLoginAlert() {
+
+        loginAlert.textContent =
+            "";
+
+        loginAlert.className =
+            "admin-alert";
+
+    }
+
+
+    function showMessage(
+        message,
+        type
+    ) {
+
+        adminMessage.textContent =
+            message;
+
+        adminMessage.className =
+            "admin-message show " +
+            (type || "error");
+
+    }
+
+
+    function clearMessage() {
+
+        adminMessage.textContent =
+            "";
+
+        adminMessage.className =
+            "admin-message";
+
+    }
+
+
+    function getToken() {
+
+        return localStorage.getItem(
+            "rationPortalToken"
+        );
+
+    }
+
+
+    function getStoredUser() {
+
+        try {
+
+            const raw =
+                localStorage.getItem(
+                    "rationPortalUser"
+                );
+
+            return raw
+                ? JSON.parse(raw)
+                : null;
+
+        }
+        catch (error) {
+
+            return null;
+
+        }
+
+    }
+
+
+    function storeAuthentication(
+        token,
+        user
+    ) {
+
+        localStorage.setItem(
+            "rationPortalToken",
+            token
+        );
+
+
+        localStorage.setItem(
+            "rationPortalUser",
+            JSON.stringify(user)
+        );
+
+    }
+
+
+    function clearAuthentication() {
+
+        localStorage.removeItem(
+            "rationPortalToken"
+        );
+
+        localStorage.removeItem(
+            "rationPortalUser"
+        );
+
+    }
+
+
+    function isAdminUser(
+        user
+    ) {
+
+        if (!user) {
+            return false;
+        }
+
+        return String(
+            user.role || ""
+        ).toUpperCase() === "ADMIN";
+
+    }
+
+
+    function showDashboard() {
+
+        loginSection.style.display =
+            "none";
+
+        dashboard.classList.add(
+            "show"
+        );
+
+        headerActions.style.display =
+            "flex";
+
+        loadApplications();
+
+    }
+
+
+    function showLogin() {
+
+        loginSection.style.display =
+            "flex";
+
+        dashboard.classList.remove(
+            "show"
+        );
+
+        headerActions.style.display =
+            "none";
+
+    }
+
+
+    function normalizeApplications(
+        data
+    ) {
+
+        if (Array.isArray(data)) {
+            return data;
+        }
+
+        if (
+            data &&
+            Array.isArray(data.data)
+        ) {
+            return data.data;
+        }
+
+        if (
+            data &&
+            Array.isArray(data.content)
+        ) {
+            return data.content;
+        }
+
+        return [];
+
+    }
+
+
+    function statusClass(
+        status
+    ) {
+
+        const normalized =
+            String(
+                status || ""
+            )
+                .trim()
+                .toLowerCase();
+
+        return "status-" +
+            normalized;
+
+    }
+
+
+    function escapeHtml(
+        value
+    ) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            return "";
+
+        }
+
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+
+    }
+
+
+    function renderStatistics(
+        applications
+    ) {
+
+        totalApplications.textContent =
+            applications.length;
+
+
+        submittedApplications.textContent =
+            applications.filter(
+                function (application) {
+
+                    return String(
+                        application.status || ""
+                    ).toUpperCase() ===
+                        "SUBMITTED";
+
+                }
+            ).length;
+
+
+        approvedApplications.textContent =
+            applications.filter(
+                function (application) {
+
+                    return String(
+                        application.status || ""
+                    ).toUpperCase() ===
+                        "APPROVED";
+
+                }
+            ).length;
+
+
+        rejectedApplications.textContent =
+            applications.filter(
+                function (application) {
+
+                    return String(
+                        application.status || ""
+                    ).toUpperCase() ===
+                        "REJECTED";
+
+                }
+            ).length;
+
+    }
+
+
+    function renderApplications(
+        applications
+    ) {
+
+        applicationsTableBody.innerHTML =
+            "";
+
+
+        if (
+            !applications ||
+            applications.length === 0
+        ) {
+
+            adminTableWrapper.style.display =
+                "none";
+
+            adminEmpty.classList.add(
+                "show"
+            );
+
+            return;
+
+        }
+
+
+        adminEmpty.classList.remove(
+            "show"
+        );
+
+
+        applications.forEach(
+            function (application) {
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                const currentStatus =
+                    String(
+                        application.status ||
+                        "SUBMITTED"
+                    )
+                        .trim()
+                        .toUpperCase();
+
+
+                const safeApplicationNumber =
+                    escapeHtml(
+                        application.applicationNumber
+                    );
+
+
+                row.innerHTML = `
+
+                    <td>
+                        <span class="application-number">
+                            ${safeApplicationNumber}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            application.applicantName ||
+                            "—"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            application.email ||
+                            "—"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            application.mobile ||
+                            "—"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            application.cardType ||
+                            "—"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            application.district ||
+                            "—"
+                        )}
+                    </td>
+
+                    <td>
+                        <span class="status-badge ${statusClass(currentStatus)}">
+                            ${escapeHtml(currentStatus)}
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <select
+                            class="status-select"
+                            data-application-number="${safeApplicationNumber}"
+                        >
+
+                            <option
+                                value="SUBMITTED"
+                                ${currentStatus === "SUBMITTED" ? "selected" : ""}
+                            >
+                                SUBMITTED
+                            </option>
+
+                            <option
+                                value="PENDING"
+                                ${currentStatus === "PENDING" ? "selected" : ""}
+                            >
+                                PENDING
+                            </option>
+
+                            <option
+                                value="VERIFIED"
+                                ${currentStatus === "VERIFIED" ? "selected" : ""}
+                            >
+                                VERIFIED
+                            </option>
+
+                            <option
+                                value="APPROVED"
+                                ${currentStatus === "APPROVED" ? "selected" : ""}
+                            >
+                                APPROVED
+                            </option>
+
+                            <option
+                                value="REJECTED"
+                                ${currentStatus === "REJECTED" ? "selected" : ""}
+                            >
+                                REJECTED
+                            </option>
+
+                        </select>
+
+                        <br>
+
+                        <button
+                            type="button"
+                            class="status-update-button"
+                            data-application-number="${safeApplicationNumber}"
+                        >
+                            Update
+                        </button>
+
+                    </td>
+
+                `;
+
+
+                const updateButton =
+                    row.querySelector(
+                        ".status-update-button"
+                    );
+
+
+                updateButton.addEventListener(
+                    "click",
+                    function () {
+
+                        const applicationNumber =
+                            this.getAttribute(
+                                "data-application-number"
+                            );
+
+
+                        const select =
+                            row.querySelector(
+                                ".status-select"
+                            );
+
+
+                        updateApplicationStatus(
+                            applicationNumber,
+                            select.value,
+                            this
+                        );
+
+                    }
+                );
+
+
+                applicationsTableBody.appendChild(
+                    row
+                );
+
+            }
+        );
+
+
+        adminTableWrapper.style.display =
+            "block";
+
+    }
+
+
+    async function loadApplications() {
+
+        const token =
+            getToken();
+
+
+        if (!token) {
+
+            clearAuthentication();
+
+            showLogin();
+
+            return;
+
+        }
+
+
+        adminLoading.style.display =
+            "block";
+
+        adminTableWrapper.style.display =
+            "none";
+
+        adminEmpty.classList.remove(
+            "show"
+        );
+
+        clearMessage();
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_BASE +
+                    "/applications",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization":
+                                "Bearer " +
+                                token,
+                            "Accept":
+                                "application/json"
+                        }
+                    }
+                );
+
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                clearAuthentication();
+
+                showLogin();
+
+                showLoginAlert(
+                    response.status === 403
+                        ? "Administrator access is required."
+                        : "Your session has expired. Please sign in again.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            let data = null;
+
+
+            try {
+
+                data =
+                    await response.json();
+
+            }
+            catch (error) {
+
+                data = null;
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data &&
+                    (
+                        data.message ||
+                        data.error
+                    )
+                        ? (
+                            data.message ||
+                            data.error
+                        )
+                        : "Unable to load applications."
+                );
+
+            }
+
+
+            const applications =
+                normalizeApplications(
+                    data
+                );
+
+
+            renderStatistics(
+                applications
+            );
+
+
+            renderApplications(
+                applications
+            );
+
+        }
+        catch (error) {
+
+            console.error(
+                "Admin application loading error:",
+                error
+            );
+
+
+            showMessage(
+                error.message ||
+                "Unable to load applications.",
+                "error"
+            );
+
+        }
+        finally {
+
+            adminLoading.style.display =
+                "none";
+
+        }
+
+    }
+
+
+    async function updateApplicationStatus(
+        applicationNumber,
+        status,
+        button
+    ) {
+
+        const token =
+            getToken();
+
+
+        if (!token) {
+
+            clearAuthentication();
+
+            showLogin();
+
+            return;
+
+        }
+
+
+        const originalText =
+            button.textContent;
+
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Updating...";
+
+
+        clearMessage();
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_BASE +
+                    "/applications/" +
+                    encodeURIComponent(
+                        applicationNumber
+                    ) +
+                    "/status",
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Authorization":
+                                "Bearer " +
+                                token,
+                            "Content-Type":
+                                "application/json",
+                            "Accept":
+                                "application/json"
+                        },
+                        body:
+                            JSON.stringify({
+                                status:
+                                    status
+                            })
+                    }
+                );
+
+
+            let data = null;
+
+
+            try {
+
+                data =
+                    await response.json();
+
+            }
+            catch (error) {
+
+                data = null;
+
+            }
+
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                clearAuthentication();
+
+                showLogin();
+
+                showLoginAlert(
+                    "Administrator access is required.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data &&
+                    (
+                        data.message ||
+                        data.error
+                    )
+                        ? (
+                            data.message ||
+                            data.error
+                        )
+                        : "Unable to update application status."
+                );
+
+            }
+
+
+            showMessage(
+                "Application " +
+                applicationNumber +
+                " status updated to " +
+                status +
+                ".",
+                "success"
+            );
+
+
+            await loadApplications();
+
+        }
+        catch (error) {
+
+            console.error(
+                "Status update error:",
+                error
+            );
+
+
+            showMessage(
+                error.message ||
+                "Unable to update application status.",
+                "error"
+            );
+
+        }
+        finally {
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                originalText;
+
+        }
+
+    }
+
+
+    loginForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            clearLoginAlert();
+
+
+            const email =
+                emailInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const password =
+                passwordInput.value;
+
+
+            if (!email || !password) {
+
+                showLoginAlert(
+                    "Administrator email and password are required.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            loginButton.disabled =
+                true;
+
+            loginButton.textContent =
+                "Signing in...";
+
+
+            const controller =
+                new AbortController();
+
+
+            const timeoutId =
+                window.setTimeout(
+                    function () {
+
+                        controller.abort();
+
+                    },
+                    30000
+                );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        API_BASE +
+                        "/auth/login",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+                                "Accept":
+                                    "application/json"
+                            },
+                            body:
+                                JSON.stringify({
+                                    email:
+                                        email,
+                                    password:
+                                        password
+                                }),
+                            signal:
+                                controller.signal
+                        }
+                    );
+
+
+                let data = null;
+
+
+                try {
+
+                    data =
+                        await response.json();
+
+                }
+                catch (error) {
+
+                    data = null;
+
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data &&
+                        (
+                            data.message ||
+                            data.error
+                        )
+                            ? (
+                                data.message ||
+                                data.error
+                            )
+                            : "Invalid administrator credentials."
+                    );
+
+                }
+
+
+                const responseData =
+                    data &&
+                    data.data &&
+                    typeof data.data === "object"
+                        ? data.data
+                        : data || {};
+
+
+                const token =
+                    responseData.token ||
+                    responseData.accessToken;
+
+
+                const role =
+                    responseData.role ||
+                    data.role ||
+                    "";
+
+
+                const fullName =
+                    responseData.fullName ||
+                    data.fullName ||
+                    "Administrator";
+
+
+                if (!token) {
+
+                    throw new Error(
+                        "Login succeeded, but the server did not return an authentication token."
+                    );
+
+                }
+
+
+                if (
+                    String(role)
+                        .toUpperCase() !==
+                    "ADMIN"
+                ) {
+
+                    throw new Error(
+                        "Access denied. This account is not an administrator."
+                    );
+
+                }
+
+
+                storeAuthentication(
+                    token,
+                    {
+                        email:
+                            email,
+                        fullName:
+                            fullName,
+                        role:
+                            role
+                    }
+                );
+
+
+                showLoginAlert(
+                    "Administrator authentication successful.",
+                    "success"
+                );
+
+
+                window.setTimeout(
+                    function () {
+
+                        showDashboard();
+
+                    },
+                    400
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Admin login error:",
+                    error
+                );
+
+
+                if (
+                    error &&
+                    error.name ===
+                        "AbortError"
+                ) {
+
+                    showLoginAlert(
+                        "Login request timed out after 30 seconds. Please try again.",
+                        "error"
+                    );
+
+                }
+                else {
+
+                    showLoginAlert(
+                        error.message ||
+                        "Administrator login failed.",
+                        "error"
+                    );
+
+                }
+
+            }
+            finally {
+
+                window.clearTimeout(
+                    timeoutId
+                );
+
+                loginButton.disabled =
+                    false;
+
+                loginButton.textContent =
+                    "Administrator Sign In";
+
+            }
+
+        }
+    );
+
+
+    refreshApplications.addEventListener(
+        "click",
+        loadApplications
+    );
+
+
+    logoutButton.addEventListener(
+        "click",
+        function () {
+
+            clearAuthentication();
+
+            window.location.reload();
+
+        }
+    );
+
+
+    /* =====================================================
+       INITIAL PAGE CHECK
+    ====================================================== */
+
+    const existingToken =
+        getToken();
+
+
+    const existingUser =
+        getStoredUser();
+
+
+    if (
+        existingToken &&
+        isAdminUser(existingUser)
+    ) {
+
+        showDashboard();
+
+    }
+    else {
+
+        if (existingToken) {
+
+            clearAuthentication();
+
+        }
+
+        showLogin();
+
+    }
+
+
+})();
+
+</script>
+
+
+</body>
+
+</html>
