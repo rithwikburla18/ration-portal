@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Ration Card Search - Ration Portal">
+<title>Ration Card Search | Ration Portal</title>
+<style>
+:root{--blue:#17324d;--blue2:#15508b;--orange:#ff9933;--green:#138808;--line:#dce5ee;--bg:#f4f7fa}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--blue);line-height:1.65}
+.flag{height:7px;background:linear-gradient(to right,var(--orange) 0 33.33%,#fff 33.33% 66.66%,var(--green) 66.66% 100%)}
+header{background:#fff;border-bottom:1px solid var(--line);padding:20px 6%}header h1{margin:0;font-size:26px;letter-spacing:.04em}header p{margin:3px 0 0;color:#60758a}
+main{max-width:980px;margin:38px auto;padding:0 20px}section{background:#fff;border:1px solid var(--line);border-radius:16px;padding:32px}
+h2{margin-top:0;color:var(--blue2)}a{color:var(--blue2);font-weight:600;text-decoration:none}a:hover{text-decoration:underline}
+footer{margin-top:48px;padding:24px 6%;background:var(--blue);color:#fff}.footer-links{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}.footer-links a{color:#fff}
+label{display:block;font-weight:700;margin-bottom:8px}input{width:100%;padding:13px 14px;border:1px solid #cdd8e3;border-radius:10px;font-size:16px}button{margin-top:14px;padding:12px 20px;border:0;border-radius:10px;background:var(--blue2);color:#fff;font-size:16px;font-weight:700;cursor:pointer}button:focus,input:focus{outline:3px solid rgba(21,80,139,.2);outline-offset:2px}.muted{color:#667a8e}#result{margin-top:20px;padding:16px;border:1px solid var(--line);border-radius:12px;background:#f8fafc;white-space:pre-wrap;word-break:break-word}
+</style>
+</head>
+<body>
+<div class="flag"></div>
+<header><h1>RATION PORTAL</h1><p>Digital Public Distribution System and Citizen Services</p></header>
+<main><section><h2>Search Ration Card</h2><p class="muted">Enter a ration card ID to retrieve its available information from the authenticated portal backend.</p>
+<form id="searchForm">
+<label for="rationId">Ration Card ID</label>
+<input id="rationId" name="rationId" maxlength="100" autocomplete="off" required>
+<button type="submit">Search Ration Card</button>
+</form>
+<div id="result" aria-live="polite">Enter a ration card ID to begin.</div>
+<script src="../config.js"></script>
+<script src="../js/auth-guard.js?v=20261006"></script>
+<script>
+(function(){
+"use strict";
+const form=document.getElementById("searchForm");
+const input=document.getElementById("rationId");
+const result=document.getElementById("result");
+const params=new URLSearchParams(window.location.search);
+const initial=params.get("q");
+if(initial){input.value=initial;}
+form.addEventListener("submit",async function(event){
+event.preventDefault();
+const id=input.value.trim();
+if(!id){result.textContent="Please enter a ration card ID.";return;}
+result.textContent="Searching...";
+try{
+const base=window.RATION_API_BASE||"https://ration-portal-backend.onrender.com/api";
+const request=(window.rationAuth&&window.rationAuth.authenticatedFetch)?window.rationAuth.authenticatedFetch:fetch;
+const response=await request(base+"/ration-cards/"+encodeURIComponent(id),{method:"GET",headers:{"Accept":"application/json"}});
+const text=await response.text();
+let data=null;
+try{data=JSON.parse(text);}catch(_){}
+if(!response.ok){result.textContent=(data&&data.message)||"Ration card could not be found or access was denied.";return;}
+result.textContent=JSON.stringify(data,null,2);
+}catch(error){result.textContent="Unable to connect to the backend service. Please try again.";}}
+);
+})();
+</script></section></main>
+<footer>
+<div><strong>Ration Portal</strong><div class="footer-links">
+<a href="../index.html">Home</a><a href="about.html">About Us</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="contact.html">Contact Us</a>
+</div></div>
+<p>Educational project — Not an official Government of India website.</p>
+</footer>
+</body>
+</html>
