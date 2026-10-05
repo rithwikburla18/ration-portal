@@ -124,6 +124,9 @@ public class SecurityConfig {
                     .permitAll()
 
                 // Authentication endpoints
+                .requestMatchers("/api/auth/me")
+                    .authenticated()
+
                 .requestMatchers("/api/auth/**")
                     .permitAll()
 

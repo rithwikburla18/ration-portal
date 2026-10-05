@@ -1,36 +1,27 @@
-﻿/* =========================================================
+/* =========================================================
    RATION PORTAL - AUTHENTICATION GUARD
-   File: frontend/js/auth-guard.js
-
-   Purpose:
-   - Protect authenticated pages
-   - Attach JWT token to API requests
-   - Handle expired sessions
-   - Redirect unauthenticated citizens to login
+   Stage 19 - Production Security Hardening
    ========================================================= */
 
 (function () {
     "use strict";
 
-    /* =====================================================
-       CONFIGURATION
-       ===================================================== */
-
     const TOKEN_KEY = "rationPortalToken";
     const USER_KEY = "rationPortalUser";
     const REDIRECT_KEY = "rationPortalRedirect";
+    const BACKEND_URL = "https://ration-portal-backend.onrender.com";
 
     const PUBLIC_PAGES = [
         "",
         "/",
         "/index.html",
         "/pages/login.html",
-        "/pages/register.html"
+        "/pages/register.html",
+        "/pages/forgot-password.html",
+        "/pages/reset-password.html",
+        "/pages/register-password.html",
+        "/pages/admin-login.html"
     ];
-
-    /* =====================================================
-       TOKEN HELPERS
-       ===================================================== */
 
     function getToken() {
         return localStorage.getItem(TOKEN_KEY);
@@ -38,17 +29,9 @@
 
     function getUser() {
         try {
-            const rawUser = localStorage.getItem(USER_KEY);
-
-            return rawUser
-                ? JSON.parse(rawUser)
-                : null;
+            const raw = localStorage.getItem(USER_KEY);
+            return raw ? JSON.parse(raw) : null;
         } catch (error) {
-            console.error(
-                "Unable to read stored user:",
-                error
-            );
-
             return null;
         }
     }
@@ -58,95 +41,76 @@
             localStorage.removeItem(USER_KEY);
             return;
         }
-
-        localStorage.setItem(
-            USER_KEY,
-            JSON.stringify(user)
-        );
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
     }
 
     function clearSession() {
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(USER_KEY);
+        localStorage.removeItem("rationPortalUserRole");
+        localStorage.removeItem("rationPortalAdminEmail");
     }
 
-    /* =====================================================
-       PAGE HELPERS
-       ===================================================== */
-
     function getCurrentPage() {
-        return window.location.pathname
-            .replace(/\\/g, "/")
-            .toLowerCase();
+        return window.location.pathname.replace(/\\/g, "/").toLowerCase();
     }
 
     function isPublicPage() {
-        const currentPage = getCurrentPage();
-
-        return PUBLIC_PAGES.some(function (page) {
-            return (
-                currentPage === page ||
-                currentPage.endsWith(page)
-            );
+        const page = getCurrentPage();
+        return PUBLIC_PAGES.some(function (item) {
+            return page === item || page.endsWith(item);
         });
     }
 
-    function getLoginUrl() {
-        const currentPage = getCurrentPage();
+    function isAdminPage() {
+        const page = getCurrentPage();
+        return page.includes("/admin-portal.html") || page.includes("/admin/");
+    }
 
-        if (currentPage.includes("/pages/")) {
+    function getLoginUrl() {
+        const page = getCurrentPage();
+
+        if (isAdminPage()) {
+            return "admin-login.html";
+        }
+
+        if (page.includes("/pages/")) {
             return "login.html";
         }
 
         return "pages/login.html";
     }
 
-    /* =====================================================
-       REDIRECT
-       ===================================================== */
-
     function redirectToLogin() {
         if (isPublicPage()) {
             return;
         }
 
-        const currentUrl = window.location.href;
-
         sessionStorage.setItem(
             REDIRECT_KEY,
-            currentUrl
+            window.location.href
         );
 
         window.location.href = getLoginUrl();
     }
 
-    /* =====================================================
-       AUTHENTICATION CHECK
-       ===================================================== */
-
-    function requireAuthentication() {
-        const token = getToken();
-
-        if (!token) {
+    function redirectForRole(user) {
+        if (!user) {
             redirectToLogin();
-            return false;
+            return;
         }
 
-        return true;
+        const role = String(user.role || "").toUpperCase();
+
+        if (isAdminPage() && role !== "ADMIN") {
+            clearSession();
+            window.location.href = "login.html";
+            return;
+        }
     }
 
-    /* =====================================================
-       JWT BASIC VALIDATION
-       ===================================================== */
-
     function isJwtFormat(token) {
-        if (!token) {
-            return false;
-        }
-
-        const parts = token.split(".");
-
-        return parts.length === 3;
+        return Boolean(token && token.split(".").length === 3);
     }
 
     function getJwtPayload(token) {
@@ -155,35 +119,29 @@
         }
 
         try {
-            const payload = token.split(".")[1];
-
-            const normalized = payload
+            const part = token.split(".")[1];
+            const normalized = part
                 .replace(/-/g, "+")
                 .replace(/_/g, "/");
 
-            const decoded = decodeURIComponent(
-                atob(normalized)
-                    .split("")
-                    .map(function (character) {
-                        return (
-                            "%" +
-                            (
-                                "00" +
-                                character
-                                    .charCodeAt(0)
-                                    .toString(16)
-                            ).slice(-2)
-                        );
-                    })
-                    .join("")
-            );
+            const padded =
+                normalized +
+                "=".repeat((4 - normalized.length % 4) % 4);
 
-            return JSON.parse(decoded);
+            return JSON.parse(
+                decodeURIComponent(
+                    atob(padded)
+                        .split("")
+                        .map(function (character) {
+                            return "%" +
+                                ("00" +
+                                    character.charCodeAt(0).toString(16)
+                                ).slice(-2);
+                        })
+                        .join("")
+                )
+            );
         } catch (error) {
-            console.warn(
-                "Unable to decode JWT payload."
-            );
-
             return null;
         }
     }
@@ -191,42 +149,18 @@
     function isTokenExpired(token) {
         const payload = getJwtPayload(token);
 
-        /*
-         * If the token cannot be decoded locally,
-         * the backend remains responsible for the
-         * final authentication decision.
-         */
-        if (!payload) {
+        if (!payload || !payload.exp) {
             return false;
         }
 
-        if (!payload.exp) {
-            return false;
-        }
-
-        const currentTime = Math.floor(
-            Date.now() / 1000
-        );
-
-        return Number(payload.exp) <= currentTime;
+        return Number(payload.exp) <=
+            Math.floor(Date.now() / 1000);
     }
-
-    /* =====================================================
-       SESSION VALIDATION
-       ===================================================== */
 
     function validateLocalSession() {
         const token = getToken();
 
-        if (!token) {
-            return false;
-        }
-
-        /*
-         * A stored authentication token must have
-         * normal JWT structure.
-         */
-        if (!isJwtFormat(token)) {
+        if (!token || !isJwtFormat(token)) {
             return false;
         }
 
@@ -238,16 +172,90 @@
         return true;
     }
 
-    /* =====================================================
-       AUTHENTICATED FETCH
-       ===================================================== */
+    async function validateBackendSession() {
+        const token = getToken();
 
-    async function authenticatedFetch(
-        url,
-        options
-    ) {
+        if (!token) {
+            return null;
+        }
+
+        try {
+            const response = await fetch(
+                BACKEND_URL + "/api/auth/me",
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Accept": "application/json"
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                clearSession();
+                return null;
+            }
+
+            const user = await response.json();
+
+            if (
+                !user ||
+                String(user.status || "").toUpperCase() !== "ACTIVE"
+            ) {
+                clearSession();
+                return null;
+            }
+
+            saveUser(user);
+            localStorage.setItem(
+                "rationPortalUserRole",
+                String(user.role || "").toUpperCase()
+            );
+
+            if (user.role &&
+                String(user.role).toUpperCase() === "ADMIN") {
+                localStorage.setItem(
+                    "rationPortalAdminEmail",
+                    user.email || ""
+                );
+            }
+
+            return user;
+        } catch (error) {
+            console.error(
+                "Backend authentication validation failed:",
+                error
+            );
+            return null;
+        }
+    }
+
+    async function requireAuthentication() {
+        if (!validateLocalSession()) {
+            clearSession();
+            redirectToLogin();
+            return false;
+        }
+
+        const user = await validateBackendSession();
+
+        if (!user) {
+            redirectToLogin();
+            return false;
+        }
+
+        redirectForRole(user);
+
+        if (isAdminPage() &&
+            String(user.role || "").toUpperCase() !== "ADMIN") {
+            return false;
+        }
+
+        return true;
+    }
+
+    async function authenticatedFetch(url, options) {
         const requestOptions = options || {};
-
         const headers = new Headers(
             requestOptions.headers || {}
         );
@@ -281,71 +289,48 @@
             }
         );
 
-        /*
-         * A 401 means the backend rejected
-         * the current authentication.
-         */
         if (response.status === 401) {
             clearSession();
 
             if (!isPublicPage()) {
-                sessionStorage.setItem(
-                    REDIRECT_KEY,
-                    window.location.href
-                );
+                redirectToLogin();
+            }
+        } else if (response.status === 403) {
+            console.warn(
+                "Access denied by backend authorization."
+            );
 
-                window.location.href =
-                    getLoginUrl();
+            if (isAdminPage()) {
+                window.location.href = "login.html";
             }
         }
 
         return response;
     }
 
-    /* =====================================================
-       LOGOUT
-       ===================================================== */
-
     function logout() {
         clearSession();
+        sessionStorage.removeItem(REDIRECT_KEY);
 
-        sessionStorage.removeItem(
-            REDIRECT_KEY
-        );
-
-        const currentPage = getCurrentPage();
-
-        if (currentPage.includes("/pages/")) {
+        if (isAdminPage()) {
+            window.location.href = "admin-login.html";
+        } else if (getCurrentPage().includes("/pages/")) {
             window.location.href = "login.html";
         } else {
-            window.location.href =
-                "pages/login.html";
+            window.location.href = "pages/login.html";
         }
     }
 
-    /* =====================================================
-       REDIRECT AFTER LOGIN
-       ===================================================== */
-
     function getLoginRedirect() {
         const redirect =
-            sessionStorage.getItem(
-                REDIRECT_KEY
-            );
+            sessionStorage.getItem(REDIRECT_KEY);
 
-        sessionStorage.removeItem(
-            REDIRECT_KEY
-        );
+        sessionStorage.removeItem(REDIRECT_KEY);
 
         if (!redirect) {
             return null;
         }
 
-        /*
-         * Only allow redirects back to the
-         * same origin. This prevents an
-         * open-redirect vulnerability.
-         */
         try {
             const parsed = new URL(
                 redirect,
@@ -369,59 +354,38 @@
         }
     }
 
-    /* =====================================================
-       PUBLIC API
-       ===================================================== */
-
     window.rationAuth = {
         getToken: getToken,
         getUser: getUser,
         saveUser: saveUser,
         clearSession: clearSession,
         logout: logout,
-        requireAuthentication:
-            requireAuthentication,
-        validateLocalSession:
-            validateLocalSession,
-        authenticatedFetch:
-            authenticatedFetch,
-        getLoginRedirect:
-            getLoginRedirect,
-        isAuthenticated:
-            function () {
-                return Boolean(
-                    getToken()
-                );
-            }
+        requireAuthentication: requireAuthentication,
+        validateLocalSession: validateLocalSession,
+        validateBackendSession: validateBackendSession,
+        authenticatedFetch: authenticatedFetch,
+        getLoginRedirect: getLoginRedirect,
+        isAuthenticated: function () {
+            return Boolean(getToken());
+        }
     };
 
-    /*
-     * Compatibility with existing
-     * application code.
-     */
-    window.authGuard =
-        window.rationAuth;
+    window.authGuard = window.rationAuth;
 
-    /* =====================================================
-       INITIAL PAGE GUARD
-       ===================================================== */
-
-    function initializeAuthGuard() {
+    async function initializeAuthGuard() {
         if (isPublicPage()) {
             return;
         }
 
-        if (!validateLocalSession()) {
-            clearSession();
-            redirectToLogin();
+        const authenticated =
+            await requireAuthentication();
+
+        if (!authenticated) {
             return;
         }
     }
 
-    if (
-        document.readyState ===
-        "loading"
-    ) {
+    if (document.readyState === "loading") {
         document.addEventListener(
             "DOMContentLoaded",
             initializeAuthGuard

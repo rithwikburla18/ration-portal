@@ -219,6 +219,22 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<?> me(org.springframework.security.core.Authentication authentication) {
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).body(Map.of("message", "Authentication required."));
+        }
+
+        User user = userRepository.findByEmail(authentication.getName().trim().toLowerCase()).orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "Authenticated user not found."));
+        }
+
+        return ResponseEntity.ok(Map.of("email", user.getEmail(), "fullName", user.getFullName(), "role", user.getRole(), "status", user.getStatus()));
+    }
+
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(
             @RequestBody Map<String, String> request
