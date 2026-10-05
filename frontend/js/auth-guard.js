@@ -11,9 +11,7 @@
     const REDIRECT_KEY = "rationPortalRedirect";
     const BACKEND_URL = "https://ration-portal-backend.onrender.com";
 
-    const PUBLIC_PAGES = [
-        "",
-        "/",
+    const PUBLIC_PAGES = [`r`n        "/",
         "/index.html",
         "/pages/login.html",
         "/pages/register.html",
