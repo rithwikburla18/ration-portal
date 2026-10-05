@@ -2,31 +2,26 @@ package com.rationportal.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api/health")
 public class HealthController {
 
-    @GetMapping("/")
-    public ResponseEntity<?> home() {
-        return ResponseEntity.ok(
-                Map.of(
-                        "application", "Ration Portal",
-                        "status", "UP",
-                        "message", "Ration Portal Backend is running"
-                )
-        );
-    }
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> health() {
 
-    @GetMapping("/api/health")
-    public ResponseEntity<?> health() {
-        return ResponseEntity.ok(
-                Map.of(
-                        "status", "UP",
-                        "service", "ration-portal-backend"
-                )
-        );
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        response.put("status", "UP");
+        response.put("service", "Ration Portal Backend");
+        response.put("timestamp", LocalDateTime.now().toString());
+
+        return ResponseEntity.ok(response);
     }
 }
