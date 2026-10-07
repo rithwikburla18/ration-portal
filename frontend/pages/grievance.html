@@ -535,7 +535,7 @@
                 width: 100%;
             }
         }
-    </style>
+    .grievance-declaration { display:flex; align-items:flex-start; gap:10px; position:relative; color:#526a80; font-size:10px; line-height:1.55; cursor:pointer; } .grievance-declaration input { position:absolute; opacity:0; pointer-events:none; } .declaration-box { flex:0 0 18px; width:18px; height:18px; display:grid; place-items:center; margin-top:1px; border:2px solid #b9c8d5; border-radius:4px; color:transparent; background:#fff; font-size:12px; font-weight:900; transition:.2s ease; } .grievance-declaration input:checked + .declaration-box { border-color:#0871c9; color:#fff; background:#0871c9; } .grievance-declaration input:focus-visible + .declaration-box { outline:3px solid rgba(8,127,229,.18); outline-offset:2px; } .declaration-text { flex:1; }</style>
 <script src="../js/i18n.js?v=20261004"></script></head>
 
 <body>
@@ -547,14 +547,14 @@
 
     <div class="gov-bar-left">
         <span>Government Service Portal</span>
-        <span aria-hidden="true">•</span>
+        <span aria-hidden="true">â€¢</span>
         <span>Digital Public Distribution System</span>
     </div>
 
     <div class="gov-bar-right">
         <a href="../index.html">Home</a>
         <span aria-hidden="true">|</span>
-        <select id="languageSelector" aria-label="Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="te">Ɍె22Â</option></select>
+        <select id="languageSelector" aria-label="Language"><option value="en">English</option><option value="hi">à¤¹à¤¿à¤¨à¥à¤¦à¥€</option><option value="te">ÉŒà±†22Ã‚</option></select>
     </div>
 
 </div>
@@ -580,7 +580,7 @@
                         line-height:1;
                     "
                 >
-                    ✦
+                    âœ¦
                 </span>
             </div>
 
@@ -780,20 +780,7 @@
 
                             <div class="form-group">
 
-                                <label
-                                    class="form-label"
-                                    for="rationNumber"
-                                >
-                                    Ration Card Number
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="rationNumber"
-                                    class="grievance-input"
-                                    placeholder="Optional"
-                                    maxlength="100"
-                                >
+                                <label class="form-label" for="rationNumber">Ration Card Number <span class="required">*</span></label><input type="text" id="rationNumber" class="grievance-input" placeholder="Enter ration card number" maxlength="100" required>
 
                             </div>
 
@@ -1020,32 +1007,7 @@
                         </h3>
 
 
-                        <label
-                            style="
-                                display:flex;
-                                align-items:flex-start;
-                                gap:9px;
-                                color:#526a80;
-                                font-size:10px;
-                                line-height:1.55;
-                                cursor:pointer;
-                            "
-                        >
-
-                            <input
-                                type="checkbox"
-                                id="declaration"
-                                required
-                                style="margin-top:2px;"
-                            >
-
-                            <span>
-                                I confirm that the information provided
-                                in this grievance is true and accurate
-                                to the best of my knowledge.
-                            </span>
-
-                        </label>
+                        <label for="declaration" class="grievance-declaration"><input type="checkbox" id="declaration" required><span class="declaration-box" aria-hidden="true">✓</span><span class="declaration-text">I confirm that the information provided in this grievance is true and accurate to the best of my knowledge.</span></label>
 
                     </div>
 
@@ -1063,7 +1025,7 @@
                             id="referenceNumber"
                             class="reference-number"
                         >
-                            —
+                            â€”
                         </div>
 
                         <div class="reference-help">
@@ -1105,7 +1067,7 @@
                 <div class="side-card accent">
 
                     <div class="side-icon">
-                        ✓
+                        âœ“
                     </div>
 
                     <h3>
@@ -1128,7 +1090,7 @@
                                 Track Grievance
 
                                 <span>
-                                    →
+                                    â†’
                                 </span>
 
                             </a>
@@ -1143,7 +1105,7 @@
                                 My Applications
 
                                 <span>
-                                    →
+                                    â†’
                                 </span>
 
                             </a>
@@ -1158,7 +1120,7 @@
                                 Citizen Services
 
                                 <span>
-                                    →
+                                    â†’
                                 </span>
 
                             </a>
@@ -1192,7 +1154,7 @@
                 <div class="side-card">
 
                     <div class="side-icon">
-                        ◷
+                        â—·
                     </div>
 
                     <h3>
@@ -1229,7 +1191,7 @@
                 class="footer-emblem"
                 aria-hidden="true"
             >
-                ✦
+                âœ¦
             </div>
 
             <div>
@@ -1271,7 +1233,7 @@
         <div class="footer-disclaimer">
 
             <div>
-                ©
+                Â©
                 <span id="currentYear"></span>
                 Ration Portal
             </div>
@@ -1391,34 +1353,6 @@ document.addEventListener(
             return element
                 ? element.value.trim()
                 : "";
-
-        }
-
-
-        function generateClientReference() {
-
-            const now =
-                new Date();
-
-
-            const year =
-                now.getFullYear();
-
-
-            const random =
-                Math.floor(
-                    100000 +
-                    Math.random() *
-                    900000
-                );
-
-
-            return (
-                "GRV-" +
-                year +
-                "-" +
-                random
-            );
 
         }
 
@@ -1587,47 +1521,7 @@ document.addEventListener(
                 }
 
 
-                const payload = {
-
-                    name:
-                        getInput(
-                            "citizenName"
-                        ),
-
-                    mobile:
-                        mobile,
-
-                    rationNumber:
-                        getInput(
-                            "rationNumber"
-                        ),
-
-                    district:
-                        getInput(
-                            "district"
-                        ),
-
-                    category:
-                        getInput(
-                            "category"
-                        ),
-
-                    priority:
-                        getInput(
-                            "priority"
-                        ),
-
-                    subject:
-                        getInput(
-                            "subject"
-                        ),
-
-                    description:
-                        getInput(
-                            "description"
-                        )
-
-                };
+                const payload = { applicantName: getInput("citizenName"), contactNumber: mobile, rationCardNumber: getInput("rationNumber"), category: getInput("category"), description: getInput("description") };
 
 
                 submitButton.disabled =
@@ -1654,29 +1548,7 @@ document.addEventListener(
                     }
 
 
-                    const generatedNumber =
-                        response &&
-                        (
-                            response.grievanceNumber ||
-                            response.referenceNumber ||
-                            response.grievanceId ||
-                            response.id
-                        );
-
-
-                    const finalReference =
-                        generatedNumber ||
-                        (
-                            response &&
-                            response.data &&
-                            (
-                                response.data.grievanceNumber ||
-                                response.data.referenceNumber ||
-                                response.data.grievanceId ||
-                                response.data.id
-                            )
-                        ) ||
-                        generateClientReference();
+                    const finalReference = response && response.grievanceNumber; if (!finalReference) { throw new Error("Grievance was submitted, but the server did not return a grievance number."); }
 
 
                     referenceNumber.textContent =
