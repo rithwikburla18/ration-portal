@@ -1,1 +1,51 @@
-package com.rationportal.controller; import com.rationportal.model.OnorcPortability; import com.rationportal.repository.OnorcPortabilityRepository; import com.rationportal.service.OnorcPortabilityService; import org.springframework.http.ResponseEntity; import org.springframework.web.bind.annotation.*; import org.springframework.security.core.Authentication; import java.util.*; @RestController @RequestMapping("/api/onorc") public class OnorcController { private final OnorcPortabilityService service; private final OnorcPortabilityRepository repo; public OnorcController(OnorcPortabilityService service,OnorcPortabilityRepository repo){this.service=service;this.repo=repo;} @PostMapping("/portability") public ResponseEntity<?> create(@RequestBody OnorcPortability p,Authentication a){if(a==null||!a.isAuthenticated())return ResponseEntity.status(401).body(Map.of("message","Authentication required.")); if(p.getRationCardNumber()==null||p.getHomeState()==null||p.getHomeDistrict()==null||p.getDestinationState()==null||p.getDestinationDistrict()==null)return ResponseEntity.badRequest().body(Map.of("message","Ration card, home location and destination location are required.")); return ResponseEntity.ok(service.create(p,a.getName()));} @GetMapping("/portability/{reference}") public ResponseEntity<?> get(@PathVariable String reference,Authentication a){if(a==null||!a.isAuthenticated())return ResponseEntity.status(401).build(); return repo.findByReferenceNumber(reference).map(p->p.getRequestedBy().equalsIgnoreCase(a.getName())||a.getAuthorities().stream().anyMatch(x->"ROLE_ADMIN".equals(x.getAuthority()))?ResponseEntity.ok(p):ResponseEntity.status(403).body(Map.of("message","Not authorized."))).orElse(ResponseEntity.notFound().build());} @GetMapping("/my-requests") public ResponseEntity<?> mine(Authentication a){if(a==null||!a.isAuthenticated())return ResponseEntity.status(401).build(); return ResponseEntity.ok(repo.findByRequestedByOrderByCreatedAtDesc(a.getName().toLowerCase()));} }
+package com.rationportal.controller;
+
+import com.rationportal.model.OnorcPortability;
+import com.rationportal.service.OnorcPortabilityService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/onorc")
+public class OnorcController {
+
+    private final OnorcPortabilityService service;
+
+    public OnorcController(OnorcPortabilityService service) {
+        this.service = service;
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+        return authentication != null &&
+            authentication.getAuthorities().stream()
+                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+    }
+
+    @PostMapping("/portability")
+    public ResponseEntity<?> create(
+        @RequestBody OnorcPortability request,
+        Authentication authentication
+    ) {
+        return ResponseEntity.ok(
+            service.create(request, authentication.getName(), isAdmin(authentication))
+        );
+    }
+
+    @GetMapping("/portability/{reference}")
+    public ResponseEntity<?> get(
+        @PathVariable String reference,
+        Authentication authentication
+    ) {
+        return ResponseEntity.ok(
+            service.getByReference(reference, authentication.getName(), isAdmin(authentication))
+        );
+    }
+
+    @GetMapping("/my-requests")
+    public List<OnorcPortability> myRequests(Authentication authentication) {
+        return service.getMyRequests(authentication.getName());
+    }
+}

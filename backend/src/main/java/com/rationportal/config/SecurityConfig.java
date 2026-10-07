@@ -3,11 +3,13 @@ package com.rationportal.config;
 import com.rationportal.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -17,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -26,185 +29,56 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            HttpSecurity http) throws Exception {
-
-        AuthenticationManagerBuilder authenticationManagerBuilder =
-                http.getSharedObject(AuthenticationManagerBuilder.class);
-
-        return authenticationManagerBuilder.build();
-    }
-
-    /*
-     * Production CORS configuration.
-     *
-     * Only the deployed Ration Portal frontend is allowed
-     * to communicate with the production backend.
-     */
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(
-                List.of(
-                        "https://ration-portal-frontend.onrender.com"
-                )
-        );
-
-        configuration.setAllowedMethods(
-                List.of(
-                        "GET",
-                        "POST",
-                        "PUT",
-                        "PATCH",
-                        "DELETE",
-                        "OPTIONS"
-                )
-        );
-
-        configuration.setAllowedHeaders(
-                List.of(
-                        "Authorization",
-                        "Content-Type",
-                        "Accept",
-                        "Origin"
-                )
-        );
-
-        configuration.setExposedHeaders(
-                List.of(
-                        "Authorization"
-                )
-        );
-
-        /*
-         * The application uses JWT through the Authorization header.
-         * Browser cookies are not required for authentication.
-         */
-        configuration.setAllowCredentials(false);
-
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-
-        source.registerCorsConfiguration(
-                "/**",
-                configuration
-        );
-
-        return source;
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http) throws Exception {
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> {})
             .csrf(csrf -> csrf.disable())
-
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(
-                    SessionCreationPolicy.STATELESS
-                )
-            )
-
+            .cors(cors -> {})
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-
-                // CORS preflight
-                .requestMatchers(HttpMethod.OPTIONS, "/**")
-                    .permitAll()
-
-                // Public backend endpoints
-                .requestMatchers(
-                        "/",
-                        "/api/health",
-                        "/error"
-                )
-                    .permitAll()
-
-                // Authentication endpoints
-                .requestMatchers("/api/auth/me")
-                    .authenticated()
-
-                .requestMatchers("/api/auth/**")
-                    .permitAll()
-
-                // Ration cards
-                .requestMatchers(
-                        HttpMethod.GET,
-                        "/api/ration-cards/**"
-                )
-                    .hasAnyRole("CITIZEN", "ADMIN")
-
-                .requestMatchers(
-                        HttpMethod.POST,
-                        "/api/ration-cards/**"
-                )
-                    .hasRole("ADMIN")
-
-                // Family members
-                .requestMatchers(
-                        HttpMethod.GET,
-                        "/api/family-members/**"
-                )
-                    .hasAnyRole("CITIZEN", "ADMIN")
-
-                .requestMatchers(
-                        HttpMethod.POST,
-                        "/api/family-members/**"
-                )
-                    .hasRole("ADMIN")
-
-                // Applications
-                .requestMatchers("/api/applications/**")
-                    .hasAnyRole("CITIZEN", "ADMIN")
-
-                // Import
-                .requestMatchers("/api/import/**")
-                    .hasRole("ADMIN")
-
-                // Distribution logs
-                .requestMatchers("/api/distribution-logs/**")
-                    .hasRole("ADMIN")
-
-                // Grievances
-                .requestMatchers(
-                        HttpMethod.POST,
-                        "/api/grievances"
-                )
-                    .hasAnyRole("CITIZEN", "ADMIN")
-
-                .requestMatchers(
-                        HttpMethod.GET,
-                        "/api/grievances/{number}"
-                )
-                    .hasAnyRole("CITIZEN", "ADMIN")
-
-                .requestMatchers(
-                        HttpMethod.GET,
-                        "/api/grievances"
-                )
-                    .hasRole("ADMIN")
-
-                // Transparency
-                .requestMatchers("/api/transparency/**")
-                    .hasAnyRole("CITIZEN", "ADMIN")
-
-                // Dashboard
-                .requestMatchers("/api/dashboard/**")
-                    .hasAnyRole("CITIZEN", "ADMIN")
-
-                // Everything else requires authentication
-                .anyRequest()
-                    .authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/", "/api/health", "/error").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/ration-cards/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/ration-cards/**").hasAnyRole("CITIZEN", "ADMIN")
+                .requestMatchers("/api/family-members/**").hasAnyRole("CITIZEN", "ADMIN")
+                .requestMatchers("/api/applications/**").hasAnyRole("CITIZEN", "ADMIN")
+                .requestMatchers("/api/import/**").hasRole("ADMIN")
+                .requestMatchers("/api/distribution-logs/**").hasAnyRole("CITIZEN", "ADMIN")
+                .requestMatchers("/api/grievances/**").hasAnyRole("CITIZEN", "ADMIN")
+                .requestMatchers("/api/transparency/**").authenticated()
+                .requestMatchers("/api/dashboard/**").authenticated()
+                .requestMatchers("/api/onorc/**").authenticated()
+                .anyRequest().authenticated()
             )
-
-            .addFilterBefore(
-                jwtAuthenticationFilter,
-                UsernamePasswordAuthenticationFilter.class
-            );
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of(
+            "https://ration-portal-frontend.onrender.com",
+            "http://localhost:5500",
+            "http://127.0.0.1:5500"
+        ));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(false);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

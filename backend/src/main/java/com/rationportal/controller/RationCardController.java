@@ -2,10 +2,14 @@ package com.rationportal.controller;
 
 import com.rationportal.model.RationCard;
 import com.rationportal.service.RationCardService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.lang.NonNull;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ration-cards")
@@ -17,40 +21,73 @@ public class RationCardController {
         this.service = service;
     }
 
+    private boolean isAdmin(Authentication authentication) {
+        return authentication != null &&
+            authentication.getAuthorities().stream()
+                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+    }
+
     @GetMapping
-    public List<RationCard> getAll() {
-        return service.getAll();
+    public List<RationCard> getAll(Authentication authentication) {
+        if (isAdmin(authentication)) {
+            return service.getAll();
+        }
+        return service.getApprovedCardsForOwner(authentication.getName());
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<?> getMyCard(Authentication authentication) {
+        if (isAdmin(authentication)) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("approved", true);
+            result.put("role", "ADMIN");
+            return ResponseEntity.ok(result);
+        }
+
+        try {
+            return ResponseEntity.ok(service.getApprovedCardForOwner(authentication.getName()));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("approved", false, "message", ex.getMessage()));
+        }
     }
 
     @GetMapping("/{number}")
-    public ResponseEntity<RationCard> getByNumber(@PathVariable String number) {
-        RationCard card = service.getByNumber(number);
-        return card == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(card);
+    public RationCard getByNumber(
+        @PathVariable String number,
+        Authentication authentication
+    ) {
+        if (isAdmin(authentication)) {
+            return service.getByNumber(number);
+        }
+        return service.getApprovedCardForOwner(number, authentication.getName());
     }
 
     @PostMapping
-    public RationCard create(@RequestBody @NonNull RationCard card) {
-        return service.save(card);
+    public ResponseEntity<?> create(
+        @RequestBody RationCard card,
+        Authentication authentication
+    ) {
+        if (!isAdmin(authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("message", "Only ADMIN can create ration cards"));
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(card));
     }
 
     @GetMapping("/admin/pending")
-    public ResponseEntity<List<RationCard>> getPending() {
-        return ResponseEntity.ok(service.getPending());
+    public List<RationCard> getPending() {
+        return service.getPending();
     }
 
     @PutMapping("/admin/{number}/approve")
-    public ResponseEntity<?> approve(@PathVariable String number) {
-        RationCard card = service.approve(number);
-        return card == null
-                ? ResponseEntity.notFound().build()
-                : ResponseEntity.ok(card);
+    public RationCard approve(@PathVariable String number) {
+        return service.approve(number);
     }
 
     @PutMapping("/admin/{number}/reject")
-    public ResponseEntity<?> reject(@PathVariable String number) {
-        RationCard card = service.reject(number);
-        return card == null
-                ? ResponseEntity.notFound().build()
-                : ResponseEntity.ok(card);
+    public RationCard reject(@PathVariable String number) {
+        return service.reject(number);
     }
 }
