@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Nation One Ration Card | Ration Portal</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/redesign.css">
+<style>
+.onorc-page{max-width:1180px;margin:0 auto;padding:28px 18px 60px}
+.onorc-hero{background:linear-gradient(135deg,#073b6f,#087fe5);color:#fff;border-radius:16px;padding:32px;margin-bottom:24px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.onorc-hero h1{margin:0 0 8px;font-size:32px}
+.onorc-hero p{margin:0;max-width:850px;line-height:1.6}
+.onorc-badge{display:inline-block;background:#fff;color:#073b6f;padding:6px 12px;border-radius:20px;font-weight:800;font-size:12px;margin-bottom:14px}
+.onorc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.onorc-card{background:#fff;border:1px solid #dce5ed;border-radius:14px;padding:22px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.onorc-card h2{margin:0 0 16px;color:#073b6f;font-size:20px}
+.onorc-card h3{color:#073b6f;font-size:15px;margin:20px 0 8px}
+.onorc-field{margin-bottom:15px}
+.onorc-field label{display:block;font-weight:700;font-size:13px;color:#304b62;margin-bottom:6px}
+.onorc-field input,.onorc-field select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #c9d6e2;border-radius:8px;background:#fff;font-size:14px}
+.onorc-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.onorc-btn{border:0;border-radius:8px;padding:12px 18px;font-weight:800;cursor:pointer}
+.onorc-primary{background:#087fe5;color:#fff}
+.onorc-secondary{background:#eef5fb;color:#174b72}
+.onorc-result{display:none;margin-top:18px;padding:16px;border-radius:10px;background:#eff9f1;border:1px solid #b8dfc0;color:#245d2d}
+.onorc-result.show{display:block}
+.onorc-info{background:#fff8e8;border:1px solid #efd89b;color:#6e5100;border-radius:10px;padding:14px;margin-top:18px;line-height:1.55}
+.onorc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+.onorc-stat{background:#f5f9fc;border:1px solid #dce7ef;border-radius:12px;padding:18px;text-align:center}
+.onorc-stat strong{display:block;font-size:25px;color:#073b6f}
+.onorc-stat span{font-size:12px;color:#526a80}
+.onorc-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.onorc-step{padding:16px;border:1px solid #dce5ed;border-radius:10px;background:#fff}
+.onorc-step b{display:block;color:#0871c9;margin-bottom:7px}
+@media(max-width:800px){.onorc-grid,.onorc-steps{grid-template-columns:1fr}.onorc-stats{grid-template-columns:1fr}.onorc-hero h1{font-size:25px}}
+</style>
+</head>
+<body>
+
+<header>
+<div class="onorc-page" style="padding-top:18px;padding-bottom:0">
+<div style="font-size:13px;color:#526a80">Government Service Portal</div>
+</div>
+</header>
+
+<main class="onorc-page">
+
+<section class="onorc-hero">
+<span class="onorc-badge">🇮🇳 NATIONAL PORTABILITY SERVICE</span>
+<h1>One Nation One Ration Card</h1>
+<p>Access your eligible Public Distribution System foodgrain entitlement across India using your existing NFSA ration card. No new ration card is required for portability.</p>
+</section>
+
+<div class="onorc-stats">
+<div class="onorc-stat"><strong>36</strong><span>States / UTs covered by ONORC</span></div>
+<div class="onorc-stat"><strong>1</strong><span>Existing ration card</span></div>
+<div class="onorc-stat"><strong>Anywhere</strong><span>ePoS-enabled FPS portability</span></div>
+</div>
+
+<section class="onorc-grid">
+
+<div class="onorc-card">
+<h2>Check Portability</h2>
+
+<form id="onorcForm">
+
+<div class="onorc-field">
+<label for="rationCardNumber">Ration Card Number *</label>
+<input id="rationCardNumber" required maxlength="50" placeholder="Enter your ration card number">
+</div>
+
+<div class="onorc-field">
+<label for="homeState">Home State / UT *</label>
+<select id="homeState" required>
+<option value="">Select Home State / UT</option>
+</select>
+</div>
+
+<div class="onorc-field">
+<label for="homeDistrict">Home District *</label>
+<select id="homeDistrict" required>
+<option value="">Select Home District</option>
+</select>
+</div>
+
+<div class="onorc-field">
+<label for="destinationState">Destination State / UT *</label>
+<select id="destinationState" required>
+<option value="">Select Destination State / UT</option>
+</select>
+</div>
+
+<div class="onorc-field">
+<label for="destinationDistrict">Destination District *</label>
+<select id="destinationDistrict" required>
+<option value="">Select Destination District</option>
+</select>
+</div>
+
+<div class="onorc-actions">
+<button class="onorc-btn onorc-primary" type="submit">Check ONORC Portability</button>
+<button class="onorc-btn onorc-secondary" type="reset">Clear</button>
+</div>
+
+</form>
+
+<div id="onorcResult" class="onorc-result" aria-live="polite"></div>
+
+<div class="onorc-info">
+<strong>Important:</strong> This portal demonstrates the citizen-side ONORC workflow. Actual foodgrain release requires the authorised ePoS process and applicable beneficiary authentication at the Fair Price Shop.
+</div>
+</div>
+
+<div class="onorc-card">
+<h2>How ONORC Works</h2>
+
+<div class="onorc-step">
+<b>1. Existing Card</b>
+Use the same NFSA ration card issued by your Home State / UT.
+</div>
+
+<div class="onorc-step">
+<b>2. Choose Destination</b>
+Select the State / UT and District where you currently need ration.
+</div>
+
+<div class="onorc-step">
+<b>3. Visit FPS</b>
+Approach an ePoS-enabled Fair Price Shop at the destination.
+</div>
+
+<div class="onorc-step">
+<b>4. Authentication & Entitlement</b>
+The authorised ePoS process retrieves entitlement information and completes the portability transaction.
+</div>
+
+<h3>No New Ration Card</h3>
+<p style="line-height:1.6;color:#526a80">ONORC is designed so eligible beneficiaries can use their existing NFSA ration card instead of obtaining a new ration card in the destination State / UT.</p>
+
+<h3>For Migrant Beneficiaries</h3>
+<p style="line-height:1.6;color:#526a80">The service is particularly useful for beneficiaries who temporarily move to another State / UT for employment or other reasons.</p>
+</div>
+
+</section>
+
+<section class="onorc-card" style="margin-top:20px">
+<h2>Portability Flow</h2>
+<div class="onorc-steps">
+<div class="onorc-step"><b>Home State</b>Ration card remains registered with the issuing State / UT.</div>
+<div class="onorc-step"><b>Destination</b>Choose where you currently need your entitlement.</div>
+<div class="onorc-step"><b>ePoS FPS</b>Visit an authorised Fair Price Shop enabled for portability.</div>
+<div class="onorc-step"><b>Ration Entitlement</b>Complete the applicable authentication and receive eligible foodgrains.</div>
+</div>
+</section>
+
+</main>
+
+<script>
+(function(){
+"use strict";
+
+var states=[
+"Andaman and Nicobar Islands","Andhra Pradesh","Arunachal Pradesh","Assam","Bihar",
+"Chandigarh","Chhattisgarh","Dadra and Nagar Haveli and Daman and Diu","Delhi",
+"Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand",
+"Karnataka","Kerala","Ladakh","Lakshadweep","Madhya Pradesh","Maharashtra",
+"Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Puducherry","Punjab",
+"Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh",
+"Uttarakhand","West Bengal"
+];
+
+var districtsByState={
+"Telangana":[
+"Adilabad","Bhadradri Kothagudem","Hanumakonda","Hyderabad","Jagtial","Jangaon",
+"Jayashankar Bhupalpally","Jogulamba Gadwal","Kamareddy","Karimnagar","Khammam",
+"Kumuram Bheem","Mahabubabad","Mahabubnagar","Mancherial","Medak",
+"Medchal-Malkajgiri","Mulugu","Nagarkurnool","Nalgonda","Narayanpet","Nirmal",
+"Nizamabad","Peddapalli","Rajanna Sircilla","Rangareddy","Sangareddy",
+"Siddipet","Suryapet","Vikarabad","Wanaparthy","Warangal","Yadadri Bhuvanagiri"
+],
+"Andhra Pradesh":[
+"Alluri Sitharama Raju","Anakapalli","Ananthapuramu","Annamayya","Bapatla",
+"Chittoor","Dr. B. R. Ambedkar Konaseema","East Godavari","Eluru","Guntur",
+"Kakinada","Krishna","Kurnool","Nandyal","NTR","Palnadu","Parvathipuram Manyam",
+"Prakasam","Srikakulam","Sri Potti Sriramulu Nellore","Sri Sathya Sai",
+"Tirupati","Visakhapatnam","Vizianagaram","West Godavari","YSR Kadapa"
+]
+};
+
+var homeState=document.getElementById("homeState");
+var destinationState=document.getElementById("destinationState");
+var homeDistrict=document.getElementById("homeDistrict");
+var destinationDistrict=document.getElementById("destinationDistrict");
+var result=document.getElementById("onorcResult");
+
+states.forEach(function(state){
+var a=document.createElement("option");
+a.value=state;a.textContent=state;homeState.appendChild(a);
+var b=document.createElement("option");
+b.value=state;b.textContent=state;destinationState.appendChild(b);
+});
+
+function loadDistricts(state,select){
+select.innerHTML='<option value="">Select District</option>';
+var districts=districtsByState[state]||[];
+districts.forEach(function(d){
+var option=document.createElement("option");
+option.value=d;option.textContent=d;select.appendChild(option);
+});
+if(!districts.length){
+var option=document.createElement("option");
+option.value="";option.textContent="District selection will be provided through the state integration";
+select.appendChild(option);
+}
+}
+
+homeState.addEventListener("change",function(){loadDistricts(homeState.value,homeDistrict);});
+destinationState.addEventListener("change",function(){loadDistricts(destinationState.value,destinationDistrict);});
+
+document.getElementById("onorcForm").addEventListener("submit",function(event){
+event.preventDefault();
+
+var card=document.getElementById("rationCardNumber").value.trim();
+
+result.innerHTML=
+"<strong>ONORC Portability Check Initiated</strong><br><br>"+
+"Ration Card: "+card+"<br>"+
+"Home: "+homeState.value+" — "+homeDistrict.value+"<br>"+
+"Destination: "+destinationState.value+" — "+destinationDistrict.value+
+"<br><br><strong>Eligible ONORC workflow:</strong> Visit an authorised ePoS-enabled Fair Price Shop at the destination and complete the applicable authentication to access your eligible NFSA entitlement.";
+
+result.classList.add("show");
+});
+
+document.getElementById("onorcForm").addEventListener("reset",function(){
+setTimeout(function(){
+homeDistrict.innerHTML='<option value="">Select Home District</option>';
+destinationDistrict.innerHTML='<option value="">Select Destination District</option>';
+result.classList.remove("show");
+result.innerHTML="";
+},0);
+});
+
+})();
+</script>
+
+</body>
+</html>
