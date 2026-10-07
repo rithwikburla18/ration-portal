@@ -214,6 +214,270 @@ public class MailService {
         }
     }
 
+    public void sendLoginNotificationEmail(
+            String email,
+            String fullName
+    ) {
+
+        if (brevoApiKey == null || brevoApiKey.isBlank()) {
+            throw new IllegalStateException(
+                    "BREVO_API_KEY is not configured."
+            );
+        }
+
+        if (brevoFromEmail == null || brevoFromEmail.isBlank()) {
+            throw new IllegalStateException(
+                    "BREVO_FROM_EMAIL is not configured."
+            );
+        }
+
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Recipient email is required."
+            );
+        }
+
+        String safeName =
+                fullName == null || fullName.isBlank()
+                        ? "Citizen"
+                        : escapeHtml(fullName);
+
+        String html = """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta
+                        name="viewport"
+                        content="width=device-width, initial-scale=1.0"
+                    >
+                    <title>Ration Portal Login Alert</title>
+                </head>
+
+                <body style="
+                    margin:0;
+                    padding:0;
+                    background:#f4f6f8;
+                    font-family:Arial,Helvetica,sans-serif;
+                    color:#1f2937;
+                ">
+
+                <div style="
+                    max-width:600px;
+                    margin:40px auto;
+                    background:#ffffff;
+                    border:1px solid #d9dee5;
+                    border-radius:10px;
+                    overflow:hidden;
+                ">
+
+                    <div style="
+                        background:#0b5ed7;
+                        color:#ffffff;
+                        padding:24px;
+                        text-align:center;
+                    ">
+                        <h1 style="
+                            margin:0;
+                            font-size:24px;
+                        ">
+                            Ration Portal
+                        </h1>
+
+                        <p style="
+                            margin:8px 0 0;
+                            font-size:14px;
+                        ">
+                            Public Distribution System
+                        </p>
+                    </div>
+
+                    <div style="
+                        padding:30px;
+                    ">
+
+                        <h2 style="
+                            margin-top:0;
+                            color:#111827;
+                        ">
+                            New Login Detected
+                        </h2>
+
+                        <p>
+                            Dear %s,
+                        </p>
+
+                        <p>
+                            Your Ration Portal account was successfully
+                            signed in.
+                        </p>
+
+                        <div style="
+                            margin:24px 0;
+                            padding:18px;
+                            background:#f7fafc;
+                            border:1px solid #e5e7eb;
+                            border-radius:8px;
+                        ">
+                            <strong>Account:</strong> %s<br>
+                            <strong>Status:</strong> Successful login
+                        </div>
+
+                        <p>
+                            If you made this login, no action is required.
+                        </p>
+
+                        <p>
+                            If you did not sign in, please reset your
+                            password immediately and secure your account.
+                        </p>
+
+                        <div style="
+                            margin:28px 0;
+                            text-align:center;
+                        ">
+                            <a
+                                href="%s/pages/forgot-password.html"
+                                style="
+                                    display:inline-block;
+                                    background:#0b5ed7;
+                                    color:#ffffff;
+                                    text-decoration:none;
+                                    padding:14px 24px;
+                                    border-radius:6px;
+                                    font-weight:bold;
+                                "
+                            >
+                                Secure My Account
+                            </a>
+                        </div>
+
+                        <hr style="
+                            border:none;
+                            border-top:1px solid #e5e7eb;
+                            margin:28px 0;
+                        ">
+
+                        <p style="
+                            margin-bottom:0;
+                            font-size:13px;
+                            color:#6b7280;
+                        ">
+                            Regards,<br>
+                            <strong>Ration Portal</strong><br>
+                            Public Distribution System
+                        </p>
+
+                    </div>
+                </div>
+
+                </body>
+                </html>
+                """.formatted(
+                        safeName,
+                        escapeHtml(email),
+                        frontendUrl
+                );
+
+        try {
+
+            Map<String, Object> sender = new HashMap<>();
+            sender.put("name", "Ration Portal");
+            sender.put("email", brevoFromEmail);
+
+            Map<String, Object> recipient = new HashMap<>();
+            recipient.put("email", email);
+
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("sender", sender);
+            payload.put("to", List.of(recipient));
+            payload.put(
+                    "subject",
+                    "Ration Portal - New Login Alert"
+            );
+            payload.put("htmlContent", html);
+
+            String json =
+                    objectMapper.writeValueAsString(payload);
+
+            HttpRequest request =
+                    HttpRequest.newBuilder()
+                            .uri(
+                                    URI.create(
+                                            BREVO_API_URL
+                                    )
+                            )
+                            .timeout(
+                                    Duration.ofSeconds(30)
+                            )
+                            .header(
+                                    "api-key",
+                                    brevoApiKey
+                            )
+                            .header(
+                                    "accept",
+                                    "application/json"
+                            )
+                            .header(
+                                    "Content-Type",
+                                    "application/json"
+                            )
+                            .POST(
+                                    HttpRequest.BodyPublishers
+                                            .ofString(json)
+                            )
+                            .build();
+
+            HttpResponse<String> response =
+                    httpClient.send(
+                            request,
+                            HttpResponse.BodyHandlers
+                                    .ofString()
+                    );
+
+            int statusCode = response.statusCode();
+
+            System.out.println(
+                    "LOGIN ALERT EMAIL HTTP STATUS: "
+                            + statusCode
+            );
+
+            if (statusCode < 200 || statusCode >= 300) {
+                throw new IllegalStateException(
+                        "Brevo rejected login alert email. HTTP "
+                                + statusCode
+                                + " Response: "
+                                + response.body()
+                );
+            }
+
+            System.out.println(
+                    "LOGIN NOTIFICATION EMAIL SENT SUCCESSFULLY."
+            );
+
+        } catch (InterruptedException exception) {
+
+            Thread.currentThread().interrupt();
+
+            throw new IllegalStateException(
+                    "Brevo login alert request was interrupted.",
+                    exception
+            );
+
+        } catch (Exception exception) {
+
+            System.err.println(
+                    "LOGIN NOTIFICATION EMAIL ERROR: "
+                            + exception.getMessage()
+            );
+
+            throw new IllegalStateException(
+                    "Login notification email could not be sent: "
+                            + exception.getMessage(),
+                    exception
+            );
+        }
+    }
     private String buildResetUrl(
             String resetToken
     ) {
