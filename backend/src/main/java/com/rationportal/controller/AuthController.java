@@ -198,7 +198,23 @@ public class AuthController {
                             user.getRole()
                     );
 
-            return ResponseEntity.ok(
+            
+            /*
+             * Security notification after successful authentication.
+             * Email failure must never block a valid login.
+             */
+            try {
+                mailService.sendLoginNotificationEmail(
+                        user.getEmail(),
+                        user.getFullName()
+                );
+            } catch (Exception mailException) {
+                System.err.println(
+                        "LOGIN NOTIFICATION WARNING: "
+                                + mailException.getMessage()
+                );
+            }
+return ResponseEntity.ok(
                     Map.of(
                             "token", token,
                             "fullName", user.getFullName(),
