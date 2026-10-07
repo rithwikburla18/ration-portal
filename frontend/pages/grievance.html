@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -547,14 +547,14 @@
 
     <div class="gov-bar-left">
         <span>Government Service Portal</span>
-        <span aria-hidden="true">Ã¢â‚¬Â¢</span>
+        <span aria-hidden="true">&#8226;</span>
         <span>Digital Public Distribution System</span>
     </div>
 
     <div class="gov-bar-right">
         <a href="../index.html">Home</a>
-        <span aria-hidden="true">|</span>
-        <select id="languageSelector" aria-label="Language"><option value="en">English</option><option value="hi">Ã Â¤Â¹Ã Â¤Â¿Ã Â¤Â¨Ã Â¥ÂÃ Â¤Â¦Ã Â¥â‚¬</option><option value="te">Ã‰Å’Ã Â±â€ 22Ãƒâ€š</option></select>
+        <span aria-hidden="true">&#8226;</span>
+        <select id="languageSelector" aria-label="Language"><option value="en">English</option><option value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option><option value="te">&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;</option></select>
     </div>
 
 </div>
@@ -580,7 +580,7 @@
                         line-height:1;
                     "
                 >
-                    Ã¢Å“Â¦
+                    &#10022;
                 </span>
             </div>
 
@@ -1007,7 +1007,7 @@
                         </h3>
 
 
-                        <label for="declaration" class="grievance-declaration"><input type="checkbox" id="declaration" required><span class="declaration-box" aria-hidden="true">âœ“</span><span class="declaration-text">I confirm that the information provided in this grievance is true and accurate to the best of my knowledge.</span></label>
+                        <label for="declaration" class="grievance-declaration"><input type="checkbox" id="declaration" required><span class="declaration-box" aria-hidden="true">&#10003;</span><span class="declaration-text">I confirm that the information provided in this grievance is true and accurate to the best of my knowledge.</span></label>
 
                     </div>
 
@@ -1025,7 +1025,7 @@
                             id="referenceNumber"
                             class="reference-number"
                         >
-                            Ã¢â‚¬â€
+                            &#8212;
                         </div>
 
                         <div class="reference-help">
@@ -1066,9 +1066,7 @@
 
                 <div class="side-card accent">
 
-                    <div class="side-icon">
-                        Ã¢Å“â€œ
-                    </div>
+                    <div class="side-icon">&#8226;</div>
 
                     <h3>
                         Citizen Support
@@ -1090,7 +1088,7 @@
                                 Track Grievance
 
                                 <span>
-                                    Ã¢â€ â€™
+                                    &#8594;
                                 </span>
 
                             </a>
@@ -1105,7 +1103,7 @@
                                 My Applications
 
                                 <span>
-                                    Ã¢â€ â€™
+                                    &#8594;
                                 </span>
 
                             </a>
@@ -1120,7 +1118,7 @@
                                 Citizen Services
 
                                 <span>
-                                    Ã¢â€ â€™
+                                    &#8594;
                                 </span>
 
                             </a>
@@ -1134,9 +1132,7 @@
 
                 <div class="side-card">
 
-                    <div class="side-icon">
-                        ?
-                    </div>
+                    <div class="side-icon">&#8226;</div>
 
                     <h3>
                         Before You Submit
@@ -1153,9 +1149,7 @@
 
                 <div class="side-card">
 
-                    <div class="side-icon">
-                        Ã¢â€”Â·
-                    </div>
+                    <div class="side-icon">&#8226;</div>
 
                     <h3>
                         Keep Your Reference
@@ -1191,8 +1185,7 @@
                 class="footer-emblem"
                 aria-hidden="true"
             >
-                Ã¢Å“Â¦
-            </div>
+                &#10022;</div>
 
             <div>
 
@@ -1233,7 +1226,7 @@
         <div class="footer-disclaimer">
 
             <div>
-                Ã‚Â©
+                &#169;
                 <span id="currentYear"></span>
                 Ration Portal
             </div>
@@ -1657,7 +1650,7 @@ var form=document.querySelector("form");
 if(!form)return;
 var button=form.querySelector('button[type="submit"],input[type="submit"]');
 if(!button)return;
-var timer=null,startTime=0,duration=300000,statusBox=null,originalText=button.textContent||button.value||"Submit Grievance";
+var timer=null,startTime=0,duration=60000,statusBox=null,originalText=button.textContent||button.value||"Submit Grievance";
 function ensureStatus(){
  if(statusBox)return statusBox;
  statusBox=document.createElement("div");
@@ -1714,7 +1707,7 @@ form.addEventListener("submit",function(){
   if(remaining>0){
    var display=minutes+":"+String(secs).padStart(2,"0");
    setButtonText("Submitting... "+display);
-   box.textContent="Your grievance is being submitted securely. Please wait — this may take up to 5 minutes. Time remaining: "+display;
+   box.textContent="Your grievance is being submitted securely. Please wait — this may take up to 1 minute. Time remaining: "+display;
   }else{
    finish("The submission is taking longer than expected. Please do not click Submit again. We are still waiting for the server response.",true);
    setButtonText("Still Processing...");
@@ -1724,4 +1717,5 @@ form.addEventListener("submit",function(){
 })();
 </script></body>
 </html>
+
 
