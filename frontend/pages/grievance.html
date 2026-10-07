@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -547,14 +547,14 @@
 
     <div class="gov-bar-left">
         <span>Government Service Portal</span>
-        <span aria-hidden="true">â€¢</span>
+        <span aria-hidden="true">Ã¢â‚¬Â¢</span>
         <span>Digital Public Distribution System</span>
     </div>
 
     <div class="gov-bar-right">
         <a href="../index.html">Home</a>
         <span aria-hidden="true">|</span>
-        <select id="languageSelector" aria-label="Language"><option value="en">English</option><option value="hi">à¤¹à¤¿à¤¨à¥à¤¦à¥€</option><option value="te">ÉŒà±†22Ã‚</option></select>
+        <select id="languageSelector" aria-label="Language"><option value="en">English</option><option value="hi">Ã Â¤Â¹Ã Â¤Â¿Ã Â¤Â¨Ã Â¥ÂÃ Â¤Â¦Ã Â¥â‚¬</option><option value="te">Ã‰Å’Ã Â±â€ 22Ãƒâ€š</option></select>
     </div>
 
 </div>
@@ -580,7 +580,7 @@
                         line-height:1;
                     "
                 >
-                    âœ¦
+                    Ã¢Å“Â¦
                 </span>
             </div>
 
@@ -1007,7 +1007,7 @@
                         </h3>
 
 
-                        <label for="declaration" class="grievance-declaration"><input type="checkbox" id="declaration" required><span class="declaration-box" aria-hidden="true">✓</span><span class="declaration-text">I confirm that the information provided in this grievance is true and accurate to the best of my knowledge.</span></label>
+                        <label for="declaration" class="grievance-declaration"><input type="checkbox" id="declaration" required><span class="declaration-box" aria-hidden="true">âœ“</span><span class="declaration-text">I confirm that the information provided in this grievance is true and accurate to the best of my knowledge.</span></label>
 
                     </div>
 
@@ -1025,7 +1025,7 @@
                             id="referenceNumber"
                             class="reference-number"
                         >
-                            â€”
+                            Ã¢â‚¬â€
                         </div>
 
                         <div class="reference-help">
@@ -1067,7 +1067,7 @@
                 <div class="side-card accent">
 
                     <div class="side-icon">
-                        âœ“
+                        Ã¢Å“â€œ
                     </div>
 
                     <h3>
@@ -1090,7 +1090,7 @@
                                 Track Grievance
 
                                 <span>
-                                    â†’
+                                    Ã¢â€ â€™
                                 </span>
 
                             </a>
@@ -1105,7 +1105,7 @@
                                 My Applications
 
                                 <span>
-                                    â†’
+                                    Ã¢â€ â€™
                                 </span>
 
                             </a>
@@ -1120,7 +1120,7 @@
                                 Citizen Services
 
                                 <span>
-                                    â†’
+                                    Ã¢â€ â€™
                                 </span>
 
                             </a>
@@ -1154,7 +1154,7 @@
                 <div class="side-card">
 
                     <div class="side-icon">
-                        â—·
+                        Ã¢â€”Â·
                     </div>
 
                     <h3>
@@ -1191,7 +1191,7 @@
                 class="footer-emblem"
                 aria-hidden="true"
             >
-                âœ¦
+                Ã¢Å“Â¦
             </div>
 
             <div>
@@ -1233,7 +1233,7 @@
         <div class="footer-disclaimer">
 
             <div>
-                Â©
+                Ã‚Â©
                 <span id="currentYear"></span>
                 Ration Portal
             </div>
@@ -1647,5 +1647,81 @@ document.addEventListener(
 );
 </script>
 
-</body>
+<style id="grievanceSubmissionTimer">
+.grievance-submit-status{margin-top:10px;padding:10px 14px;border-radius:8px;background:#eef6ff;border:1px solid #c8def5;color:#15558a;font-size:13px;font-weight:600;text-align:center;display:none}.grievance-submit-status.active{display:block}.grievance-submit-status.expired{background:#fff8e8;border-color:#f1d48a;color:#805b00}
+</style>
+<script id="grievanceSubmissionTimer">
+(function(){
+"use strict";
+var form=document.querySelector("form");
+if(!form)return;
+var button=form.querySelector('button[type="submit"],input[type="submit"]');
+if(!button)return;
+var timer=null,startTime=0,duration=300000,statusBox=null,originalText=button.textContent||button.value||"Submit Grievance";
+function ensureStatus(){
+ if(statusBox)return statusBox;
+ statusBox=document.createElement("div");
+ statusBox.className="grievance-submit-status";
+ statusBox.setAttribute("aria-live","polite");
+ statusBox.setAttribute("role","status");
+ button.parentNode.insertBefore(statusBox,button.nextSibling);
+ return statusBox;
+}
+function setButtonText(value){
+ if(button.tagName==="INPUT")button.value=value;else button.textContent=value;
+}
+function stopTimer(){
+ if(timer){clearInterval(timer);timer=null;}
+}
+function finish(message,expired){
+ stopTimer();
+ if(statusBox){
+  statusBox.textContent=message;
+  statusBox.classList.toggle("expired",!!expired);
+  statusBox.classList.add("active");
+ }
+}
+function watchPage(){
+ var text=(document.body.innerText||"").toLowerCase();
+ if(text.indexOf("grievance has been submitted successfully")>=0 || text.indexOf("grievance reference number")>=0){
+  finish("Grievance submitted successfully. Your reference number is shown below.",false);
+  return true;
+ }
+ if(text.indexOf("failed to submit")>=0 || text.indexOf("unable to submit")>=0 || text.indexOf("submission failed")>=0 || text.indexOf("error submitting")>=0){
+  stopTimer();
+  if(statusBox)statusBox.classList.remove("active");
+  button.disabled=false;
+  setButtonText(originalText);
+  return true;
+ }
+ return false;
+}
+form.addEventListener("submit",function(){
+ if(!form.checkValidity())return;
+ var box=ensureStatus();
+ stopTimer();
+ startTime=Date.now();
+ button.disabled=true;
+ box.classList.add("active");
+ box.classList.remove("expired");
+ timer=setInterval(function(){
+  if(watchPage())return;
+  var elapsed=Date.now()-startTime;
+  var remaining=Math.max(0,duration-elapsed);
+  var seconds=Math.ceil(remaining/1000);
+  var minutes=Math.floor(seconds/60);
+  var secs=seconds%60;
+  if(remaining>0){
+   var display=minutes+":"+String(secs).padStart(2,"0");
+   setButtonText("Submitting... "+display);
+   box.textContent="Your grievance is being submitted securely. Please wait — this may take up to 5 minutes. Time remaining: "+display;
+  }else{
+   finish("The submission is taking longer than expected. Please do not click Submit again. We are still waiting for the server response.",true);
+   setButtonText("Still Processing...");
+  }
+ },250);
+},false);
+})();
+</script></body>
 </html>
+
