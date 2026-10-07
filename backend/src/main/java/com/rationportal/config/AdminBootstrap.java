@@ -19,10 +19,7 @@ public class AdminBootstrap implements CommandLineRunner {
     @Value("${ADMIN_PASSWORD:}")
     private String adminPassword;
 
-    public AdminBootstrap(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder
-    ) {
+    public AdminBootstrap(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -32,74 +29,39 @@ public class AdminBootstrap implements CommandLineRunner {
 
         if (adminEmail == null || adminEmail.isBlank()
                 || adminPassword == null || adminPassword.isBlank()) {
-
-            System.out.println(
-                    "ADMIN BOOTSTRAP SKIPPED: ADMIN_EMAIL or ADMIN_PASSWORD is not configured."
-            );
-
+            System.out.println("ADMIN BOOTSTRAP SKIPPED: ADMIN_EMAIL or ADMIN_PASSWORD is not configured.");
             return;
         }
 
-        String normalizedEmail = adminEmail.trim().toLowerCase();
+        String normalizedAdminEmail = adminEmail.trim().toLowerCase();
 
         if (adminPassword.length() < 8) {
-
-            System.err.println(
-                    "ADMIN BOOTSTRAP FAILED: ADMIN_PASSWORD must contain at least 8 characters."
-            );
-
+            System.err.println("ADMIN BOOTSTRAP FAILED: ADMIN_PASSWORD must contain at least 8 characters.");
             return;
         }
 
-        User user = userRepository.findByEmail(normalizedEmail)
-                .orElse(null);
+        User admin = userRepository.findByEmail(normalizedAdminEmail).orElse(null);
 
-        if (user == null) {
-
-            user = new User();
-
-            user.setFullName("Ration Portal Administrator");
-            user.setEmail(normalizedEmail);
-            user.setPasswordHash(
-                    passwordEncoder.encode(adminPassword)
-            );
-            user.setRole("ADMIN");
-            user.setStatus("ACTIVE");
-
-            userRepository.save(user);
-
-            System.out.println(
-                    "ADMIN BOOTSTRAP SUCCESS: Admin account created."
-            );
-
-            return;
+        if (admin == null) {
+            admin = new User();
+            admin.setFullName("Ration Portal Administrator");
+            admin.setEmail(normalizedAdminEmail);
+            admin.setPasswordHash(passwordEncoder.encode(adminPassword));
         }
 
-        boolean changed = false;
+        admin.setRole("ADMIN");
+        admin.setStatus("ACTIVE");
+        userRepository.save(admin);
 
-        if (!"ADMIN".equalsIgnoreCase(user.getRole())) {
-            user.setRole("ADMIN");
-            changed = true;
+        for (User user : userRepository.findAll()) {
+            if (!user.getEmail().equalsIgnoreCase(normalizedAdminEmail)
+                    && "ADMIN".equalsIgnoreCase(user.getRole())) {
+                user.setRole("CITIZEN");
+                userRepository.save(user);
+                System.out.println("ADMIN SECURITY: Demoted unauthorized ADMIN account: " + user.getEmail());
+            }
         }
 
-        if (!"ACTIVE".equalsIgnoreCase(user.getStatus())) {
-            user.setStatus("ACTIVE");
-            changed = true;
-        }
-
-        if (changed) {
-
-            userRepository.save(user);
-
-            System.out.println(
-                    "ADMIN BOOTSTRAP SUCCESS: Existing account promoted to ADMIN."
-            );
-
-        } else {
-
-            System.out.println(
-                    "ADMIN BOOTSTRAP: Admin account already exists."
-            );
-        }
+        System.out.println("ADMIN BOOTSTRAP SUCCESS: " + normalizedAdminEmail + " is the only authorized ADMIN.");
     }
 }
