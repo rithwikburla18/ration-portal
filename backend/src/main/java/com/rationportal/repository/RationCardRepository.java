@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface RationCardRepository extends JpaRepository<RationCard, Long> {
     Optional<RationCard> findByRationCardNumber(String rationCardNumber);
     List<RationCard> findByStatusIgnoreCase(String status);
+Optional<RationCard> findByRationCardNumberAndOwnerEmailIgnoreCase(String rationCardNumber, String ownerEmail);
 }
