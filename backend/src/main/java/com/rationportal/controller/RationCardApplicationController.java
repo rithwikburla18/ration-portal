@@ -49,6 +49,14 @@ public class RationCardApplicationController {
             @RequestBody @NonNull Map<String, Object> request,
             Authentication authentication) {
 
+        if (!isAuthenticated(authentication)) {
+            return ResponseEntity.status(401)
+                    .body(Map.of(
+                            "message",
+                            "Authentication required."
+                    ));
+        }
+
         try {
             String headOfFamily = getString(request, "headOfFamily");
             String mobile = getString(request, "mobile");
@@ -127,15 +135,12 @@ public class RationCardApplicationController {
                     repository.save(application);
 
             try {
-
                 notificationService.sendApplicationSubmittedEmail(
                         savedApplication.getEmail(),
                         savedApplication.getApplicantName(),
                         savedApplication.getApplicationNumber()
                 );
-
             } catch (Exception notificationException) {
-
                 System.err.println(
                         "APPLICATION SUBMITTED EMAIL NOTIFICATION FAILED: "
                                 + notificationException.getMessage()
@@ -143,14 +148,11 @@ public class RationCardApplicationController {
             }
 
             try {
-
                 notificationService.sendApplicationSubmittedSms(
                         savedApplication.getMobile(),
                         savedApplication.getApplicationNumber()
                 );
-
             } catch (Exception notificationException) {
-
                 System.err.println(
                         "APPLICATION SUBMITTED SMS NOTIFICATION FAILED: "
                                 + notificationException.getMessage()
@@ -178,8 +180,16 @@ public class RationCardApplicationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RationCardApplication>> getApplications(
+    public ResponseEntity<?> getApplications(
             Authentication authentication) {
+
+        if (!isAuthenticated(authentication)) {
+            return ResponseEntity.status(401)
+                    .body(Map.of(
+                            "message",
+                            "Authentication required."
+                    ));
+        }
 
         boolean isAdmin = isAdmin(authentication);
 
@@ -201,6 +211,14 @@ public class RationCardApplicationController {
     public ResponseEntity<?> getApplicationByNumber(
             @PathVariable @NonNull String applicationNumber,
             Authentication authentication) {
+
+        if (!isAuthenticated(authentication)) {
+            return ResponseEntity.status(401)
+                    .body(Map.of(
+                            "message",
+                            "Authentication required."
+                    ));
+        }
 
         RationCardApplication application =
                 repository.findByApplicationNumber(applicationNumber)
@@ -235,6 +253,14 @@ public class RationCardApplicationController {
             @PathVariable @NonNull String applicationNumber,
             @RequestBody @NonNull Map<String, Object> request,
             Authentication authentication) {
+
+        if (!isAuthenticated(authentication)) {
+            return ResponseEntity.status(401)
+                    .body(Map.of(
+                            "message",
+                            "Authentication required."
+                    ));
+        }
 
         if (!isAdmin(authentication)) {
 
@@ -291,16 +317,13 @@ public class RationCardApplicationController {
                 repository.save(application);
 
         try {
-
             notificationService.sendApplicationStatusEmail(
                     savedApplication.getEmail(),
                     savedApplication.getApplicantName(),
                     savedApplication.getApplicationNumber(),
                     savedApplication.getStatus()
             );
-
         } catch (Exception notificationException) {
-
             System.err.println(
                     "APPLICATION STATUS EMAIL NOTIFICATION FAILED: "
                             + notificationException.getMessage()
@@ -308,15 +331,12 @@ public class RationCardApplicationController {
         }
 
         try {
-
             notificationService.sendApplicationStatusSms(
                     savedApplication.getMobile(),
                     savedApplication.getApplicationNumber(),
                     savedApplication.getStatus()
             );
-
         } catch (Exception notificationException) {
-
             System.err.println(
                     "APPLICATION STATUS SMS NOTIFICATION FAILED: "
                             + notificationException.getMessage()
@@ -343,9 +363,17 @@ public class RationCardApplicationController {
         );
     }
 
+    private boolean isAuthenticated(Authentication authentication) {
+
+        return authentication != null
+                && authentication.isAuthenticated()
+                && authentication.getName() != null
+                && !authentication.getName().isBlank();
+    }
+
     private boolean isAdmin(Authentication authentication) {
 
-        if (authentication == null) {
+        if (!isAuthenticated(authentication)) {
             return false;
         }
 
