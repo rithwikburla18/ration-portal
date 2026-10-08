@@ -104,6 +104,32 @@ public class AuthController {
         String password =
                 request.getOrDefault("password", "");
 
+        String termsAccepted =
+                request.getOrDefault(
+                        "termsAccepted",
+                        "false"
+                );
+
+        /*
+         * ========================================================
+         * TERMS & CONDITIONS - SERVER-SIDE ENFORCEMENT
+         * ========================================================
+         *
+         * A citizen account cannot be created unless the
+         * Terms & Conditions have explicitly been accepted.
+         */
+        if (!"true".equalsIgnoreCase(
+                termsAccepted.trim()
+        )) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "message",
+                            "Terms & Conditions acceptance is required."
+                    )
+            );
+        }
+
         if (name.isBlank()) {
 
             return ResponseEntity.badRequest().body(
@@ -149,9 +175,15 @@ public class AuthController {
 
         user.setFullName(name);
         user.setEmail(email);
+
         user.setPasswordHash(
                 passwordEncoder.encode(password)
         );
+
+        /*
+         * Citizen self-registration can NEVER create
+         * an administrator account.
+         */
         user.setRole("CITIZEN");
         user.setStatus("ACTIVE");
 
@@ -198,23 +230,28 @@ public class AuthController {
                             user.getRole()
                     );
 
-            
             /*
-             * Security notification after successful authentication.
-             * Email failure must never block a valid login.
+             * Security notification after successful
+             * authentication.
+             *
+             * Email failure must never block login.
              */
             try {
+
                 mailService.sendLoginNotificationEmail(
                         user.getEmail(),
                         user.getFullName()
                 );
+
             } catch (Exception mailException) {
+
                 System.err.println(
                         "LOGIN NOTIFICATION WARNING: "
                                 + mailException.getMessage()
                 );
             }
-return ResponseEntity.ok(
+
+            return ResponseEntity.ok(
                     Map.of(
                             "token", token,
                             "fullName", user.getFullName(),
@@ -236,19 +273,62 @@ return ResponseEntity.ok(
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> me(org.springframework.security.core.Authentication authentication) {
+    public ResponseEntity<?> me(
+            org.springframework.security.core.Authentication authentication
+    ) {
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(401).body(Map.of("message", "Authentication required."));
+        if (
+                authentication == null ||
+                !authentication.isAuthenticated()
+        ) {
+
+            return ResponseEntity
+                    .status(401)
+                    .body(
+                            Map.of(
+                                    "message",
+                                    "Authentication required."
+                            )
+                    );
         }
 
-        User user = userRepository.findByEmail(authentication.getName().trim().toLowerCase()).orElse(null);
+        User user =
+                userRepository
+                        .findByEmail(
+                                authentication
+                                        .getName()
+                                        .trim()
+                                        .toLowerCase()
+                        )
+                        .orElse(null);
 
         if (user == null) {
-            return ResponseEntity.status(401).body(Map.of("message", "Authenticated user not found."));
+
+            return ResponseEntity
+                    .status(401)
+                    .body(
+                            Map.of(
+                                    "message",
+                                    "Authenticated user not found."
+                            )
+                    );
         }
 
-        return ResponseEntity.ok(Map.of("email", user.getEmail(), "fullName", user.getFullName(), "role", user.getRole(), "status", user.getStatus()));
+        return ResponseEntity.ok(
+                Map.of(
+                        "email",
+                        user.getEmail(),
+
+                        "fullName",
+                        user.getFullName(),
+
+                        "role",
+                        user.getRole(),
+
+                        "status",
+                        user.getStatus()
+                )
+        );
     }
 
     @PostMapping("/forgot-password")
@@ -261,8 +341,12 @@ return ResponseEntity.ok(
                         .trim()
                         .toLowerCase();
 
-        if (email.isBlank()
-                || !EMAIL_PATTERN.matcher(email).matches()) {
+        if (
+                email.isBlank()
+                        || !EMAIL_PATTERN
+                        .matcher(email)
+                        .matches()
+        ) {
 
             return ResponseEntity.badRequest().body(
                     Map.of(
@@ -279,7 +363,6 @@ return ResponseEntity.ok(
 
         /*
          * Do not reveal whether an email is registered.
-         * This prevents account/email enumeration.
          */
         if (user == null) {
 
@@ -295,14 +378,23 @@ return ResponseEntity.ok(
                 UUID.randomUUID().toString();
 
         LocalDateTime expiry =
-                LocalDateTime.now().plusMinutes(15);
+                LocalDateTime.now()
+                        .plusMinutes(15);
 
-        user.setResetPasswordToken(resetToken);
-        user.setResetPasswordTokenExpiry(expiry);
+        user.setResetPasswordToken(
+                resetToken
+        );
+
+        user.setResetPasswordTokenExpiry(
+                expiry
+        );
 
         userRepository.save(user);
 
-        mailService.sendPasswordResetEmail(email, resetToken);
+        mailService.sendPasswordResetEmail(
+                email,
+                resetToken
+        );
 
         return ResponseEntity.ok(
                 Map.of(
@@ -318,11 +410,43 @@ return ResponseEntity.ok(
     ) {
 
         String token =
-                request.getOrDefault("token", "")
+                request.getOrDefault(
+                        "token",
+                        ""
+                )
                         .trim();
 
         String newPassword =
-                request.getOrDefault("newPassword", "");
+                request.getOrDefault(
+                        "newPassword",
+                        ""
+                );
+
+        String termsAccepted =
+                request.getOrDefault(
+                        "termsAccepted",
+                        "false"
+                );
+
+        /*
+         * ========================================================
+         * TERMS & CONDITIONS - SERVER-SIDE ENFORCEMENT
+         * ========================================================
+         *
+         * Changing a password through the password-reset
+         * workflow requires explicit Terms acceptance.
+         */
+        if (!"true".equalsIgnoreCase(
+                termsAccepted.trim()
+        )) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "message",
+                            "Terms & Conditions acceptance is required."
+                    )
+            );
+        }
 
         if (token.isBlank()) {
 
@@ -334,8 +458,10 @@ return ResponseEntity.ok(
             );
         }
 
-        if (newPassword.isBlank()
-                || newPassword.length() < 8) {
+        if (
+                newPassword.isBlank()
+                        || newPassword.length() < 8
+        ) {
 
             return ResponseEntity.badRequest().body(
                     Map.of(
@@ -360,9 +486,14 @@ return ResponseEntity.ok(
             );
         }
 
-        if (user.getResetPasswordTokenExpiry() == null
-                || user.getResetPasswordTokenExpiry()
-                        .isBefore(LocalDateTime.now())) {
+        if (
+                user.getResetPasswordTokenExpiry() == null
+                        || user
+                        .getResetPasswordTokenExpiry()
+                        .isBefore(
+                                LocalDateTime.now()
+                        )
+        ) {
 
             return ResponseEntity.badRequest().body(
                     Map.of(
@@ -373,11 +504,21 @@ return ResponseEntity.ok(
         }
 
         user.setPasswordHash(
-                passwordEncoder.encode(newPassword)
+                passwordEncoder.encode(
+                        newPassword
+                )
         );
 
-        user.setResetPasswordToken(null);
-        user.setResetPasswordTokenExpiry(null);
+        /*
+         * Reset tokens are single-use.
+         */
+        user.setResetPasswordToken(
+                null
+        );
+
+        user.setResetPasswordTokenExpiry(
+                null
+        );
 
         userRepository.save(user);
 

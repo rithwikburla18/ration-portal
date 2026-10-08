@@ -1,32 +1,46 @@
 (function () {
     "use strict";
 
-    const TOKEN_KEY = "ration_token";
-    const USER_KEY = "ration_user";
-    const ROLE_KEY = "ration_role";
-    const BACKEND_URL = "https://ration-portal-backend.onrender.com";
+    /*
+     * ============================================================
+     * RATION PORTAL
+     * Authentication + Navigation + Password Security Guard
+     * ============================================================
+     */
+
+    const TOKEN_KEY = "rationPortalToken";
+    const USER_KEY = "rationPortalUser";
+    const ROLE_KEY = "rationPortalRole";
+    const AUTHENTICATED_KEY = "ration_authenticated";
+    const REDIRECT_KEY = "rationPortalRedirect";
+
+    const LEGACY_TOKEN_KEY = "ration_token";
+    const LEGACY_USER_KEY = "ration_user";
+    const LEGACY_ROLE_KEY = "ration_role";
+
+    const BACKEND_URL =
+        "https://ration-portal-backend.onrender.com";
 
     const PUBLIC_PAGES = [
         "index.html",
         "login.html",
         "register.html",
+        "register-password.html",
         "forgot-password.html",
         "reset-password.html",
         "about.html",
         "contact.html",
-        "privacy-policy.html",
+        "privacy.html",
         "terms.html"
     ];
 
-    const PROTECTED_SERVICE_FILES = [
-        "ration-card.html",
-        "e-ration-card.html",
-        "family.html",
-        "distribution.html",
-        "onorc.html",
-        "apply-ration-card.html",
-        "applications.html"
-    ];
+    const PROTECTED_SERVICE_FILES = ["citizen-dashboard.html","ration-card.html","e-ration-card.html","family.html","distribution.html","onorc.html","apply-ration-card.html","applications.html","application-status.html","grievance.html","grievance-dashboard.html","grievance-status.html","transparency.html"]; const APPROVAL_REQUIRED_SERVICE_FILES = ["ration-card.html","e-ration-card.html","family.html","distribution.html","onorc.html"];
+
+    /*
+     * ============================================================
+     * SESSION HELPERS
+     * ============================================================
+     */
 
     function getToken() {
         return localStorage.getItem(TOKEN_KEY);
@@ -34,45 +48,154 @@
 
     function getUser() {
         try {
-            return JSON.parse(localStorage.getItem(USER_KEY) || "null");
+            return JSON.parse(
+                localStorage.getItem(USER_KEY) || "null"
+            );
         } catch (_) {
             return null;
         }
     }
 
     function getRole() {
-        return localStorage.getItem(ROLE_KEY) || getUser()?.role || "";
+        return (
+            localStorage.getItem(ROLE_KEY) ||
+            getUser()?.role ||
+            ""
+        );
+    }
+
+    function saveSession(token, user) {
+        if (!token) {
+            clearSession();
+            return;
+        }
+
+        localStorage.setItem(TOKEN_KEY, token);
+
+        if (user) {
+            localStorage.setItem(
+                USER_KEY,
+                JSON.stringify(user)
+            );
+
+            if (user.role) {
+                localStorage.setItem(
+                    ROLE_KEY,
+                    user.role
+                );
+            }
+        }
+
+        localStorage.setItem(
+            AUTHENTICATED_KEY,
+            "true"
+        );
     }
 
     function clearSession() {
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(USER_KEY);
         localStorage.removeItem(ROLE_KEY);
-        localStorage.removeItem("ration_authenticated");
+        localStorage.removeItem(AUTHENTICATED_KEY);
+        localStorage.removeItem(REDIRECT_KEY);
+
+        /*
+         * Remove old session keys so an old implementation
+         * can never silently restore a previous session.
+         */
+        localStorage.removeItem(LEGACY_TOKEN_KEY);
+        localStorage.removeItem(LEGACY_USER_KEY);
+        localStorage.removeItem(LEGACY_ROLE_KEY);
+    }
+
+    /*
+     * ============================================================
+     * JWT VALIDATION
+     * ============================================================
+     */
+
+    function decodeJwtPayload(token) {
+        if (!token) {
+            return null;
+        }
+
+        try {
+            const parts = token.split(".");
+
+            if (parts.length !== 3) {
+                return null;
+            }
+
+            const base64 = parts[1]
+                .replace(/-/g, "+")
+                .replace(/_/g, "/");
+
+            const json = decodeURIComponent(
+                atob(base64)
+                    .split("")
+                    .map(function (character) {
+                        return (
+                            "%" +
+                            (
+                                "00" +
+                                character
+                                    .charCodeAt(0)
+                                    .toString(16)
+                            ).slice(-2)
+                        );
+                    })
+                    .join("")
+            );
+
+            return JSON.parse(json);
+        } catch (_) {
+            return null;
+        }
     }
 
     function isTokenExpired(token) {
-        if (!token) return true;
-        try {
-            const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
-            return !payload.exp || payload.exp * 1000 <= Date.now();
-        } catch (_) {
+        const payload = decodeJwtPayload(token);
+
+        if (!payload || !payload.exp) {
             return true;
         }
+
+        return (
+            Number(payload.exp) * 1000 <=
+            Date.now()
+        );
     }
+
+    /*
+     * ============================================================
+     * SERVER SESSION VALIDATION
+     * ============================================================
+     */
 
     async function validateSession() {
         const token = getToken();
 
-        if (!token || isTokenExpired(token)) {
+        if (!token) {
+            return null;
+        }
+
+        if (isTokenExpired(token)) {
             clearSession();
             return null;
         }
 
         try {
-            const response = await fetch(BACKEND_URL + "/api/auth/me", {
-                headers: { Authorization: "Bearer " + token }
-            });
+            const response = await fetch(
+                BACKEND_URL + "/api/auth/me",
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization:
+                            "Bearer " + token,
+                        Accept: "application/json"
+                    }
+                }
+            );
 
             if (!response.ok) {
                 clearSession();
@@ -80,190 +203,134 @@
             }
 
             const user = await response.json();
-            localStorage.setItem(USER_KEY, JSON.stringify(user));
-            if (user.role) localStorage.setItem(ROLE_KEY, user.role);
-            localStorage.setItem("ration_authenticated", "true");
+
+            if (!user || !user.email) {
+                clearSession();
+                return null;
+            }
+
+            localStorage.setItem(
+                USER_KEY,
+                JSON.stringify(user)
+            );
+
+            if (user.role) {
+                localStorage.setItem(
+                    ROLE_KEY,
+                    user.role
+                );
+            }
+
+            localStorage.setItem(
+                AUTHENTICATED_KEY,
+                "true"
+            );
+
             return user;
         } catch (_) {
-            return getUser();
+            /*
+             * Do not silently authenticate from stale local
+             * data when the server cannot validate the token.
+             */
+            clearSession();
+            return null;
         }
     }
 
-    async function authenticatedFetch(url, options = {}) {
+    /*
+     * ============================================================
+     * AUTHENTICATED API REQUEST
+     * ============================================================
+     */
+
+    async function authenticatedFetch(
+        url,
+        options
+    ) {
+        const requestOptions = {
+            ...(options || {})
+        };
+
+        const headers = new Headers(
+            requestOptions.headers || {}
+        );
+
         const token = getToken();
-        const headers = new Headers(options.headers || {});
 
         if (token) {
-            headers.set("Authorization", "Bearer " + token);
+            headers.set(
+                "Authorization",
+                "Bearer " + token
+            );
         }
 
-        if (options.body && !headers.has("Content-Type")) {
-            headers.set("Content-Type", "application/json");
+        headers.set(
+            "Accept",
+            "application/json"
+        );
+
+        if (
+            requestOptions.body &&
+            !headers.has("Content-Type")
+        ) {
+            headers.set(
+                "Content-Type",
+                "application/json"
+            );
         }
 
-        return fetch(url, { ...options, headers });
+        requestOptions.headers = headers;
+
+        const response = await fetch(
+            url,
+            requestOptions
+        );
+
+        if (
+            response.status === 401 ||
+            response.status === 403
+        ) {
+            clearSession();
+        }
+
+        return response;
     }
 
+    /*
+     * ============================================================
+     * PAGE HELPERS
+     * ============================================================
+     */
+
     function currentFile() {
-        return (location.pathname.split("/").pop() || "index.html").toLowerCase();
+        return (
+            location.pathname
+                .split("/")
+                .pop() ||
+            "index.html"
+        ).toLowerCase();
     }
 
     function isPublicAuthPage() {
-        return PUBLIC_PAGES.includes(currentFile());
+        return PUBLIC_PAGES.includes(
+            currentFile()
+        );
     }
 
-    function isProtectedServicePage() {
-        return PROTECTED_SERVICE_FILES.includes(currentFile());
-    }
+    function isProtectedServicePage() { return PROTECTED_SERVICE_FILES.includes(currentFile()); } function isApprovalRequiredPage() { return APPROVAL_REQUIRED_SERVICE_FILES.includes(currentFile()); }
 
-    async function hasApprovedCard() {
-        const token = getToken();
-        if (!token) return false;
-
-        if (getRole().toUpperCase() === "ADMIN") return true;
-
-        try {
-            const response = await authenticatedFetch(BACKEND_URL + "/api/ration-cards/my");
-            return response.ok;
-        } catch (_) {
-            return false;
-        }
-    }
-
-    function redirectToLogin() {
-        const target = location.pathname + location.search + location.hash;
-        location.href = "login.html?returnUrl=" + encodeURIComponent(target);
-    }
-
-    async function requireAuthentication() {
-        const user = await validateSession();
-
-        if (!user) {
-            redirectToLogin();
-            return false;
-        }
-
-        if (isProtectedServicePage() && !(await hasApprovedCard())) {
-            alert("Your ration card must be approved before you can use this service.");
-            location.href = "index.html";
-            return false;
-        }
-
-        return true;
-    }
-
-    function installPasswordToggles() {
-        document.querySelectorAll("[data-password-toggle]").forEach(button => {
-            if (button.dataset.bound === "true") return;
-            button.dataset.bound = "true";
-
-            button.addEventListener("click", function () {
-                const targetId = button.getAttribute("data-password-toggle");
-                const input = document.getElementById(targetId);
-                if (!input) return;
-
-                const showing = input.type === "text";
-                input.type = showing ? "password" : "text";
-                button.setAttribute("aria-label", showing ? "Show password" : "Hide password");
-                button.textContent = showing ? "👁" : "🙈";
-            });
-        });
-    }
-
-    function installTermsCheckbox() {
-        const page = currentFile();
-
-        if (!["login.html", "register.html", "register-password.html", "reset-password.html"].includes(page)) {
-            return;
-        }
-
-        const form = document.querySelector("form");
-        if (!form || form.querySelector("#termsAgreement")) return;
-
-        const wrapper = document.createElement("label");
-        wrapper.style.display = "flex";
-        wrapper.style.alignItems = "flex-start";
-        wrapper.style.gap = "8px";
-        wrapper.style.margin = "12px 0";
-        wrapper.style.fontSize = "14px";
-
-        wrapper.innerHTML =
-            '<input id="termsAgreement" type="checkbox" required style="margin-top:3px">' +
-            '<span>I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms & Conditions</a>.</span>';
-
-        const submit = form.querySelector('button[type="submit"], input[type="submit"]');
-        if (submit) {
-            form.insertBefore(wrapper, submit);
-        } else {
-            form.appendChild(wrapper);
-        }
-
-        form.addEventListener("submit", function (event) {
-            const checkbox = document.getElementById("termsAgreement");
-            if (checkbox && !checkbox.checked) {
-                event.preventDefault();
-                alert("Please accept the Terms & Conditions before continuing.");
-                checkbox.focus();
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeAuthGuard,
+            {
+                once: true
             }
-        }, true);
+        );
+    } else {
+        initializeAuthGuard();
     }
-
-    function updateProtectedLinks() {
-        const token = getToken();
-        const user = getUser();
-
-        document.querySelectorAll("a[href]").forEach(link => {
-            const href = link.getAttribute("href") || "";
-            const file = href.split("?")[0].split("#")[0].split("/").pop().toLowerCase();
-
-            if (!PROTECTED_SERVICE_FILES.includes(file)) return;
-
-            if (!token || !user) {
-                link.style.display = "none";
-                return;
-            }
-
-            if (getRole().toUpperCase() === "ADMIN") {
-                link.style.display = "";
-                return;
-            }
-
-            hasApprovedCard().then(approved => {
-                link.style.display = approved ? "" : "none";
-            });
-        });
-    }
-
-    function logout() {
-        clearSession();
-        location.href = "login.html";
-    }
-
-    window.rationAuth = {
-        getToken,
-        getUser,
-        getRole,
-        clearSession,
-        validateSession,
-        authenticatedFetch,
-        hasApprovedCard,
-        requireAuthentication,
-        installPasswordToggles,
-        installTermsCheckbox,
-        logout,
-        backendUrl: BACKEND_URL
-    };
-
-    document.addEventListener("DOMContentLoaded", async function () {
-        installPasswordToggles();
-        installTermsCheckbox();
-
-        if (isPublicAuthPage()) {
-            updateProtectedLinks();
-            return;
-        }
-
-        await requireAuthentication();
-        updateProtectedLinks();
-    });
 })();

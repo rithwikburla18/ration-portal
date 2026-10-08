@@ -651,7 +651,7 @@
         <div class="admin-brand">
 
             <div class="admin-emblem">
-                ⚖
+                âš–
             </div>
 
             <div>
@@ -712,7 +712,7 @@
         <div class="admin-login-card">
 
             <div class="admin-login-icon">
-                🛡️
+                ðŸ›¡ï¸
             </div>
 
             <h1 class="admin-login-title">
@@ -758,14 +758,7 @@
                         Password
                     </label>
 
-                    <input
-                        id="adminPassword"
-                        class="admin-input"
-                        type="password"
-                        autocomplete="current-password"
-                        placeholder="Enter administrator password"
-                        required
-                    >
+                    <div class="password-wrapper"><input id="adminPassword" class="admin-input" type="password" autocomplete="current-password" placeholder="Enter administrator password" required><button type="button" class="toggle-password" id="toggleAdminPassword" data-password-toggle="adminPassword" aria-label="Show password" title="Show password" aria-pressed="false"><span aria-hidden="true">◉</span></button></div>
 
                 </div>
 
@@ -785,7 +778,7 @@
                 class="admin-back-link"
                 href="../index.html"
             >
-                ← Back to Citizen Portal
+                â† Back to Citizen Portal
             </a>
 
         </div>
@@ -1453,35 +1446,35 @@
                     <td>
                         ${escapeHtml(
                             application.applicantName ||
-                            "—"
+                            "â€”"
                         )}
                     </td>
 
                     <td>
                         ${escapeHtml(
                             application.email ||
-                            "—"
+                            "â€”"
                         )}
                     </td>
 
                     <td>
                         ${escapeHtml(
                             application.mobile ||
-                            "—"
+                            "â€”"
                         )}
                     </td>
 
                     <td>
                         ${escapeHtml(
                             application.cardType ||
-                            "—"
+                            "â€”"
                         )}
                     </td>
 
                     <td>
                         ${escapeHtml(
                             application.district ||
-                            "—"
+                            "â€”"
                         )}
                     </td>
 

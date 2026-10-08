@@ -132,3 +132,13 @@ tmp/
 # Generated backend files
 backend/.gradle/
 backend/bin/
+
+# Stage 10-30 temporary recovery files
+*.before-warning-fix
+*.before-loop-fix
+*.stage17-backup
+STAGE10-30-BACKUP-*/
+STAGE10-30-MASTER-SYNC-BACKUP-*/
+STAGE10-30-DASHBOARD-SYNC-BACKUP-*/
+STAGE10-30-PRODUCTION-AUDIT-*.txt
+frontend-final-backup-*/

@@ -2,8 +2,10 @@ package com.rationportal.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rationportal.model.RationCard;
 import com.rationportal.model.RationCardApplication;
 import com.rationportal.repository.RationCardApplicationRepository;
+import com.rationportal.repository.RationCardRepository;
 import com.rationportal.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -23,6 +25,7 @@ import java.util.UUID;
 public class RationCardApplicationController {
 
     private final RationCardApplicationRepository repository;
+    private final RationCardRepository rationCardRepository;
     private final ObjectMapper objectMapper;
     private final NotificationService notificationService;
 
@@ -36,10 +39,12 @@ public class RationCardApplicationController {
 
     public RationCardApplicationController(
             RationCardApplicationRepository repository,
+            RationCardRepository rationCardRepository,
             ObjectMapper objectMapper,
             NotificationService notificationService) {
 
         this.repository = repository;
+        this.rationCardRepository = rationCardRepository;
         this.objectMapper = objectMapper;
         this.notificationService = notificationService;
     }
@@ -316,6 +321,8 @@ public class RationCardApplicationController {
         RationCardApplication savedApplication =
                 repository.save(application);
 
+        syncRationCardForApplication(savedApplication);
+
         try {
             notificationService.sendApplicationStatusEmail(
                     savedApplication.getEmail(),
@@ -377,11 +384,10 @@ public class RationCardApplicationController {
             return false;
         }
 
-        return authentication.getAuthorities()
-                .stream()
-                .anyMatch(authority ->
-                        "ROLE_ADMIN".equals(authority.getAuthority())
-                );
+        for (var authority : authentication.getAuthorities()) {
+            if ("ROLE_ADMIN".equals(authority.getAuthority())) return true;
+        }
+        return false;
     }
 
     private String getString(
@@ -396,4 +402,47 @@ public class RationCardApplicationController {
 
         return value.toString().trim();
     }
+    private void syncRationCardForApplication(
+            RationCardApplication application) {
+
+        String ownerEmail = application.getEmail() == null
+                ? ""
+                : application.getEmail().trim().toLowerCase();
+
+        if (ownerEmail.isBlank()) {
+            return;
+        }
+
+        String cardNumber = "RC-" + application.getApplicationNumber();
+
+        RationCard card = rationCardRepository
+                .findByRationCardNumber(cardNumber)
+                .orElseGet(RationCard::new);
+
+        card.setRationCardNumber(cardNumber);
+        card.setCardType(application.getCardType());
+        card.setHeadOfFamily(application.getApplicantName());
+        card.setAddress(application.getAddress());
+        card.setDistrict(application.getDistrict());
+        card.setState(application.getState());
+        card.setOwnerEmail(ownerEmail);
+
+        String applicationStatus = application.getStatus() == null
+                ? "PENDING"
+                : application.getStatus().trim().toUpperCase();
+
+        if ("APPROVED".equals(applicationStatus)) {
+            card.setStatus("APPROVED");
+            card.setApprovalStatus("APPROVED");
+        } else if ("REJECTED".equals(applicationStatus)) {
+            card.setStatus("REJECTED");
+            card.setApprovalStatus("REJECTED");
+        } else {
+            card.setStatus("PENDING");
+            card.setApprovalStatus("PENDING");
+        }
+
+        rationCardRepository.save(card);
+    }
+
 }

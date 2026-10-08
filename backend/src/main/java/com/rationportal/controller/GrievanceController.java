@@ -2,24 +2,27 @@ package com.rationportal.controller;
 
 import com.rationportal.model.Grievance;
 import com.rationportal.repository.GrievanceRepository;
+import com.rationportal.repository.RationCardRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/grievances")
 public class GrievanceController {
 
     private final GrievanceRepository repository;
+    private final RationCardRepository rationCardRepository;
 
-    public GrievanceController(GrievanceRepository repository) {
+    public GrievanceController(GrievanceRepository repository, RationCardRepository rationCardRepository) {
         this.repository = repository;
+        this.rationCardRepository = rationCardRepository;
     }
 
     private boolean isAuthenticated(Authentication authentication) {
@@ -30,11 +33,11 @@ public class GrievanceController {
     }
 
     private boolean isAdmin(Authentication authentication) {
-        return isAuthenticated(authentication)
-                && authentication.getAuthorities()
-                .stream()
-                .anyMatch(authority ->
-                        "ROLE_ADMIN".equals(authority.getAuthority()));
+        if (!isAuthenticated(authentication)) return false;
+        for (var authority : authentication.getAuthorities()) {
+            if ("ROLE_ADMIN".equals(authority.getAuthority())) return true;
+        }
+        return false;
     }
 
     private boolean isOwner(
@@ -86,6 +89,23 @@ public class GrievanceController {
          * NEVER trust submittedByEmail from the browser.
          * The authenticated server identity is authoritative.
          */
+        if (!isAdmin(authentication)) {
+            String cardNumber = grievance.getRationCardNumber();
+            if (cardNumber == null || cardNumber.isBlank()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "Ration card number is required."
+                ));
+            }
+
+            if (rationCardRepository.findByRationCardNumberAndOwnerEmailIgnoreCase(
+                    cardNumber.trim(), authentication.getName().trim().toLowerCase()
+            ).isEmpty()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(
+                        "message", "You are not authorized to submit a grievance for this ration card."
+                ));
+            }
+        }
+
         grievance.setSubmittedByEmail(
                 authentication.getName()
                         .trim()
@@ -118,12 +138,10 @@ public class GrievanceController {
         /*
          * Citizen can view ONLY their own grievances.
          */
-        List<Grievance> own =
-                repository.findAll()
-                        .stream()
-                        .filter(grievance ->
-                                isOwner(grievance, authentication))
-                        .collect(Collectors.toList());
+        List<Grievance> own = new ArrayList<>();
+        for (Grievance grievance : repository.findAll()) {
+            if (isOwner(grievance, authentication)) own.add(grievance);
+        }
 
         return ResponseEntity.ok(own);
     }

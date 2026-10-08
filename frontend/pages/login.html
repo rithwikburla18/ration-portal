@@ -103,7 +103,7 @@
             </span>
 
             <span aria-hidden="true">
-                •
+                ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢
             </span>
 
             <span>
@@ -124,7 +124,7 @@
             </span>
 
             <span>
-                <select id="languageSelector" aria-label="Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="te">Ɍె22Â</option></select>
+                <select id="languageSelector" aria-label="Language"><option value="en">English</option><option value="hi">ÃƒÂ Ã‚Â¤Ã‚Â¹ÃƒÂ Ã‚Â¤Ã‚Â¿ÃƒÂ Ã‚Â¤Ã‚Â¨ÃƒÂ Ã‚Â¥Ã‚ÂÃƒÂ Ã‚Â¤Ã‚Â¦ÃƒÂ Ã‚Â¥Ã¢â€šÂ¬</option><option value="te">Ãƒâ€°Ã…â€™ÃƒÂ Ã‚Â±Ã¢â‚¬Â 22ÃƒÆ’Ã¢â‚¬Å¡</option></select>
             </span>
 
         </div>
@@ -157,7 +157,7 @@
                             line-height:1;
                         "
                     >
-                        ⚖
+                        ÃƒÂ¢Ã…Â¡Ã¢â‚¬â€œ
                     </span>
 
                 </div>
@@ -249,7 +249,7 @@
                     class="auth-logo"
                     aria-hidden="true"
                 >
-                    ⚖
+                    ÃƒÂ¢Ã…Â¡Ã¢â‚¬â€œ
                 </div>
 
                 <h1 class="auth-title">
@@ -650,7 +650,7 @@
                     class="footer-emblem"
                     aria-hidden="true"
                 >
-                    ⚖
+                    ÃƒÂ¢Ã…Â¡Ã¢â‚¬â€œ
                 </div>
 
 
@@ -693,7 +693,7 @@
             <div class="footer-disclaimer">
 
                 <div>
-                    ©
+                    Ãƒâ€šÃ‚Â©
                     <span id="currentYear"></span>
                     Ration Portal
                 </div>
@@ -777,23 +777,6 @@
                  * STEP 2:
                  * Terms & Conditions checkbox
                  */
-
-                const termsAccepted =
-                    document.getElementById(
-                        "termsAccepted"
-                    );
-
-
-                const termsError =
-                    document.getElementById(
-                        "termsError"
-                    );
-
-
-                const rememberMe =
-                    document.getElementById(
-                        "rememberMe"
-                    );
 
 
                 /* =================================================
@@ -916,7 +899,7 @@
 
                 /* =================================================
                    SHOW TERMS ERROR
-                   
+
                    This is the important STEP 2 addition.
                 ================================================== */
 
@@ -1095,7 +1078,7 @@
 
                 /* =================================================
                    TERMS CHECKBOX EVENT
-                   
+
                    When the citizen checks the checkbox,
                    the Terms error disappears.
                 ================================================== */
@@ -1218,38 +1201,7 @@
                                 valid =
                                     false;
 
-                            }
-
-
-                            /* =====================================
-                               TERMS & CONDITIONS VALIDATION
-                               
-                               IMPORTANT:
-                               Login will NOT continue unless
-                               this checkbox is checked.
-                            ====================================== */
-
-                            if (
-                                !termsAccepted ||
-                                !termsAccepted.checked
-                            ) {
-
-                                showTermsError(
-                                    "Please accept the Terms & Conditions before logging in."
-                                );
-
-
-                                valid =
-                                    false;
-
-                            }
-
-
-                            /* =====================================
-                               STOP LOGIN IF ANY VALIDATION FAILED
-                            ====================================== */
-
-                            if (!valid) {
+                            }if (!valid) {
                                 return;
                             }
 
@@ -1281,7 +1233,7 @@
 
                                 /* =====================================
                                    30-SECOND LOGIN TIMEOUT
-                                   
+
                                    If the backend does not respond within
                                    30 seconds, cancel the request and show
                                    a clear timeout message.
@@ -1509,36 +1461,7 @@
                                         )
                                     );
 
-                                }
-
-
-                                /* =================================
-                                   REMEMBER ME
-                                ================================== */
-
-                                if (
-                                    rememberMe &&
-                                    rememberMe.checked
-                                ) {
-
-                                    localStorage.setItem(
-                                        "rationPortalRememberMe",
-                                        "true"
-                                    );
-
-                                }
-
-                                else {
-
-                                    localStorage.removeItem(
-                                        "rationPortalRememberMe"
-                                    );
-
-                                }
-
-
-                                /* =================================
-                                   SUCCESS MESSAGE
+                                }/* ================================= SUCCESS MESSAGE
                                 ================================== */
 
                                 showAlert(
@@ -1679,29 +1602,7 @@
                             .getFullYear();
 
                 }
-
-
-                /* =================================================
-                   ALREADY LOGGED-IN USER
-                   
-                   If a token already exists, send the citizen
-                   directly to the dashboard.
-                ================================================== */
-
-                const existingToken =
-                    localStorage.getItem(
-                        "rationPortalToken"
-                    );
-
-
-                if (existingToken) {
-
-                    window.location.href =
-                        "citizen-dashboard.html";
-
-                }
-
-            }
+if (window.rationAuth && typeof window.rationAuth.clearSession === "function") { window.rationAuth.clearSession(); }}
 
         );
 
