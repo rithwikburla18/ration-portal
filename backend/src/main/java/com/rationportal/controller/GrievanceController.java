@@ -22,63 +22,172 @@ public class GrievanceController {
         this.repository = repository;
     }
 
+    private boolean isAuthenticated(Authentication authentication) {
+        return authentication != null
+                && authentication.isAuthenticated()
+                && authentication.getName() != null
+                && !authentication.getName().isBlank();
+    }
+
     private boolean isAdmin(Authentication authentication) {
-        return authentication != null &&
-            authentication.getAuthorities().stream()
-                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        return isAuthenticated(authentication)
+                && authentication.getAuthorities()
+                .stream()
+                .anyMatch(authority ->
+                        "ROLE_ADMIN".equals(authority.getAuthority()));
+    }
+
+    private boolean isOwner(
+            Grievance grievance,
+            Authentication authentication) {
+
+        return isAuthenticated(authentication)
+                && grievance != null
+                && grievance.getSubmittedByEmail() != null
+                && grievance.getSubmittedByEmail()
+                .equalsIgnoreCase(authentication.getName());
     }
 
     @PostMapping
     public ResponseEntity<?> submit(
-        @RequestBody Grievance grievance,
-        Authentication authentication
-    ) {
-        if (authentication == null || !authentication.isAuthenticated()) {
+            @RequestBody Grievance grievance,
+            Authentication authentication) {
+
+        if (!isAuthenticated(authentication)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("message", "Authentication required."));
+                    .body(Map.of(
+                            "message",
+                            "Authentication required."
+                    ));
         }
 
-        if (grievance.getGrievanceNumber() == null ||
-            grievance.getGrievanceNumber().isBlank()) {
+        if (grievance == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of(
+                            "message",
+                            "Grievance details are required."
+                    ));
+        }
+
+        if (grievance.getGrievanceNumber() == null
+                || grievance.getGrievanceNumber().isBlank()) {
+
             grievance.setGrievanceNumber(
-                "GRV" + UUID.randomUUID().toString().replace("-", "")
-                    .substring(0, 8).toUpperCase()
+                    "GRV"
+                            + UUID.randomUUID()
+                            .toString()
+                            .replace("-", "")
+                            .substring(0, 8)
+                            .toUpperCase()
             );
         }
 
-        grievance.setSubmittedByEmail(authentication.getName().toLowerCase());
-        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(grievance));
+        /*
+         * NEVER trust submittedByEmail from the browser.
+         * The authenticated server identity is authoritative.
+         */
+        grievance.setSubmittedByEmail(
+                authentication.getName()
+                        .trim()
+                        .toLowerCase()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(repository.save(grievance));
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll(Authentication authentication) {
+    public ResponseEntity<?> getAll(
+            Authentication authentication) {
+
+        if (!isAuthenticated(authentication)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(
+                            "message",
+                            "Authentication required."
+                    ));
+        }
+
+        /*
+         * Administrator can view every grievance.
+         */
         if (isAdmin(authentication)) {
             return ResponseEntity.ok(repository.findAll());
         }
 
-        List<Grievance> own = repository.findAll().stream()
-            .filter(g -> g.getSubmittedByEmail() != null &&
-                g.getSubmittedByEmail().equalsIgnoreCase(authentication.getName()))
-            .collect(Collectors.toList());
+        /*
+         * Citizen can view ONLY their own grievances.
+         */
+        List<Grievance> own =
+                repository.findAll()
+                        .stream()
+                        .filter(grievance ->
+                                isOwner(grievance, authentication))
+                        .collect(Collectors.toList());
 
         return ResponseEntity.ok(own);
     }
 
     @GetMapping("/{number}")
     public ResponseEntity<?> getByNumber(
-        @PathVariable String number,
-        Authentication authentication
-    ) {
+            @PathVariable String number,
+            Authentication authentication) {
+
+        if (!isAuthenticated(authentication)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(
+                            "message",
+                            "Authentication required."
+                    ));
+        }
+
+        if (number == null || number.isBlank()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of(
+                            "message",
+                            "Grievance number is required."
+                    ));
+        }
+
         return repository.findByGrievanceNumber(number)
-            .map(grievance -> {
-                if (isAdmin(authentication) ||
-                    (grievance.getSubmittedByEmail() != null &&
-                     grievance.getSubmittedByEmail().equalsIgnoreCase(authentication.getName()))) {
-                    return ResponseEntity.ok(grievance);
-                }
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "You are not authorized to view this grievance."));
-            })
-            .orElse(ResponseEntity.notFound().build());
+                .map(grievance -> {
+
+                    /*
+                     * Admin can view any grievance.
+                     */
+                    if (isAdmin(authentication)) {
+                        return ResponseEntity.ok(grievance);
+                    }
+
+                    /*
+                     * Citizen can view only their own grievance.
+                     */
+                    if (isOwner(grievance, authentication)) {
+                        return ResponseEntity.ok(grievance);
+                    }
+
+                    /*
+                     * Do not reveal another citizen's grievance.
+                     */
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(Map.of(
+                                    "message",
+                                    "You are not authorized to view this grievance."
+                            ));
+                })
+                .orElse(
+                        ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(Map.of(
+                                        "message",
+                                        "Grievance not found."
+                                ))
+                );
     }
+
+    /*
+     * Citizens are deliberately not given a PUT/PATCH/DELETE endpoint.
+     *
+     * Grievance status and administrative actions must be handled
+     * through a dedicated administrator-only workflow.
+     */
 }
