@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -536,7 +536,9 @@
             }
         }
     .grievance-declaration { display:flex; align-items:flex-start; gap:10px; position:relative; color:#526a80; font-size:10px; line-height:1.55; cursor:pointer; } .grievance-declaration input { position:absolute; opacity:0; pointer-events:none; } .declaration-box { flex:0 0 18px; width:18px; height:18px; display:grid; place-items:center; margin-top:1px; border:2px solid #b9c8d5; border-radius:4px; color:transparent; background:#fff; font-size:12px; font-weight:900; transition:.2s ease; } .grievance-declaration input:checked + .declaration-box { border-color:#0871c9; color:#fff; background:#0871c9; } .grievance-declaration input:focus-visible + .declaration-box { outline:3px solid rgba(8,127,229,.18); outline-offset:2px; } .declaration-text { flex:1; }</style>
-<script src="../js/i18n.js?v=20261004"></script></head>
+<script src="../js/i18n.js?v=20261004"></script>    <link rel="stylesheet" href="../css/final-theme.css?v=20261009">
+    <meta name="theme-color" content="#0a2f57">
+</head>
 
 <body>
 
@@ -1669,7 +1671,7 @@ form.addEventListener("submit",function(){
   if(remaining>0){
    var display=minutes+":"+String(secs).padStart(2,"0");
    setButtonText("Submitting... "+display);
-   box.textContent="Your grievance is being submitted securely. Please wait Ã¢â‚¬â€ this may take up to 1 minute. Time remaining: "+display;
+   box.textContent="Your grievance is being submitted securely. Please wait — this may take up to 1 minute. Time remaining: "+display;
   }else{
    finish("The submission is taking longer than expected. Please do not click Submit again. We are still waiting for the server response.",true);
    setButtonText("Still Processing...");
@@ -1679,4 +1681,3 @@ form.addEventListener("submit",function(){
 })();
 </script></body>
 </html>
-

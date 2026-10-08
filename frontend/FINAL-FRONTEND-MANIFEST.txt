@@ -1,0 +1,44 @@
+FINAL RATION PORTAL FRONTEND REDESIGN
+===================================
+Original supplied frontend files: 38
+Package files including final theme: 39
+
+config.js
+css\redesign.css
+css\style.css
+index.html
+js\app.js
+js\auth-guard.js
+js\config.js
+js\i18n.js
+js\pwa.js
+js\register-ui.js
+js\script.js
+pages\about.html
+pages\admin-login.html
+pages\admin-portal.html
+pages\application-status.html
+pages\applications.html
+pages\apply-ration-card.html
+pages\citizen-dashboard.html
+pages\contact.html
+pages\distribution.html
+pages\e-ration-card.html
+pages\fair-price-shop.html
+pages\family.html
+pages\forgot-password.html
+pages\grievance-dashboard.html
+pages\grievance-status.html
+pages\grievance.html
+pages\login.html
+pages\onorc.html
+pages\privacy.html
+pages\ration-card.html
+pages\register-password.html
+pages\register.html
+pages\reset-password.html
+pages\search.html
+pages\terms.html
+pages\transparency.html
+service-worker.js
+css\final-theme.css
