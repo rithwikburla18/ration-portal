@@ -1,5 +1,7 @@
 package com.rationportal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -75,6 +77,7 @@ public class User {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPasswordHash() {
         return passwordHash;
     }
@@ -107,6 +110,7 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    @JsonIgnore
     public String getResetPasswordToken() {
         return resetPasswordToken;
     }
@@ -115,6 +119,7 @@ public class User {
         this.resetPasswordToken = resetPasswordToken;
     }
 
+    @JsonIgnore
     public LocalDateTime getResetPasswordTokenExpiry() {
         return resetPasswordTokenExpiry;
     }

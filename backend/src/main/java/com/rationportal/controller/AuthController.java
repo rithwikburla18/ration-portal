@@ -361,17 +361,11 @@ public class AuthController {
                         .findByEmail(email)
                         .orElse(null);
 
-        /*
-         * Do not reveal whether an email is registered.
-         */
-        if (user == null) {
+        final String publicMessage = "If an account exists for this email, password reset instructions will be provided.";
 
-            return ResponseEntity.ok(
-                    Map.of(
-                            "message",
-                            "If an account exists for this email, password reset instructions will be provided."
-                    )
-            );
+        /* Use the same public response for registered and unknown email addresses. */
+        if (user == null) {
+            return ResponseEntity.ok(Map.of("message", publicMessage));
         }
 
         String resetToken =
@@ -391,17 +385,13 @@ public class AuthController {
 
         userRepository.save(user);
 
-        mailService.sendPasswordResetEmail(
-                email,
-                resetToken
-        );
+        try {
+            mailService.sendPasswordResetEmail(email, resetToken);
+        } catch (Exception mailException) {
+            System.err.println("PASSWORD RESET EMAIL WARNING: delivery failed (" + mailException.getClass().getSimpleName() + ").");
+        }
 
-        return ResponseEntity.ok(
-                Map.of(
-                        "message",
-                        "Password reset request created."
-                )
-        );
+        return ResponseEntity.ok(Map.of("message", publicMessage));
     }
 
     @PostMapping("/reset-password")

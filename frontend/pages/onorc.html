@@ -175,7 +175,17 @@ form.addEventListener("submit",async function(event){
   var response=await window.rationAuth.authenticatedFetch("https://ration-portal-backend.onrender.com/api/onorc/portability",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({rationCardNumber:card,homeState:homeState,homeDistrict:homeDistrict,destinationState:destinationState,destinationDistrict:destinationDistrict})});
   var data={}; try{data=await response.json();}catch(_){ }
   if(!response.ok){throw new Error(data.message||"Unable to create ONORC portability request.");}
-  result.innerHTML="<strong>ONORC request created</strong><br><br>Reference: "+(data.referenceNumber||"-")+"<br>Status: "+(data.status||"REQUESTED")+"<br>Destination: "+destinationState+" — "+destinationDistrict;
+  result.replaceChildren();
+  var heading = document.createElement("strong");
+  heading.textContent = "ONORC request created";
+  result.appendChild(heading);
+  result.appendChild(document.createElement("br"));
+  result.appendChild(document.createElement("br"));
+  result.appendChild(document.createTextNode("Reference: " + (data.referenceNumber || "-")));
+  result.appendChild(document.createElement("br"));
+  result.appendChild(document.createTextNode("Status: " + (data.status || "REQUESTED")));
+  result.appendChild(document.createElement("br"));
+  result.appendChild(document.createTextNode("Destination: " + destinationState + " - " + destinationDistrict));
   result.classList.add("show");
  }catch(e){result.textContent=e.message||"Unable to submit ONORC request.";result.classList.add("show");}
 });
