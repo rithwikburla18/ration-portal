@@ -1,0 +1,448 @@
+/*
+ * RATION PORTAL - PATRIOTIC LANDSCAPE THEME
+ * Uses the original user-supplied landscape artwork.
+ * Educational project; not an official government website.
+ */
+
+:root {
+    --rp-patriotic-navy: #092744;
+    --rp-patriotic-blue: #15508b;
+    --rp-patriotic-saffron: #ed8421;
+    --rp-patriotic-green: #187735;
+    --rp-patriotic-gold: #c89a43;
+    --rp-patriotic-cream: #fff9ef;
+    --rp-patriotic-border: #e5d7bd;
+}
+
+/* Global page background */
+html {
+    background: #f8f6f0 !important;
+}
+
+body {
+    background:
+        radial-gradient(
+            circle at 5% 8%,
+            rgba(237, 132, 33, .09),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 95% 20%,
+            rgba(24, 119, 53, .075),
+            transparent 25%
+        ),
+        linear-gradient(
+            180deg,
+            #fffdf8 0%,
+            #f5f7f3 100%
+        ) !important;
+    color: #263b4b;
+}
+
+/* National tricolour accent */
+body::before {
+    background: linear-gradient(
+        90deg,
+        var(--rp-patriotic-saffron) 0 33.333%,
+        #fff 33.333% 66.666%,
+        var(--rp-patriotic-green) 66.666% 100%
+    ) !important;
+    height: 5px !important;
+}
+
+.gov-bar,
+.gov-strip,
+.rp-access-bar,
+.admin-top-line {
+    background: linear-gradient(
+        90deg,
+        #071d32,
+        #123e60,
+        #071d32
+    ) !important;
+}
+
+/* Shared header styling */
+header,
+.header,
+.brand-header,
+.rp-header {
+    border-bottom-color: rgba(200, 154, 67, .42) !important;
+    box-shadow: 0 8px 24px rgba(46, 39, 22, .075) !important;
+}
+
+.brand-title,
+.rp-brand-title,
+.admin-brand-title,
+h1,
+h2,
+h3,
+.section-title,
+.section-heading,
+.section-header h2,
+.section-card h2,
+.card-heading,
+.admin-panel-title {
+    text-wrap: pretty;
+}
+
+/* Cards and content panels */
+.card,
+.service-card,
+.stat-card,
+.form-card,
+.search-panel,
+.auth-card,
+.panel,
+.panel-card,
+.summary-card,
+.metric-card,
+.admin-stat-card,
+.application-stat,
+.applications-card,
+.status-card,
+.application-card,
+.grievance-card,
+.fps-card,
+.transparency-intro,
+.info-card,
+.info-box,
+.detail-box,
+.quota-card,
+.entitlement-card,
+.onorc-card,
+.onorc-stat,
+.card-section,
+.table-card,
+.intro-card,
+.side-card,
+.rp-feature-card,
+.rp-service-card,
+.rp-stat-card,
+.rp-dashboard-panel,
+.rp-search-card,
+.ration-card-preview,
+.digital-card {
+    border-color: var(--rp-patriotic-border) !important;
+    box-shadow: 0 8px 26px rgba(65, 49, 18, .075) !important;
+}
+
+.card::before,
+.auth-card::before,
+.admin-login-card::before,
+.rp-feature-card::before {
+    background: linear-gradient(
+        90deg,
+        var(--rp-patriotic-saffron),
+        #fff,
+        var(--rp-patriotic-green)
+    ) !important;
+}
+
+/* Primary buttons */
+.btn-primary,
+.primary-button,
+.primary-btn,
+.onorc-primary,
+.grievance-submit,
+.admin-login-button,
+.status-search-button,
+.rp-login-button,
+.rp-search-button {
+    background: linear-gradient(
+        135deg,
+        #124a7a,
+        #15508b
+    ) !important;
+    border-color: rgba(237, 132, 33, .55) !important;
+    box-shadow: 0 8px 20px rgba(9, 39, 68, .17) !important;
+}
+
+.btn-primary:hover,
+.primary-button:hover,
+.primary-btn:hover,
+.grievance-submit:hover,
+.admin-login-button:hover,
+.status-search-button:hover,
+.rp-login-button:hover,
+.rp-search-button:hover {
+    background: linear-gradient(
+        135deg,
+        #0b365d,
+        #124a7a
+    ) !important;
+}
+
+.btn-secondary,
+.secondary-button,
+.secondary-btn,
+.onorc-secondary,
+.grievance-cancel {
+    border-color: #d5c29f !important;
+    color: #123e60 !important;
+    background: #fffdf7 !important;
+}
+
+/* Keyboard accessibility */
+:focus-visible {
+    outline-color: rgba(237, 132, 33, .65) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus,
+.search-input:focus {
+    border-color: var(--rp-patriotic-blue) !important;
+    box-shadow: 0 0 0 4px rgba(21, 80, 139, .11) !important;
+}
+
+/* Inner page hero banners */
+.page-hero,
+.applications-hero,
+.application-hero,
+.status-hero,
+.grievance-hero,
+.dashboard-hero,
+.fps-hero,
+.transparency-hero,
+.onorc-hero {
+    background:
+        radial-gradient(
+            circle at 87% 18%,
+            rgba(237, 132, 33, .24),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 12% 90%,
+            rgba(24, 119, 53, .22),
+            transparent 28%
+        ),
+        linear-gradient(
+            125deg,
+            #092744,
+            #15508b
+        ) !important;
+
+    border-bottom: 4px solid transparent !important;
+    border-image: linear-gradient(
+        90deg,
+        var(--rp-patriotic-saffron),
+        #fff,
+        var(--rp-patriotic-green)
+    ) 1 !important;
+}
+
+/* =========================================================
+   HOMEPAGE HERO - SUPPLIED LANDSCAPE IMAGE
+   ========================================================= */
+
+.rp-hero {
+    position: relative !important;
+    min-height: 690px !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+    border-radius: 0 !important;
+
+    border-bottom: 5px solid transparent !important;
+    border-image: linear-gradient(
+        90deg,
+        var(--rp-patriotic-saffron),
+        #fff,
+        var(--rp-patriotic-green)
+    ) 1 !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(5, 25, 43, .20),
+            rgba(5, 25, 43, .04) 55%,
+            rgba(5, 25, 43, .12)
+        ),
+        url("../assets/images/patriotic-hero.png")
+            center center / cover no-repeat !important;
+
+    box-shadow:
+        inset 0 -60px 80px rgba(14, 36, 29, .13),
+        0 14px 36px rgba(8, 38, 66, .12) !important;
+}
+
+/* Gentle overlay; the supplied artwork remains visible */
+.rp-hero::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 249, 239, .12),
+        rgba(255, 249, 239, .03) 55%,
+        rgba(255, 249, 239, .08)
+    ) !important;
+    pointer-events: none !important;
+}
+
+.rp-hero::after {
+    display: none !important;
+}
+
+/* Hide the previous CSS-drawn landscape decorations */
+.rp-hero-ribbon,
+.rp-light-ray,
+.rp-particles,
+.rp-chakra,
+.rp-monument,
+.rp-hero-visual {
+    display: none !important;
+}
+
+/* Place existing homepage content over the artwork */
+.rp-hero-inner {
+    position: relative !important;
+    z-index: 2 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: min(1180px, calc(100% - 36px)) !important;
+    min-height: 690px !important;
+    padding: 56px 0 82px !important;
+}
+
+.rp-hero-copy {
+    width: min(880px, 100%) !important;
+    max-width: 880px !important;
+    margin: 0 auto !important;
+    padding: clamp(22px, 3.2vw, 42px) !important;
+
+    border: 1px solid rgba(255, 255, 255, .94) !important;
+    border-radius: 24px !important;
+
+    background: rgba(255, 253, 248, .92) !important;
+    box-shadow: 0 22px 60px rgba(6, 27, 49, .22) !important;
+
+    -webkit-backdrop-filter: blur(7px) !important;
+    backdrop-filter: blur(7px) !important;
+}
+
+/* Homepage headline colours */
+.rp-hero-kicker {
+    color: #15508b !important;
+}
+
+.rp-hero .rp-hero-title {
+    color: var(--rp-patriotic-navy) !important;
+    font-size: clamp(32px, 4.3vw, 56px) !important;
+    line-height: 1.04 !important;
+    letter-spacing: -.035em !important;
+    text-shadow: none !important;
+}
+
+.rp-title-saffron {
+    color: #d96f0e !important;
+}
+
+.rp-title-blue {
+    color: #15508b !important;
+}
+
+.rp-title-green {
+    color: #187735 !important;
+}
+
+.rp-hero .rp-hero-subtitle,
+.rp-hero .rp-hero-tagline {
+    color: #28465c !important;
+    text-shadow: none !important;
+}
+
+/* Ration search panel */
+.rp-search-card {
+    border: 1px solid #e6d5b5 !important;
+    background: rgba(255, 255, 255, .98) !important;
+    box-shadow: 0 12px 28px rgba(34, 47, 36, .12) !important;
+}
+
+/* Hero benefit chips */
+.rp-hero-chip {
+    border: 1px solid rgba(200, 154, 67, .38) !important;
+    background: rgba(255, 255, 255, .91) !important;
+    color: #21425a !important;
+}
+
+/* Services panel */
+.rp-services {
+    margin-top: -44px !important;
+}
+
+.rp-services-shell {
+    border-color: rgba(200, 154, 67, .32) !important;
+    box-shadow: 0 22px 58px rgba(49, 42, 25, .12) !important;
+}
+
+/* Shared footer */
+footer,
+.site-footer {
+    background: linear-gradient(
+        110deg,
+        #071d32,
+        #103b5e
+    ) !important;
+
+    border-top: 4px solid transparent !important;
+    border-image: linear-gradient(
+        90deg,
+        var(--rp-patriotic-saffron),
+        #fff,
+        var(--rp-patriotic-green)
+    ) 1 !important;
+}
+
+.footer-links a:hover,
+footer a:hover,
+.site-footer a:hover {
+    color: #ffd6a8 !important;
+}
+
+/* Responsive layout */
+@media (max-width: 760px) {
+    .rp-hero,
+    .rp-hero-inner {
+        min-height: 650px !important;
+    }
+
+    .rp-hero {
+        background-position: center center !important;
+    }
+
+    .rp-hero-inner {
+        width: calc(100% - 24px) !important;
+        padding: 34px 0 62px !important;
+    }
+
+    .rp-hero-copy {
+        padding: 20px 16px !important;
+        border-radius: 17px !important;
+    }
+
+    .rp-hero .rp-hero-title {
+        font-size: clamp(30px, 8vw, 42px) !important;
+    }
+
+    .rp-hero-chips {
+        justify-content: center !important;
+    }
+
+    .rp-services {
+        margin-top: -28px !important;
+    }
+}
+
+/* Respect reduced-motion accessibility settings */
+@media (prefers-reduced-motion: reduce) {
+    .rp-hero *,
+    .rp-hero *::before,
+    .rp-hero *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
