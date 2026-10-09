@@ -142,3 +142,6 @@ STAGE10-30-MASTER-SYNC-BACKUP-*/
 STAGE10-30-DASHBOARD-SYNC-BACKUP-*/
 STAGE10-30-PRODUCTION-AUDIT-*.txt
 frontend-final-backup-*/
+
+# Local encoding backups
+*.before-encoding-fix
