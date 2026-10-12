@@ -1174,8 +1174,9 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
 
 
             showMessage(
-                error.message ||
-                "Unable to load applications.",
+                error instanceof TypeError
+                    ? "Cannot reach the Ration Portal server. Check backend availability and CORS settings."
+                    : (error.message || "Unable to load applications."),
                 "error"
             );
 
@@ -1556,6 +1557,14 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
 
                     showLoginAlert(
                         "Login request timed out after 30 seconds. Please try again.",
+                        "error"
+                    );
+
+                }
+                else if (error instanceof TypeError) {
+
+                    showLoginAlert(
+                        "Cannot reach the Ration Portal server. Check that the backend is online and its CORS settings allow this website. The page is open, but the login API could not be reached.",
                         "error"
                     );
 
