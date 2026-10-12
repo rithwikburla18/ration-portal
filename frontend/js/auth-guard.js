@@ -50,8 +50,8 @@
             });
             if (!response.ok) return false;
             const result = await response.json();
-            return !!result && result.approved !== false &&
-                (!result.status || ["APPROVED", "ACTIVE"].includes(String(result.status).toUpperCase()));
+            return !!result && (result.approved === true ||
+                ["APPROVED", "ACTIVE"].includes(String(result.status || "").toUpperCase()));
         } catch (_) {
             return false;
         }
