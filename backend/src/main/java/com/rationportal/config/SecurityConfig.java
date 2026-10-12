@@ -1,6 +1,8 @@
 package com.rationportal.config;
 
 import com.rationportal.security.JwtAuthenticationFilter;
+import com.rationportal.security.ApprovedCitizenAccessFilter;
+import com.rationportal.repository.RationCardRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,12 +26,15 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final ApprovedCitizenAccessFilter approvedCitizenAccessFilter;
     private final String allowedOrigins;
 
     public SecurityConfig(
             @Lazy JwtAuthenticationFilter jwtAuthenticationFilter,
+            RationCardRepository rationCardRepository,
             @Value("${app.cors.allowed-origins:http://localhost:5500,http://127.0.0.1:5500,https://ration-portal-frontend.onrender.com}") String allowedOrigins) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.approvedCitizenAccessFilter = new ApprovedCitizenAccessFilter(rationCardRepository);
         this.allowedOrigins = allowedOrigins;
     }
 
@@ -60,7 +65,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/dashboard/**").hasAnyRole("CITIZEN", "ADMIN")
                         .requestMatchers("/api/onorc/**").hasAnyRole("CITIZEN", "ADMIN")
                         .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(approvedCitizenAccessFilter, JwtAuthenticationFilter.class);
         return http.build();
     }
 
