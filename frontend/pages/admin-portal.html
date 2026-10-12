@@ -22,15 +22,9 @@
 
     <title>Admin Portal | Ration Portal</title>
 
-    <link
-        rel="stylesheet"
-        href="../css/style.css"
-    >
+    
 
-    <link
-        rel="stylesheet"
-        href="../css/redesign.css"
-    >
+    
 
     <link
         rel="preconnect"
@@ -49,595 +43,61 @@
     >
 
     <script src="../js/i18n.js?v=20261005"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{colors:{portal:{navy:"#0a2240",saffron:"#f28f1c",green:"#138808"}}}}};</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
 
 
     <style>
-
-        :root {
-            --admin-navy: #06284a;
-            --admin-blue: #0871c9;
-            --admin-saffron: #ff9933;
-            --admin-green: #138808;
-            --admin-bg: #f4f7fb;
-            --admin-white: #ffffff;
-            --admin-border: #dbe3ec;
-            --admin-text: #172033;
-            --admin-muted: #64748b;
-            --admin-danger: #b42318;
-            --admin-success: #067647;
-            --admin-warning: #b54708;
-        }
-
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        body {
-            margin: 0;
-            background:
-                linear-gradient(
-                    180deg,
-                    #ffffff 0%,
-                    var(--admin-bg) 100%
-                );
-            color: var(--admin-text);
-            font-family: Inter, Arial, Helvetica, sans-serif;
-        }
-
-
-        .admin-top-line {
-            height: 5px;
-            background:
-                linear-gradient(
-                    90deg,
-                    var(--admin-saffron) 0 33.33%,
-                    #ffffff 33.33% 66.66%,
-                    var(--admin-green) 66.66% 100%
-                );
-        }
-
-
-        .admin-header {
-            background: var(--admin-navy);
-            color: white;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-        }
-
-
-        .admin-header-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 18px 28px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-
-        .admin-brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-
-        .admin-emblem {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            background: white;
-            color: #0871c9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-
-        .admin-brand-title {
-            font-size: 22px;
-            font-weight: 800;
-        }
-
-
-        .admin-brand-subtitle {
-            margin-top: 3px;
-            font-size: 12px;
-            opacity: 0.82;
-        }
-
-
-        .admin-header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-
-        .admin-role-badge {
-            padding: 8px 13px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-
-        .admin-logout {
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: transparent;
-            color: white;
-            padding: 9px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-
-        .admin-logout:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-
-        .admin-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px 24px 60px;
-        }
-
-
-        .admin-login-wrapper {
-            min-height: calc(100vh - 100px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-
-        .admin-login-card {
-            width: 100%;
-            max-width: 500px;
-            background: white;
-            border: 1px solid var(--admin-border);
-            border-radius: 18px;
-            padding: 38px;
-            box-shadow: 0 18px 45px rgba(6, 40, 74, 0.12);
-        }
-
-
-        .admin-login-icon {
-            width: 72px;
-            height: 72px;
-            margin: 0 auto 18px;
-            border-radius: 18px;
-            background: #eaf4ff;
-            color: var(--admin-blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 34px;
-        }
-
-
-        .admin-login-title {
-            text-align: center;
-            margin: 0;
-            color: var(--admin-navy);
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-
-        .admin-login-subtitle {
-            text-align: center;
-            color: var(--admin-muted);
-            margin: 10px 0 28px;
-            line-height: 1.6;
-        }
-
-
-        .admin-alert {
-            display: none;
-            padding: 13px 15px;
-            border-radius: 9px;
-            margin-bottom: 18px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-
-        .admin-alert.show {
-            display: block;
-        }
-
-
-        .admin-alert.error {
-            background: #fff1f0;
-            border: 1px solid #f4b8b4;
-            color: var(--admin-danger);
-        }
-
-
-        .admin-alert.success {
-            background: #ecfdf3;
-            border: 1px solid #a6e5c1;
-            color: var(--admin-success);
-        }
-
-
-        .admin-form-group {
-            margin-bottom: 18px;
-        }
-
-
-        .admin-form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--admin-text);
-        }
-
-
-        .admin-input {
-            width: 100%;
-            padding: 13px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 9px;
-            font-size: 15px;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-
-        .admin-input:focus {
-            border-color: var(--admin-blue);
-            box-shadow: 0 0 0 3px rgba(8, 113, 201, 0.12);
-        }
-
-
-        .admin-login-button {
-            width: 100%;
-            border: none;
-            border-radius: 9px;
-            padding: 14px;
-            background: var(--admin-navy);
-            color: white;
-            font-size: 15px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-
-        .admin-login-button:hover {
-            background: #0a3a68;
-        }
-
-
-        .admin-login-button:disabled {
-            opacity: 0.65;
-            cursor: not-allowed;
-        }
-
-
-        .admin-back-link {
-            display: block;
-            margin-top: 20px;
-            text-align: center;
-            color: var(--admin-blue);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-
-        .admin-dashboard {
-            display: none;
-        }
-
-
-        .admin-dashboard.show {
-            display: block;
-        }
-
-
-        .admin-page-title {
-            margin-bottom: 6px;
-            color: var(--admin-navy);
-            font-size: 30px;
-            font-weight: 800;
-        }
-
-
-        .admin-page-subtitle {
-            margin-top: 0;
-            color: var(--admin-muted);
-        }
-
-
-        .admin-stats {
-            display: grid;
-            grid-template-columns:
-                repeat(4, minmax(0, 1fr));
-            gap: 18px;
-            margin: 28px 0;
-        }
-
-
-        .admin-stat-card {
-            background: white;
-            border: 1px solid var(--admin-border);
-            border-radius: 14px;
-            padding: 22px;
-            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
-        }
-
-
-        .admin-stat-label {
-            color: var(--admin-muted);
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-
-        .admin-stat-value {
-            margin-top: 8px;
-            color: var(--admin-navy);
-            font-size: 30px;
-            font-weight: 800;
-        }
-
-
-        .admin-panel {
-            background: white;
-            border: 1px solid var(--admin-border);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
-        }
-
-
-        .admin-panel-header {
-            padding: 20px 22px;
-            border-bottom: 1px solid var(--admin-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-
-        .admin-panel-title {
-            margin: 0;
-            font-size: 19px;
-            color: var(--admin-navy);
-        }
-
-
-        .admin-refresh {
-            border: 1px solid #cbd5e1;
-            background: white;
-            color: var(--admin-navy);
-            border-radius: 8px;
-            padding: 9px 14px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-
-        .admin-refresh:hover {
-            background: #f8fafc;
-        }
-
-
-        .admin-loading {
-            padding: 30px;
-            text-align: center;
-            color: var(--admin-muted);
-        }
-
-
-        .admin-table-wrapper {
-            overflow-x: auto;
-        }
-
-
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 950px;
-        }
-
-
-        .admin-table th {
-            background: #f8fafc;
-            color: #475569;
-            padding: 14px 16px;
-            text-align: left;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            border-bottom: 1px solid var(--admin-border);
-        }
-
-
-        .admin-table td {
-            padding: 15px 16px;
-            border-bottom: 1px solid #edf1f5;
-            vertical-align: middle;
-            font-size: 14px;
-        }
-
-
-        .admin-table tr:hover td {
-            background: #fbfdff;
-        }
-
-
-        .application-number {
-            color: var(--admin-blue);
-            font-weight: 800;
-        }
-
-
-        .status-badge {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-        }
-
-
-        .status-submitted {
-            background: #eaf4ff;
-            color: #075985;
-        }
-
-
-        .status-pending {
-            background: #fff7ed;
-            color: #9a3412;
-        }
-
-
-        .status-verified {
-            background: #ecfdf3;
-            color: #047857;
-        }
-
-
-        .status-approved {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-
-        .status-rejected {
-            background: #fff1f2;
-            color: #be123c;
-        }
-
-
-        .status-select {
-            min-width: 130px;
-            padding: 8px 9px;
-            border: 1px solid #cbd5e1;
-            border-radius: 7px;
-            background: white;
-            font-size: 13px;
-        }
-
-
-        .status-update-button {
-            margin-top: 6px;
-            border: none;
-            background: var(--admin-blue);
-            color: white;
-            border-radius: 7px;
-            padding: 8px 11px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-
-        .status-update-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-
-        .admin-empty {
-            display: none;
-            padding: 40px;
-            text-align: center;
-            color: var(--admin-muted);
-        }
-
-
-        .admin-empty.show {
-            display: block;
-        }
-
-
-        .admin-message {
-            display: none;
-            margin: 18px 22px 0;
-            padding: 12px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-        }
-
-
-        .admin-message.show {
-            display: block;
-        }
-
-
-        .admin-message.success {
-            background: #ecfdf3;
-            color: #067647;
-        }
-
-
-        .admin-message.error {
-            background: #fff1f0;
-            color: #b42318;
-        }
-
-
-        @media (max-width: 1000px) {
-
-            .admin-stats {
-                grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
-            }
-
-        }
-
-
-        @media (max-width: 650px) {
-
-            .admin-header-inner {
-                padding: 15px;
-            }
-
-            .admin-container {
-                padding: 22px 14px 45px;
-            }
-
-            .admin-login-card {
-                padding: 26px 20px;
-            }
-
-            .admin-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .admin-brand-subtitle {
-                display: none;
-            }
-
-            .admin-role-badge {
-                display: none;
-            }
-
-        }
-
-    </style>
+:root{color-scheme:light;--portal-navy:#0a2240;--portal-saffron:#f28f1c;--portal-green:#138808;--portal-ink:#10243b;--portal-muted:#5b6b7d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--portal-ink);background:#dce8d8 url('image_3.png') center center/cover fixed no-repeat;position:relative}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(135deg,rgba(242,143,28,.24),rgba(255,255,255,.60) 35%,rgba(19,136,8,.24)),rgba(6,24,42,.18);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.admin-top-line{height:6px;background:linear-gradient(90deg,#f28f1c 0 33.333%,#fff 33.333% 66.666%,#138808 66.666% 100%);box-shadow:0 2px 12px #0a224033}
+.admin-header{position:sticky;top:0;z-index:50;color:#fff;background:linear-gradient(110deg,rgba(10,34,64,.98),rgba(10,47,87,.95));border-bottom:1px solid #ffffff26;box-shadow:0 12px 30px #061a3030;backdrop-filter:blur(18px)}
+.admin-header-inner{max-width:1500px;margin:0 auto;padding:17px clamp(16px,3vw,42px);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.admin-brand{display:flex;align-items:center;gap:15px;min-width:0}.admin-emblem{width:56px;height:56px;flex:0 0 56px;border-radius:17px;display:grid;place-items:center;color:#0a2240;background:linear-gradient(145deg,#fff,#fff8eb);border:2px solid #f28f1c;box-shadow:0 0 0 4px #ffffff12,0 8px 22px #0003;font-size:29px}
+.admin-brand-title{font-size:clamp(19px,2vw,25px);font-weight:900;letter-spacing:-.6px;text-shadow:0 2px 14px #ffffff20}.admin-brand-subtitle{margin-top:4px;color:#e0e9f5;font-size:12px;letter-spacing:.7px;text-transform:uppercase}
+.admin-header-right{display:flex;align-items:center;gap:12px}.admin-role-badge{padding:9px 14px;border-radius:999px;background:#13880826;border:1px solid #77d76b85;color:#e5ffe1;font-size:11px;font-weight:900;letter-spacing:1px}
+.admin-logout{display:inline-flex;align-items:center;gap:8px;border:1px solid #ffffff55;background:#ffffff12;color:#fff;padding:10px 16px;border-radius:12px;cursor:pointer;font-weight:800;transition:.2s}.admin-logout:before{content:"\f2f5";font-family:"Font Awesome 6 Free";font-weight:900}.admin-logout:hover{background:#f28f1c;color:#14243a;border-color:#f28f1c;transform:translateY(-1px)}
+.admin-container{width:min(1500px,100%);margin:0 auto;padding:clamp(20px,4vw,48px) clamp(14px,3vw,40px) 64px}
+.admin-login-wrapper{min-height:calc(100vh - 100px);display:flex;align-items:center;justify-content:center;padding:26px 0}
+.admin-login-card{position:relative;isolation:isolate;overflow:hidden;width:100%;max-width:510px;padding:clamp(25px,4vw,42px);border:1px solid #ffffffb5;border-radius:28px;background:rgba(255,255,255,.88);box-shadow:0 28px 80px #071d3540,0 5px 18px #071d3512;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+.admin-login-card:before{content:"";position:absolute;z-index:-1;top:0;left:0;right:0;height:7px;background:linear-gradient(90deg,#f28f1c,#fff 50%,#138808)}
+.admin-login-icon{width:78px;height:78px;margin:0 auto 20px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(145deg,#0a2240,#174d79);border:1px solid #f28f1c;color:#fff;box-shadow:0 12px 28px #0a22403d,0 0 0 6px #0a22400b;font-size:36px}
+.admin-login-title{margin:0;text-align:center;color:var(--portal-navy);font-size:clamp(24px,3vw,31px);font-weight:900;letter-spacing:-.8px}.admin-login-subtitle{max-width:360px;margin:11px auto 28px;text-align:center;color:#5b6b7d;line-height:1.7;font-size:14px}
+.admin-alert{display:none;padding:13px 15px;border-radius:13px;margin-bottom:18px;font-size:14px;line-height:1.55}.admin-alert.show{display:block}.admin-alert.error{background:#fff1f0;border:1px solid #f4b8b4;color:#b42318}.admin-alert.success{background:#ecfdf3;border:1px solid #a6e5c1;color:#067647}
+.admin-form-group{margin-bottom:19px}.admin-form-group label{display:block;margin-bottom:9px;font-size:13px;font-weight:800;color:#18314c}
+.admin-input{width:100%;min-height:49px;padding:13px 15px;border:1px solid #cbd5e1;border-radius:13px;background:#ffffffd9;color:#10243b;font:inherit;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s,background .2s}.admin-input::placeholder{color:#94a3b8}.admin-input:focus{border-color:#f28f1c;background:#fff;box-shadow:0 0 0 4px #f28f1c26}
+.password-wrapper{position:relative;display:flex;align-items:center}.password-wrapper .admin-input{padding-right:52px}.toggle-password{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:10px;background:#edf3f8;color:#0a2240;cursor:pointer}.toggle-password:hover{background:#dbe8f3}
+.password-eye-icon{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}.toggle-password:focus-visible{outline:3px solid #f28f1c;outline-offset:2px}
+.terms-row{display:flex;align-items:flex-start;gap:10px;margin:4px 0 8px;padding:12px 14px;border-radius:12px;background:#f8fafc;border:1px solid #dce5ed;transition:border-color .2s,background .2s}.terms-row label{margin:0;font-size:12px;line-height:1.6;color:#475569;font-weight:500;cursor:pointer;user-select:none}.terms-row label a{color:#075aaa;font-weight:800;text-decoration:underline;text-underline-offset:2px}.terms-row.invalid{border-color:#dc2626;background:#fff7f7}.terms-checkbox-visible{appearance:auto!important;-webkit-appearance:checkbox!important;display:inline-block!important;visibility:visible!important;opacity:1!important;flex:0 0 17px;width:17px;height:17px;margin:2px 0 0;accent-color:#0a2240;cursor:pointer}.terms-error{display:none;color:#b42318;font-size:12px;line-height:1.5;margin:0 0 12px}.terms-error.visible{display:block}
+.admin-login-button{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;min-height:51px;margin-top:8px;border:0;border-radius:13px;background:linear-gradient(105deg,#0a2240,#174b77 68%,#138808);color:#fff;font-size:14px;font-weight:900;letter-spacing:.2px;cursor:pointer;box-shadow:0 12px 24px #0a224033;transition:transform .2s,box-shadow .2s,filter .2s}.admin-login-button:before{content:"\f2f6";font-family:"Font Awesome 6 Free";font-weight:900}.admin-login-button:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 16px 30px #0a224044}.admin-login-button:disabled{opacity:.65;cursor:not-allowed;transform:none}
+.admin-back-link{display:block;margin-top:23px;text-align:center;color:#155c91;text-decoration:none;font-size:13px;font-weight:800}.admin-back-link:hover{color:#138808;text-decoration:underline}
+.admin-dashboard{display:none}.admin-dashboard.show{display:block;animation:rise-in .45s ease both}
+.admin-page-title{position:relative;margin:0 0 8px;color:#0a2240;font-size:clamp(28px,3.5vw,39px);font-weight:950;letter-spacing:-1.2px;text-shadow:0 2px 16px #ffffffb8}.admin-page-title:before{content:"\f0f2";font-family:"Font Awesome 6 Free";font-weight:900;display:inline-grid;place-items:center;margin-right:13px;width:48px;height:48px;border-radius:15px;background:linear-gradient(145deg,#0a2240,#1c527e);color:#fff;font-size:20px;vertical-align:middle;box-shadow:0 8px 20px #0a22402b}
+.admin-page-subtitle{margin:0;color:#44586b;font-size:15px;line-height:1.7}
+.admin-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:30px 0}.admin-stat-card{position:relative;overflow:hidden;min-height:138px;padding:23px;border:1px solid #ffffffc4;border-radius:22px;background:rgba(255,255,255,.88);box-shadow:0 14px 38px #0a224019;backdrop-filter:blur(18px);transition:transform .22s,box-shadow .22s}.admin-stat-card:after{content:"";position:absolute;right:-28px;top:-38px;width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#f28f1c26,#1388081a)}
+.admin-stat-card:nth-child(1){border-top:4px solid #0a2240}.admin-stat-card:nth-child(2){border-top:4px solid #f28f1c}.admin-stat-card:nth-child(3){border-top:4px solid #138808}.admin-stat-card:nth-child(4){border-top:4px solid #d64545}.admin-stat-card:hover{transform:translateY(-4px);box-shadow:0 20px 42px #0a22402a}
+.admin-stat-label{position:relative;z-index:1;color:#596a7d;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.admin-stat-value{position:relative;z-index:1;margin-top:12px;color:#0a2240;font-size:clamp(28px,3vw,38px);font-weight:950;letter-spacing:-1px}
+.admin-panel{overflow:hidden;border:1px solid #ffffffc9;border-radius:24px;background:rgba(255,255,255,.91);box-shadow:0 20px 55px #0a224021;backdrop-filter:blur(20px)}.admin-panel-header{padding:23px clamp(16px,2.5vw,30px);border-bottom:1px solid #e3eaf0;background:linear-gradient(105deg,#ffffffeb,#eef6f0e8);display:flex;justify-content:space-between;align-items:center;gap:15px}.admin-panel-title{margin:0;color:#0a2240;font-size:clamp(17px,2vw,21px);font-weight:900}.admin-panel-title:before{content:"\f15c";font-family:"Font Awesome 6 Free";font-weight:900;margin-right:10px;color:#f28f1c}
+.admin-refresh{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #c9d8e5;background:#fff;color:#0a2240;border-radius:12px;padding:10px 15px;cursor:pointer;font-weight:800;font-size:13px;box-shadow:0 4px 12px #0a22400b;transition:.2s}.admin-refresh:before{content:"\f2f1";font-family:"Font Awesome 6 Free";font-weight:900}.admin-refresh:hover{background:#0a2240;color:#fff;border-color:#0a2240;transform:translateY(-1px)}
+.admin-loading{padding:32px;text-align:center;color:#596a7d}.admin-loading:before{content:"";display:inline-block;width:16px;height:16px;margin-right:10px;vertical-align:-3px;border:2px solid #dbe5ee;border-top-color:#f28f1c;border-radius:50%;animation:spin .8s linear infinite}
+.admin-table-wrapper{overflow:auto}.admin-table{width:100%;border-collapse:separate;border-spacing:0;min-width:950px}.admin-table th{position:sticky;top:0;background:linear-gradient(105deg,#0a2240,#174b77 65%,#138808);color:#fff;padding:16px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.9px;border-bottom:3px solid #f28f1c;white-space:nowrap}.admin-table td{padding:16px;border-bottom:1px solid #e9eef3;vertical-align:middle;font-size:13px;color:#24394d;background:#ffffffa6}.admin-table tbody tr{transition:transform .18s,box-shadow .18s}.admin-table tbody tr:hover td{background:#fff8ed}.admin-table tbody tr:hover td:first-child{box-shadow:inset 4px 0 #f28f1c}
+.application-number{color:#075b9a;font-weight:900}.status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.35px;text-transform:capitalize;white-space:nowrap;border:1px solid transparent}.status-submitted{background:#e7f2ff;color:#075985;border-color:#bfdbfe}.status-pending{background:#fff2dd;color:#9a4b00;border-color:#fed7aa}.status-verified{background:#e8f9ed;color:#087443;border-color:#bbf7d0}.status-approved{background:#dcfce7;color:#166534;border-color:#86efac}.status-rejected{background:#fff0f1;color:#be123c;border-color:#fecdd3}
+.status-select{min-width:130px;max-width:100%;padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#24394d;font-size:12px;outline:none}.status-select:focus{border-color:#f28f1c;box-shadow:0 0 0 3px #f28f1c26}.status-update-button{margin-top:6px;border:0;background:linear-gradient(105deg,#0a2240,#17643e);color:#fff;border-radius:9px;padding:9px 12px;cursor:pointer;font-size:11px;font-weight:900;box-shadow:0 4px 10px #0a224022;transition:.2s}.status-update-button:hover{background:linear-gradient(105deg,#f28f1c,#138808);color:#fff;transform:translateY(-1px)}.status-update-button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.admin-empty{display:none;padding:44px 24px;text-align:center;color:#5b6b7d}.admin-empty:before{content:"\f07b";display:block;font-family:"Font Awesome 6 Free";font-weight:900;font-size:36px;color:#9aafbf;margin-bottom:12px}.admin-empty.show{display:block}
+.admin-message{display:none;margin:18px 22px 0;padding:13px 15px;border-radius:12px;font-size:13px;line-height:1.5}.admin-message.show{display:block}.admin-message.success{background:#ecfdf3;color:#067647;border:1px solid #a6e5c1}.admin-message.error{background:#fff1f0;color:#b42318;border:1px solid #f4b8b4}
+:focus-visible{outline:3px solid #f28f1c;outline-offset:3px}@keyframes spin{to{transform:rotate(360deg)}}@keyframes rise-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1000px){.admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-container{padding-top:28px}}
+@media(max-width:650px){.admin-header-inner{padding:13px 15px}.admin-emblem{width:45px;height:45px;flex-basis:45px;font-size:24px;border-radius:14px}.admin-brand{gap:10px}.admin-brand-title{font-size:18px}.admin-brand-subtitle{font-size:9px;letter-spacing:.4px}.admin-container{padding:22px 13px 42px}.admin-login-card{padding:28px 20px;border-radius:22px}.admin-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.admin-stat-card{padding:17px;min-height:120px;border-radius:17px}.admin-stat-label{font-size:9px;letter-spacing:.5px}.admin-stat-value{font-size:29px}.admin-page-title:before{width:39px;height:39px;font-size:16px;margin-right:8px}.admin-panel{border-radius:17px}.admin-panel-header{padding:17px;align-items:flex-start}.admin-panel-title{line-height:1.4}.admin-refresh{padding:9px 11px;white-space:nowrap}.admin-role-badge{display:none}.admin-logout{padding:9px 11px;font-size:12px}.admin-login-wrapper{min-height:calc(100vh - 100px)}}
+@media(max-width:390px){.admin-brand-subtitle{display:none}.admin-stats{grid-template-columns:1fr 1fr}.admin-stat-card{padding:14px}.admin-stat-value{font-size:26px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
 
     <script src="../js/auth-guard.js?v=20261005"></script>
-    <link rel="stylesheet" href="../css/final-theme.css?v=20261009">
-    <meta name="theme-color" content="#0a2f57">
+    
+    <meta name="theme-color" content="#0a2240">
 </head>
 
 
@@ -652,9 +112,7 @@
 
         <div class="admin-brand">
 
-            <div class="admin-emblem">
-                ⚖️
-            </div>
+            <div class="admin-emblem" aria-hidden="true"><i class="fa-solid fa-landmark"></i></div>
 
             <div>
 
@@ -713,9 +171,7 @@
 
         <div class="admin-login-card">
 
-            <div class="admin-login-icon">
-                🛡️
-            </div>
+            <div class="admin-login-icon" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></div>
 
             <h1 class="admin-login-title">
                 Administrator Login
@@ -760,10 +216,31 @@
                         Password
                     </label>
 
-                    <div class="password-wrapper"><input id="adminPassword" class="admin-input" type="password" autocomplete="current-password" placeholder="Enter administrator password" required><button type="button" class="toggle-password" id="toggleAdminPassword" data-password-toggle="adminPassword" aria-label="Show password" title="Show password" aria-pressed="false"><span aria-hidden="true">◉</span></button></div>
+                    <div class="password-wrapper">
+                        <input id="adminPassword" class="admin-input" type="password" autocomplete="current-password" placeholder="Enter administrator password" required>
+                        <button type="button" class="toggle-password" id="toggleAdminPassword" aria-label="Show password" title="Show password" aria-pressed="false">
+                            <svg id="adminEyeIcon" class="password-eye-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2.1 12s3.5-6 9.9-6 9.9 6 9.9 6-3.5 6-9.9 6-9.9-6-9.9-6Z"></path>
+                                <circle cx="12" cy="12" r="2.8"></circle>
+                            </svg>
+                            <svg id="adminEyeOffIcon" class="password-eye-icon" viewBox="0 0 24 24" aria-hidden="true" style="display:none;">
+                                <path d="M3 3l18 18"></path>
+                                <path d="M10.6 6.3A10.7 10.7 0 0 1 12 6c6.4 0 9.9 6 9.9 6a18.2 18.2 0 0 1-3.1 3.8"></path>
+                                <path d="M6.4 6.4C3.8 8.1 2.1 12 2.1 12s3.5 6 9.9 6c1.4 0 2.6-.3 3.7-.8"></path>
+                            </svg>
+                        </button>
+                    </div>
 
                 </div>
 
+
+                <div class="terms-row" id="adminTermsRow">
+                    <input type="checkbox" id="adminTerms" name="adminTerms" class="terms-checkbox-visible" required aria-required="true">
+                    <label for="adminTerms">
+                        I agree to the <a href="#" id="adminTermsLink">Terms and Conditions</a> and confirm that I am an authorized Ration Portal administrator.
+                    </label>
+                </div>
+                <div id="adminTermsError" class="terms-error" role="alert" aria-live="polite"></div>
 
                 <button
                     id="adminLoginButton"
@@ -1031,6 +508,60 @@
             "adminLoginAlert"
         );
 
+    const togglePassword =
+        document.getElementById("toggleAdminPassword");
+    const eyeIcon =
+        document.getElementById("adminEyeIcon");
+    const eyeOffIcon =
+        document.getElementById("adminEyeOffIcon");
+    const termsCheckbox =
+        document.getElementById("adminTerms");
+    const termsRow =
+        document.getElementById("adminTermsRow");
+    const termsError =
+        document.getElementById("adminTermsError");
+    const termsLink =
+        document.getElementById("adminTermsLink");
+
+    if (togglePassword && passwordInput && eyeIcon && eyeOffIcon) {
+        togglePassword.addEventListener("click", function () {
+            const shouldShow = passwordInput.type === "password";
+            passwordInput.type = shouldShow ? "text" : "password";
+            eyeIcon.style.display = shouldShow ? "none" : "block";
+            eyeOffIcon.style.display = shouldShow ? "block" : "none";
+            togglePassword.setAttribute("aria-label", shouldShow ? "Hide password" : "Show password");
+            togglePassword.setAttribute("title", shouldShow ? "Hide password" : "Show password");
+            togglePassword.setAttribute("aria-pressed", String(shouldShow));
+            passwordInput.focus();
+        });
+    }
+
+    function showTermsError(message) {
+        if (!termsError || !termsRow) return;
+        termsError.textContent = message;
+        termsError.classList.add("visible");
+        termsRow.classList.add("invalid");
+    }
+
+    function clearTermsError() {
+        if (!termsError || !termsRow) return;
+        termsError.textContent = "";
+        termsError.classList.remove("visible");
+        termsRow.classList.remove("invalid");
+    }
+
+    if (termsCheckbox) {
+        termsCheckbox.addEventListener("change", function () {
+            if (termsCheckbox.checked) clearTermsError();
+        });
+    }
+
+    if (termsLink) {
+        termsLink.addEventListener("click", function (event) {
+            event.preventDefault();
+            showLoginAlert("Terms and Conditions: This portal is restricted to authorized administrators. By accepting, you confirm that you are authorized to access and process Ration Portal administration data.", "error");
+        });
+    }
 
     const headerActions =
         document.getElementById(
@@ -1720,8 +1251,9 @@
 
 
             showMessage(
-                error.message ||
-                "Unable to load applications.",
+                error instanceof TypeError
+                    ? "Cannot reach the Ration Portal server. Check backend availability and CORS settings."
+                    : (error.message || "Unable to load applications."),
                 "error"
             );
 
@@ -1914,6 +1446,13 @@
             const password =
                 passwordInput.value;
 
+            clearTermsError();
+
+            if (!termsCheckbox || !termsCheckbox.checked) {
+                showTermsError("Please accept the Terms and Conditions before signing in.");
+                if (termsCheckbox) termsCheckbox.focus();
+                return;
+            }
 
             if (!email || !password) {
 
@@ -2102,6 +1641,14 @@
 
                     showLoginAlert(
                         "Login request timed out after 30 seconds. Please try again.",
+                        "error"
+                    );
+
+                }
+                else if (error instanceof TypeError) {
+
+                    showLoginAlert(
+                        "Cannot reach the Ration Portal server. Check that the backend is online and its CORS settings allow this website. The page is open, but the login API could not be reached.",
                         "error"
                     );
 
