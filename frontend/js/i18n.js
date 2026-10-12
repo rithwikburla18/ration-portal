@@ -66,7 +66,13 @@
             "hero.chip.access": "Easy Access",
 
             "hero.familySmall": "Citizen-first public distribution",
-            "hero.familyMera": "Mera Ration Mera Adhikar",
+
+            "hero.sloganLine1": "Mera Ration",
+
+            "hero.sloganLine2": "Mera Adhikar",
+
+            "hero.sloganLine3": "Hamara Adhikar",
+            "hero.familyMera": "Mera Ration Mera Adhikar Hamara Adhikar",
             "hero.familyMeraWord": "Mera",
             "hero.familyAdhikar": "Adhikar",
 
@@ -333,11 +339,14 @@
             "hero.chip.access":
                 "आसान पहुँच",
 
+            "hero.sloganLine1": "मेरा राशन",
+            "hero.sloganLine2": "मेरा अधिकार",
+            "hero.sloganLine3": "हमारा अधिकार",
             "hero.familySmall":
                 "नागरिक-केंद्रित सार्वजनिक वितरण",
 
             "hero.familyMera":
-                "मेरा राशन मेरा अधिकार",
+                "मेरा राशन मेरा अधिकार, हमारा अधिकार",
 
             "hero.familyMeraWord":
                 "मेरा",
@@ -623,11 +632,17 @@
             "hero.chip.access":
                 "సులభమైన ప్రాప్యత",
 
+            "hero.sloganLine1": "నా రేషన్",
+
+            "hero.sloganLine2": "నా హక్కు",
+
+            "hero.sloganLine3": "మన హక్కు",
+
             "hero.familySmall":
                 "పౌర కేంద్రిత ప్రజా పంపిణీ",
 
             "hero.familyMera":
-                "నా రేషన్ నా హక్కు",
+                "నా రేషన్ నా హక్కు, మన హక్కు",
 
             "hero.familyMeraWord":
                 "నా రేషన్",

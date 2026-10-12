@@ -2451,7 +2451,673 @@ img, svg, video, canvas {
 }
 /* ===== END RESPONSIVE BALANCE FIX ===== */
 
+
+/* ===== FINAL HOMEPAGE READABILITY FIX ===== */
+:root {
+    color-scheme: light;
+    --rp-navy: #082b4c;
+    --rp-blue: #0877c9;
+    --rp-saffron: #ff922e;
+    --rp-green: #16852b;
+    --rp-text: #17324d;
+    --rp-muted: #526b82;
+}
+html {
+    scroll-behavior: smooth;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+body {
+    color: var(--rp-text);
+    background: #f5f8fc;
+    max-width: 100%;
+    overflow-x: clip;
+}
+a {
+    text-underline-offset: 3px;
+}
+:where(button, input, select, textarea, a):focus-visible {
+    outline: 3px solid #ffb547 !important;
+    outline-offset: 3px !important;
+}
+.rp-access,
+.rp-access-bar,
+.rp-topbar {
+    background: #082b4c !important;
+    color: #fff !important;
+}
+.rp-access a,
+.rp-access-bar a,
+.rp-topbar a,
+.rp-access button,
+.rp-access-bar button,
+.rp-topbar button {
+    color: #fff !important;
+}
+.rp-nav,
+.rp-navbar,
+nav[aria-label] {
+    background-color: #082b4c;
+}
+.rp-nav a,
+.rp-navbar a,
+nav[aria-label] a {
+    color: #f4f8ff;
+}
+.rp-nav a:hover,
+.rp-navbar a:hover,
+nav[aria-label] a:hover {
+    color: #fff;
+    background-color: #16466e;
+}
+.rp-nav a[aria-current="page"],
+.rp-navbar a[aria-current="page"] {
+    color: #075fa8 !important;
+    background-color: #f3f8ff;
+}
+.rp-hero {
+    color: #fff;
+    background-color: #173b56;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+}
+.rp-hero .rp-hero-title {
+    text-shadow: 0 3px 14px rgba(0, 0, 0, .28);
+}
+.rp-hero .rp-hero-copy {
+    color: #fff !important;
+    background: rgba(7, 28, 39, .78) !important;
+    border: 1px solid rgba(255, 255, 255, .42);
+    border-radius: 24px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, .24);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+.rp-hero .rp-hero-copy :where(p, span, strong, label, small) {
+    color: #fff;
+}
+.rp-hero .rp-search-card {
+    background: #fff !important;
+    border: 1px solid #d5e2ef;
+    border-radius: 18px;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, .12);
+}
+.rp-hero .rp-search-input {
+    color: #17324d !important;
+    background: #fff !important;
+    border: 1px solid #bdcfe0 !important;
+}
+.rp-hero .rp-search-input::placeholder {
+    color: #586f85 !important;
+    opacity: 1;
+}
+.rp-hero .rp-search-button {
+    color: #fff !important;
+    background: #086db8 !important;
+    border: 1px solid #086db8 !important;
+    font-weight: 700;
+}
+.rp-hero .rp-search-button:hover {
+    background: #064f8b !important;
+}
+.rp-services-shell,
+.rp-dashboard-grid,
+.rp-announcement-shell,
+.rp-notice-shell {
+    min-width: 0;
+}
+:where(.rp-service-card, .rp-stat-card, .rp-notice-card) {
+    overflow-wrap: anywhere;
+}
+@media (max-width: 720px) {
+    .rp-hero .rp-hero-copy {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+/* ===== END FINAL HOMEPAGE READABILITY FIX ===== */
+
+
+/* ===== FINAL NAVIGATION CONTRAST FIX ===== */
+:root {
+    --rp-navy: #082b4c;
+    --rp-navy-hover: #16466e;
+    --rp-link-blue: #075fa8;
+    --rp-focus-gold: #ffbf47;
+}
+body {
+    color: #17324d;
+    line-height: 1.6;
+}
+header, nav, main, footer, section {
+    min-width: 0;
+}
+header a, nav a, footer a {
+    overflow-wrap: anywhere;
+}
+nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    line-height: 1.35;
+}
+nav a:hover, nav a:focus-visible {
+    color: #fff !important;
+    background: #16466e !important;
+}
+nav a[aria-current="page"] {
+    color: #075fa8 !important;
+    background: #f2f7fc !important;
+}
+header a:focus-visible, nav a:focus-visible,
+footer a:focus-visible, button:focus-visible,
+input:focus-visible, select:focus-visible {
+    outline: 3px solid #ffbf47 !important;
+    outline-offset: 3px;
+}
+.rp-access-inner, .rp-access, .rp-access-bar,
+.rp-accessibility-bar, .rp-topbar, .rp-utility-bar {
+    color: #fff !important;
+}
+.rp-access-inner a, .rp-access a, .rp-access-bar a,
+.rp-accessibility-bar a, .rp-topbar a, .rp-utility-bar a,
+.rp-access-inner button, .rp-access button,
+.rp-access-bar button, .rp-accessibility-bar button,
+.rp-topbar button, .rp-utility-bar button {
+    color: #fff !important;
+    font-weight: 600;
+}
+.rp-header-inner {
+    gap: clamp(12px, 2vw, 28px);
+}
+.rp-hero .rp-hero-copy {
+    color: #fff !important;
+    background: rgba(7, 28, 39, .86) !important;
+}
+.rp-hero .rp-hero-copy p,
+.rp-hero .rp-hero-copy span,
+.rp-hero .rp-hero-copy strong,
+.rp-hero .rp-hero-copy small {
+    color: #fff;
+}
+.rp-hero .rp-search-input {
+    color: #17324d !important;
+    background: #fff !important;
+}
+.rp-hero .rp-search-input::placeholder {
+    color: #526b82 !important;
+    opacity: 1;
+}
+.rp-hero .rp-search-button {
+    color: #fff !important;
+    background: #075fa8 !important;
+}
+.rp-service-card, .rp-stat-card, .rp-notice-card {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+footer a {
+    display: inline-block;
+    margin: 4px 8px 4px 0;
+}
+@media (max-width: 720px) {
+    nav a {
+        padding: 9px 11px;
+        white-space: normal;
+    }
+    .rp-header-inner {
+        flex-wrap: wrap;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
+/* ===== END FINAL NAVIGATION CONTRAST FIX ===== */
+
+
+/* ===== FINAL HEADER AND EMBLEM FIX ===== */
+body .rp-access-bar {
+    background: #f0f5f8 !important;
+    color: #12314b !important;
+    border-bottom: 1px solid #d5e1e9 !important;
+}
+body .rp-access-bar :where(strong, span, a, button) {
+    color: #12314b !important;
+    font-weight: 700 !important;
+}
+body .rp-access-bar a:hover,
+body .rp-access-bar button:hover {
+    color: #006b70 !important;
+}
+body .rp-nav,
+body .rp-navbar,
+body nav[aria-label] {
+    background: #087e83 !important;
+    color: #fff !important;
+}
+body .rp-nav a,
+body .rp-navbar a,
+body nav[aria-label] a {
+    color: #fff !important;
+    font-weight: 700 !important;
+}
+body .rp-nav a:hover,
+body .rp-navbar a:hover,
+body nav[aria-label] a:hover {
+    color: #fff !important;
+    background: #075e63 !important;
+}
+body .rp-nav a[aria-current="page"],
+body .rp-navbar a[aria-current="page"],
+body nav[aria-label] a[aria-current="page"] {
+    color: #075e63 !important;
+    background: #fff !important;
+    border-radius: 12px 12px 0 0;
+}
+body .rp-access-bar,
+body .rp-nav,
+body .rp-navbar,
+body nav[aria-label] {
+    text-shadow: none !important;
+}
+body :is(.rp-brand-mark, .rp-logo, .rp-brand-logo, .rp-brand-emblem, .rp-emblem, .rp-logo-wrap, .rp-brand-icon) {
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+}
+body :is(.rp-brand-mark, .rp-logo, .rp-brand-logo, .rp-brand-emblem, .rp-emblem, .rp-logo-wrap, .rp-brand-icon) img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+}
+body :is(.rp-brand-mark, .rp-logo, .rp-brand-logo, .rp-brand-emblem, .rp-emblem, .rp-logo-wrap, .rp-brand-icon) svg {
+    max-width: 100%;
+    border-radius: 50%;
+}
+@media (max-width: 720px) {
+    body .rp-access-bar {
+        gap: 8px;
+    }
+    body .rp-access-bar :where(strong, span, a, button) {
+        overflow-wrap: anywhere;
+    }
+}
+/* ===== END FINAL HEADER AND EMBLEM FIX ===== */
+
+
+/* Three-line citizen slogan */
+.rp-hero .rp-family-slogan{display:flex;flex-direction:column;align-items:center;gap:5px;margin:12px auto 0;text-align:center;font-size:clamp(22px,2.5vw,34px);font-weight:900;line-height:1.18;letter-spacing:-.5px}
+.rp-hero .rp-slogan-line{display:block;max-width:100%;overflow-wrap:anywhere}
+.rp-hero .rp-slogan-saffron{color:#ff9b35!important}
+.rp-hero .rp-slogan-green{color:#75df70!important}
+@media(max-width:520px){.rp-hero .rp-family-slogan{font-size:clamp(20px,6vw,27px);gap:6px}}
+/* FINAL HERO: heading and three-line slogan only */
+body > main#main-content > section.rp-hero{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;min-height:clamp(540px,calc(100vh - 230px),760px);padding:clamp(34px,6vh,64px) 0 clamp(120px,18vh,190px);background:linear-gradient(180deg,rgba(3,28,53,.08),rgba(3,28,53,.24)),var(--hero-img) center/cover no-repeat,linear-gradient(180deg,#87c4ec,#d9eefb 55%,#fbe8c4);color:#fff}
+.rp-hero .rp-hero-inner{position:relative;z-index:5;width:min(1100px,calc(100% - 48px));margin:0 auto;text-align:center}
+.rp-hero .rp-hero-title{margin:0;padding:0;font-size:clamp(2.1rem,5.4vw,4.6rem);line-height:1.04;letter-spacing:-1.6px;font-weight:900;text-align:center;text-shadow:0 4px 20px rgba(0,15,32,.55)}
+.rp-hero .rp-hero-title span{display:block;overflow-wrap:anywhere}
+.rp-hero .rp-slogan-top{position:relative;z-index:5;width:100%;margin:clamp(14px,2.4vh,24px) auto 0;text-align:center}
+.rp-hero .rp-slogan-top .rp-family-slogan{display:flex;flex-direction:column;align-items:center;gap:4px;width:auto;max-width:100%;margin:0 auto;padding:0;background:transparent;border:0;box-shadow:none;font-style:normal;font-weight:900;line-height:1.15}
+.rp-hero .rp-slogan-top .rp-slogan-line{display:block;max-width:100%;font-size:clamp(1.5rem,3.4vw,2.9rem);font-weight:900;line-height:1.15;overflow-wrap:anywhere;text-shadow:0 3px 14px rgba(0,15,32,.6)}
+.rp-hero .rp-slogan-top .rp-slogan-saffron{color:#ff9b35}
+.rp-hero .rp-slogan-top .rp-slogan-white{color:#fff}
+.rp-hero .rp-slogan-top .rp-slogan-green{color:#70e878}
+.rp-hero .rp-hero-card-wrap,.rp-hero .rp-hero-copy,.rp-hero .rp-hero-kicker,.rp-hero .rp-hero-subtitle,.rp-hero .rp-hero-tagline,.rp-hero .rp-hero-chips,.rp-hero .rp-hero-message{display:none!important}
+.rp-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;z-index:6;background:linear-gradient(90deg,#ff922e 0 33.33%,#fff 33.33% 66.66%,#138808 66.66%)}
+@media(max-width:720px){body > main#main-content > section.rp-hero{min-height:0;padding:34px 0 150px}.rp-hero .rp-hero-inner{width:calc(100% - 28px)}.rp-hero .rp-hero-title{font-size:clamp(2rem,8vw,3.4rem);letter-spacing:-.7px}.rp-hero .rp-slogan-top .rp-slogan-line{font-size:clamp(1.35rem,6.5vw,2.2rem)}}</style>
+<style id="premium-patriotic-header-v2">
+/* PREMIUM PATRIOTIC HEADER V2 — header/navigation only */
+:root {
+  --rp-premium-navy: #102743;
+  --rp-premium-indigo: #202a58;
+  --rp-premium-gold: #e8b65a;
+  --rp-premium-teal: #075e63;
+  --rp-premium-ink: #17324d;
+}
+body .rp-access-bar {
+  background: #102743 !important;
+  color: #fff !important;
+  border-top: 4px solid transparent !important;
+  border-image: linear-gradient(90deg,#ff922e 0 33.33%,#fff 33.33% 66.66%,#16852b 66.66% 100%) 1 !important;
+  box-shadow: 0 3px 12px rgba(7,25,45,.12) !important;
+}
+body .rp-access-bar :is(strong,span,a,button) {
+  color: #fff !important;
+  font-weight: 650 !important;
+  text-shadow: none !important;
+}
+body .rp-access-bar :is(a,button):hover {
+  color: #ffcf7c !important;
+}
+body .rp-access-bar :is(a,button):focus-visible {
+  outline: 3px solid #ffd27d !important;
+  outline-offset: 3px !important;
+}
+body :is(header,.rp-header,.rp-site-header,.rp-brand-header):has(.rp-header-inner) {
+  background: linear-gradient(180deg,#ff9a35 0%,#fff 49%,#fff 60%,#e3f2df 100%) !important;
+  border-bottom: 1px solid rgba(16,39,67,.15) !important;
+  box-shadow: 0 8px 24px rgba(16,39,67,.12) !important;
+}
+body .rp-header-inner {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+body .rp-header-inner :is(h1,h2,h3,p,strong,span,.rp-brand-title,.rp-brand-subtitle) {
+  color: #17324d;
+  text-shadow: none !important;
+}
+body .rp-header-inner :is(a,button) {
+  font-weight: 750;
+}
+body .rp-header-inner :is(a,button):focus-visible {
+  outline: 3px solid #a85d00 !important;
+  outline-offset: 3px !important;
+}
+/* Circular logo frame; preserve the existing logo artwork */
+body .rp-brand-mark {
+  width: 96px !important;
+  height: 96px !important;
+  min-width: 96px !important;
+  min-height: 96px !important;
+  box-sizing: border-box !important;
+  border: 3px solid #c5d1dc !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: #fff !important;
+  box-shadow: inset 0 0 0 4px #edf2f6,0 5px 15px rgba(16,39,67,.18) !important;
+  flex: 0 0 96px !important;
+}
+body .rp-brand-mark img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 50% !important;
+}
+/* Glass-style navigation */
+body .rp-nav,
+body .rp-navbar,
+body nav[aria-label] {
+  background: linear-gradient(110deg,rgba(16,39,67,.98),rgba(32,42,88,.96)) !important;
+  color: #fff !important;
+  border: 1px solid rgba(232,182,90,.8) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 8px 24px rgba(8,24,48,.24),inset 0 1px rgba(255,255,255,.12) !important;
+}
+body .rp-nav-inner {
+  background: transparent !important;
+  min-width: 0;
+}
+body .rp-nav :is(a,button),
+body .rp-navbar :is(a,button),
+body nav[aria-label] :is(a,button) {
+  color: #f8fbff !important;
+  font-weight: 750 !important;
+  text-shadow: none !important;
+  transition: background-color .18s ease,color .18s ease,transform .18s ease;
+}
+body .rp-nav :is(a,button):hover,
+body .rp-navbar :is(a,button):hover,
+body nav[aria-label] :is(a,button):hover {
+  color: #fff !important;
+  background: rgba(255,255,255,.13) !important;
+}
+body .rp-nav a[aria-current="page"],
+body .rp-navbar a[aria-current="page"],
+body nav[aria-label] a[aria-current="page"],
+body .rp-nav a.active,
+body .rp-navbar a.active {
+  color: #38270c !important;
+  background: linear-gradient(135deg,#ffe0a0,#e8b65a) !important;
+  border: 1px solid #ffdf99 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 12px rgba(232,182,90,.25) !important;
+}
+body .rp-nav :is(a,button):focus-visible,
+body .rp-navbar :is(a,button):focus-visible,
+body nav[aria-label] :is(a,button):focus-visible {
+  outline: 3px solid #ffd27d !important;
+  outline-offset: 3px !important;
+}
+/* Date/time chip, using existing clock/date elements */
+body .rp-nav-inner :is(time,.rp-date,.rp-time,.rp-datetime,.rp-clock,.rp-date-time) {
+  color: #fff !important;
+  font-weight: 750 !important;
+  text-shadow: none !important;
+}
+@media (max-width: 900px) {
+  body .rp-brand-mark {
+    width: 76px !important;
+    height: 76px !important;
+    min-width: 76px !important;
+    min-height: 76px !important;
+    flex-basis: 76px !important;
+  }
+  body .rp-nav,body .rp-navbar,body nav[aria-label] {
+    border-radius: 16px !important;
+  }
+}
+@media (max-width: 600px) {
+  body .rp-brand-mark {
+    width: 62px !important;
+    height: 62px !important;
+    min-width: 62px !important;
+    min-height: 62px !important;
+    flex-basis: 62px !important;
+  }
+  body .rp-header-inner {
+    gap: 12px !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .rp-nav *,body .rp-navbar *,body nav[aria-label] * {
+    transition: none !important;
+  }
+}
+
+/* Three-line citizen slogan */
+.rp-hero .rp-family-slogan{display:flex;flex-direction:column;align-items:center;gap:5px;margin:12px auto 0;text-align:center;font-size:clamp(22px,2.5vw,34px);font-weight:900;line-height:1.18;letter-spacing:-.5px}
+.rp-hero .rp-slogan-line{display:block;max-width:100%;overflow-wrap:anywhere}
+.rp-hero .rp-slogan-saffron{color:#ff9b35!important}
+.rp-hero .rp-slogan-green{color:#75df70!important}
+@media(max-width:520px){.rp-hero .rp-family-slogan{font-size:clamp(20px,6vw,27px);gap:6px}}
 </style>
+<style id="final-tricolor-premium-header-v2">
+:root{--rp-premium-navy:#092746;--rp-premium-indigo:#172554;--rp-premium-gold:#e9bd65}
+body{color:#102d49;overflow-x:hidden}
+body .rp-access-bar{background:#092746!important;color:#fff!important;border-bottom:2px solid transparent!important;border-image:linear-gradient(90deg,#ff922e 0 33.33%,#fff 33.33% 66.66%,#168537 66.66%) 1!important}
+body .rp-access-bar :where(strong,span,a,button){color:#fff!important;opacity:1!important}
+body .rp-access-bar a:hover,body .rp-access-bar button:hover{color:#ffd58c!important}
+body .rp-header-inner{position:relative!important;isolation:isolate;background:linear-gradient(180deg,#ff8a19 0%,#ffb34c 19%,#fffaf0 47%,#fff 59%,#e9f5e8 78%,#188039 100%)!important;min-height:132px;padding-top:12px!important;padding-bottom:12px!important;align-items:center!important}
+body .rp-header-inner :where(h1,h2,h3,p,strong,small,span,.rp-brand-title,.rp-brand-subtitle){color:#102d49!important;text-shadow:0 1px 1px rgba(255,255,255,.65)}
+body .rp-header-inner .rp-brand-mark{width:92px!important;height:92px!important;min-width:92px!important;flex:0 0 92px!important;box-sizing:border-box!important;border-radius:50%!important;overflow:hidden!important;border:4px solid #d7b56d!important;outline:2px solid #fff;box-shadow:0 4px 15px rgba(9,39,70,.28),inset 0 0 0 2px #fff;background:#fff!important}
+body .rp-header-inner .rp-brand-mark img,body .rp-header-inner .rp-brand-mark svg{display:block;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;border-radius:50%!important}
+body .rp-header-inner a[href*="admin-login"],body .rp-header-inner a[href*="onorc"],body .rp-header-inner a[href*="login"]:not([href*="admin-login"]),body .rp-header-inner a[href*="register"]{color:#fff!important;border:1px solid #f6d18a!important;border-radius:999px!important;font-weight:800!important;text-decoration:none!important;text-shadow:0 1px 2px rgba(0,0,0,.2);transition:filter .18s ease,transform .18s ease}
+body .rp-header-inner a[href*="admin-login"]{background:linear-gradient(135deg,#f28a19,#d9570b)!important}
+body .rp-header-inner a[href*="onorc"]{background:linear-gradient(135deg,#102e55,#172554)!important}
+body .rp-header-inner a[href*="login"]:not([href*="admin-login"]){background:linear-gradient(135deg,#ff8b1e,#e75b10)!important}
+body .rp-header-inner a[href*="register"]{background:linear-gradient(135deg,#218a40,#08612a)!important}
+body .rp-header-inner a:hover{filter:brightness(1.08);transform:translateY(-2px)}
+body .rp-nav-inner{min-height:76px;background:linear-gradient(105deg,#071b39,#172554 55%,#0b3150)!important;align-items:center!important;gap:clamp(8px,1.5vw,22px)!important}
+body .rp-nav-inner a{color:#fff!important;font-weight:750!important;text-decoration:none!important;text-shadow:0 1px 3px rgba(0,0,0,.45);border:1px solid transparent;border-radius:999px;padding:13px 17px!important;background:transparent!important}
+body .rp-nav-inner a:hover{color:#fff!important;background:rgba(255,255,255,.12)!important;border-color:rgba(235,194,111,.55)}
+body .rp-nav-inner a[aria-current="page"],body .rp-nav-inner a.active{color:#38230a!important;background:linear-gradient(135deg,#ffe3a0,#e8ad45)!important;border:1px solid #fff0c8!important;box-shadow:0 3px 12px rgba(238,171,58,.35);text-shadow:none!important}
+body .rp-nav-inner :where(time,.rp-date,.rp-time,.rp-datetime,.rp-clock,.rp-date-time){color:#fff!important;background:rgba(6,19,47,.85)!important;border:1px solid #6bbce9!important;border-radius:999px!important;padding:9px 13px!important;font-weight:750!important;box-shadow:0 0 12px rgba(63,173,255,.2);white-space:nowrap}
+body :where(a,button,input,select,textarea):focus-visible{outline:3px solid #ffbf47!important;outline-offset:3px!important}
+@media(max-width:1050px){body .rp-header-inner{flex-wrap:wrap;justify-content:center;gap:14px!important}body .rp-nav-inner{flex-wrap:wrap;justify-content:center;padding-top:8px;padding-bottom:8px}}
+@media(max-width:720px){body .rp-header-inner .rp-brand-mark{width:76px!important;height:76px!important;min-width:76px!important;flex-basis:76px!important}body .rp-nav-inner a{padding:10px 12px!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* END FINAL TRICOLOR PREMIUM HEADER V2 */
+
+/* Three-line citizen slogan */
+.rp-hero .rp-family-slogan{display:flex;flex-direction:column;align-items:center;gap:5px;margin:12px auto 0;text-align:center;font-size:clamp(22px,2.5vw,34px);font-weight:900;line-height:1.18;letter-spacing:-.5px}
+.rp-hero .rp-slogan-line{display:block;max-width:100%;overflow-wrap:anywhere}
+.rp-hero .rp-slogan-saffron{color:#ff9b35!important}
+.rp-hero .rp-slogan-green{color:#75df70!important}
+@media(max-width:520px){.rp-hero .rp-family-slogan{font-size:clamp(20px,6vw,27px);gap:6px}}
+</style>
+<style id="circular-tricolor-flag-logo-fix">
+/* Circular Indian tricolour emblem */
+body .rp-header-inner .rp-brand-mark{
+ position:relative!important;isolation:isolate!important;
+ display:block!important;width:92px!important;height:92px!important;
+ min-width:92px!important;min-height:92px!important;flex:0 0 92px!important;
+ box-sizing:border-box!important;border:4px solid #d8b66a!important;
+ border-radius:50%!important;overflow:hidden!important;
+ background:linear-gradient(to bottom,#ff9933 0%,#ff9933 33.333%,#fff 33.333%,#fff 66.666%,#138808 66.666%,#138808 100%)!important;
+ box-shadow:0 0 0 3px #fff,0 4px 16px rgba(9,39,70,.3)!important;
+}
+body .rp-header-inner .rp-brand-mark::before{
+ content:""!important;position:absolute!important;inset:0!important;
+ display:block!important;width:100%!important;height:100%!important;
+ left:0!important;top:0!important;border:0!important;border-radius:50%!important;
+ background:linear-gradient(to bottom,#ff9933 0%,#ff9933 33.333%,#fff 33.333%,#fff 66.666%,#138808 66.666%,#138808 100%)!important;
+ box-shadow:none!important;z-index:0!important;
+}
+body .rp-header-inner .rp-brand-mark::after{
+ content:""!important;position:absolute!important;display:block!important;
+ z-index:3!important;left:50%!important;top:50%!important;
+ width:20px!important;height:20px!important;
+ transform:translate(-50%,-50%)!important;border:1.6px solid #174a91!important;
+ border-radius:50%!important;box-sizing:border-box!important;
+ background:radial-gradient(circle,#174a91 0 1.4px,transparent 1.8px),repeating-conic-gradient(#174a91 0deg 2deg,transparent 2deg 15deg)!important;
+}
+body .rp-header-inner .rp-brand-mark-inner{display:none!important}
+@media(max-width:720px){
+ body .rp-header-inner .rp-brand-mark{
+  width:76px!important;height:76px!important;min-width:76px!important;
+  min-height:76px!important;flex-basis:76px!important;
+ }
+}
+
+/* Three-line citizen slogan */
+.rp-hero .rp-family-slogan{display:flex;flex-direction:column;align-items:center;gap:5px;margin:12px auto 0;text-align:center;font-size:clamp(22px,2.5vw,34px);font-weight:900;line-height:1.18;letter-spacing:-.5px}
+.rp-hero .rp-slogan-line{display:block;max-width:100%;overflow-wrap:anywhere}
+.rp-hero .rp-slogan-saffron{color:#ff9b35!important}
+.rp-hero .rp-slogan-green{color:#75df70!important}
+@media(max-width:520px){.rp-hero .rp-family-slogan{font-size:clamp(20px,6vw,27px);gap:6px}}
+</style>
+
+
+<style>
+/* Responsive homepage hero repair */
+.rp-hero { position: relative; overflow: hidden; }
+.rp-hero .rp-search-card,
+.rp-hero .rp-search-form,
+.rp-hero .rp-search-result { display: none !important; }
+.rp-hero .rp-family-slogan,
+.rp-hero .rp-hero-content,
+.rp-hero .rp-hero-copy { box-sizing: border-box; max-width: 100%; }
+.rp-hero .rp-family-slogan {
+  width: min(92%, 820px);
+  margin-inline: auto;
+  padding: clamp(18px, 3vw, 36px);
+  border-radius: 24px;
+  overflow-wrap: anywhere;
+}
+.rp-hero .rp-slogan-line {
+  display: block;
+  max-width: 100%;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.rp-hero .rp-slogan-line:first-child { color: #ff9b35; }
+.rp-hero .rp-slogan-line:nth-child(2) { color: #fff; }
+.rp-hero .rp-slogan-line:nth-child(3) { color: #70e878; }
+@media (max-width: 900px) {
+  .rp-hero .rp-family-slogan { width: 94%; padding: 18px 14px; }
+  .rp-hero .rp-slogan-line { font-size: clamp(27px, 6vw, 48px); }
+}
+@media (max-width: 600px) {
+  .rp-hero .rp-family-slogan { width: 96%; padding: 14px 10px; border-radius: 16px; }
+  .rp-hero .rp-slogan-line { font-size: clamp(24px, 7vw, 36px); }
+}
+</style>
+<style>
+/* Responsive homepage hero repair */
+.rp-hero { position: relative; overflow: hidden; }
+.rp-hero .rp-search-card,
+.rp-hero .rp-search-form,
+.rp-hero .rp-search-result { display: none !important; }
+.rp-hero .rp-family-slogan,
+.rp-hero .rp-hero-content,
+.rp-hero .rp-hero-copy { box-sizing: border-box; max-width: 100%; }
+.rp-hero .rp-family-slogan {
+  width: min(92%, 820px);
+  margin-inline: auto;
+  padding: clamp(18px, 3vw, 36px);
+  border-radius: 24px;
+  overflow-wrap: anywhere;
+}
+.rp-hero .rp-slogan-line {
+  display: block;
+  max-width: 100%;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.rp-hero .rp-slogan-line:first-child { color: #ff9b35; }
+.rp-hero .rp-slogan-line:nth-child(2) { color: #fff; }
+.rp-hero .rp-slogan-line:nth-child(3) { color: #70e878; }
+@media (max-width: 900px) {
+  .rp-hero .rp-family-slogan { width: 94%; padding: 18px 14px; }
+  .rp-hero .rp-slogan-line { font-size: clamp(27px, 6vw, 48px); }
+}
+@media (max-width: 600px) {
+  .rp-hero .rp-family-slogan { width: 96%; padding: 14px 10px; border-radius: 16px; }
+  .rp-hero .rp-slogan-line { font-size: clamp(24px, 7vw, 36px); }
+}
+</style>
+<style>
+.rp-hero .rp-slogan-top{position:relative;z-index:5;width:100%;margin:16px auto 0;text-align:center}
+.rp-hero .rp-slogan-top .rp-family-slogan{display:block;width:min(92%,820px);margin:0 auto;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.rp-hero .rp-slogan-top .rp-slogan-line{display:block;font-size:clamp(30px,4.2vw,58px);line-height:1.12;overflow-wrap:anywhere;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+.rp-hero .rp-slogan-top .rp-slogan-line:first-child{color:#ff9b35}
+.rp-hero .rp-slogan-top .rp-slogan-line:nth-child(2){color:#fff}
+.rp-hero .rp-slogan-top .rp-slogan-line:nth-child(3){color:#70e878}
+@media(max-width:600px){.rp-hero .rp-slogan-top .rp-slogan-line{font-size:clamp(25px,7vw,36px)}}
+</style>
+<style id="bottom-aligned-hero-text">
+body > main#main-content > section.rp-hero{align-items:stretch}
+body > main#main-content > section.rp-hero .rp-hero-inner{display:flex;flex-direction:column;justify-content:flex-end;min-height:inherit;padding-top:clamp(150px,30vh,300px);padding-bottom:clamp(20px,5vh,55px)}
+body > main#main-content > section.rp-hero .rp-hero-title{margin-top:auto}
+body > main#main-content > section.rp-hero .rp-slogan-top{margin-top:18px}
+@media(max-width:720px){body > main#main-content > section.rp-hero .rp-hero-inner{min-height:430px;padding-top:100px;padding-bottom:18px}}
+</style>
+<style id="bottom-slogan-spacing-fix">
+body > main#main-content > section.rp-hero .rp-hero-inner{box-sizing:border-box;gap:0}
+body > main#main-content > section.rp-hero .rp-hero-title{flex:0 0 auto;width:100%;line-height:1.12;margin:0 0 20px!important}
+body > main#main-content > section.rp-hero .rp-hero-title span{display:block!important;position:static!important;margin:0 0 7px!important;line-height:1.12!important}
+body > main#main-content > section.rp-hero .rp-slogan-top{display:block!important;flex:0 0 auto;width:100%;margin:0 auto!important;padding:0!important}
+body > main#main-content > section.rp-hero .rp-slogan-top .rp-family-slogan{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:10px!important;margin:0 auto!important;padding:0!important;line-height:1.3!important}
+body > main#main-content > section.rp-hero .rp-slogan-top .rp-slogan-line{display:block!important;position:static!important;width:auto!important;max-width:100%;margin:0!important;padding:0!important;line-height:1.3!important;white-space:normal!important;overflow-wrap:anywhere!important;transform:none!important}
+@media(max-width:720px){body > main#main-content > section.rp-hero .rp-hero-title{margin-bottom:16px!important}body > main#main-content > section.rp-hero .rp-hero-title span{margin-bottom:5px!important}body > main#main-content > section.rp-hero .rp-slogan-top .rp-family-slogan{gap:8px!important}}
+</style>
+<!-- BOTTOM SLOGAN SPACING FIX -->
+<style id="tricolour-slogan-background">body > main#main-content > section.rp-hero .rp-slogan-top{background:linear-gradient(to bottom,#FF9933 0%,#FF9933 33.33%,#FFFFFF 33.33%,#FFFFFF 66.66%,#138808 66.66%,#138808 100%)!important;border-radius:8px!important;padding:12px 22px!important;margin-top:12px!important;box-sizing:border-box!important;color:#172033!important}body > main#main-content > section.rp-hero .rp-slogan-top .rp-family-slogan{gap:8px!important}body > main#main-content > section.rp-hero .rp-slogan-top .rp-slogan-line{color:#172033!important;text-shadow:none!important}@media(max-width:720px){body > main#main-content > section.rp-hero .rp-slogan-top{padding:10px 12px!important}}</style>
 </head>
 
 <body>
@@ -3395,144 +4061,11 @@ img, svg, video, canvas {
     data-i18n="hero.rightTime"
 >Right Time</span>
                 </h1>
+
+
         </div>
 
-        <div class="rp-hero-card-wrap">
-            <div
-    class="rp-hero-copy"
->
-
-                <div
-    class="rp-hero-kicker"
->
-                    <span
-    class="rp-kicker-dot"
-    aria-hidden="true"
-></span>
-                    <span
-    data-i18n="hero.kicker"
->Citizen Digital Service Portal</span>
-                </div>
-
-
-
-                <div
-    class="rp-hero-subtitle"
-    data-i18n="hero.subtitle"
->Public Distribution System – Government-inspired digital service experience</div>
-
-                <p
-    class="rp-hero-tagline"
-    data-i18n="hero.tagline"
->Ensuring Food Security for Every Citizen through accessible, transparent and citizen-centric digital services.</p>
-
-                <!-- Search -->
-                <div
-    class="rp-search-card"
->
-                    <form
-    class="rp-search-form"
-    id="rationSearchForm"
-    autocomplete="off"
-    novalidate
->
-                        <div
-    class="rp-search-icon"
-    aria-hidden="true"
->
-                            <svg
-    class="rp-icon"
-><use
-    href="#icon-search"
-></use></svg>
-                        </div>
-                        <label
-    class="sr-only"
-    for="rationSearchInput"
->Ration Card Number, Ration ID or Member ID</label>
-                        <input
-    id="rationSearchInput"
-    name="rationNumber"
-    class="rp-search-input"
-    type="text"
-    maxlength="40"
-    placeholder="Enter Ration Card Number / Ration ID / Member ID"
-    data-i18n-placeholder="search.placeholder"
-    aria-describedby="rationSearchHelp rationSearchResult"
->
-                        <button
-    class="rp-search-button"
-    type="submit"
->
-                            <svg
-    class="rp-icon-sm"
-    aria-hidden="true"
-><use
-    href="#icon-search"
-></use></svg>
-                            Search
-                        </button>
-                    </form>
-                    <div
-    class="rp-example"
-    id="rationSearchHelp"
->Example: RJ/12345678 or 1234567890</div>
-                    <div
-    class="rp-search-result"
-    id="rationSearchResult"
-    aria-live="polite"
-></div>
-                </div>
-
-                <div
-    class="rp-hero-chips"
->
-                    <span
-    class="rp-hero-chip"
-><span
-    class="rp-chip-dot rp-dot-green"
-></span>Food Security for All</span>
-                    <span
-    class="rp-hero-chip"
-><span
-    class="rp-chip-dot rp-dot-blue"
-></span>Transparent System</span>
-                    <span
-    class="rp-hero-chip"
-><span
-    class="rp-chip-dot rp-dot-saffron"
-></span>Digital India</span>
-                    <span
-    class="rp-hero-chip"
-><span
-    class="rp-chip-dot rp-dot-purple"
-></span>Easy Access</span>
-                </div>
-
-                <div
-    class="rp-hero-message"
->
-                    <span
-    class="rp-hero-message-small"
-><span
-    data-i18n="hero.familySmall"
->Citizen-first public distribution</span></span>
-                    <strong>
-                        <span
-    data-i18n="hero.familyMera"
->Mera Ration</span>
-                        <span
-    class="rp-saffron-text"
->Mera</span>
-                        <span
-    class="rp-green-text"
->Adhikar</span>
-                    </strong>
-                    <div
-    class="rp-brush"
-    aria-hidden="true"
-></div>
-                </div>
+        
 
             </div>
 
@@ -4043,6 +4576,15 @@ img, svg, video, canvas {
         </div>
     </section>
 
+    <!-- BOTTOM SLOGAN -->
+    <section class="rp-bottom-slogan" style="text-align: center; padding: 20px 0 60px;">
+        <strong style="display:flex; flex-direction:column; align-items:center; gap:8px; font-size:clamp(30px, 4.2vw, 58px); font-weight:900; line-height:1.12; letter-spacing: -0.5px;" aria-label="Mera Ration, Mera Adhikar, Hamara Adhikar">
+            <span style="color:#ff9b35;" data-i18n="hero.sloganLine1">Mera Ration</span>
+            <span style="color:#082b4c;" data-i18n="hero.sloganLine2">Mera Adhikar</span>
+            <span style="color:#138808;" data-i18n="hero.sloganLine3">Hamara Adhikar</span>
+        </strong>
+    </section>
+
     <!-- NOTICE -->
     <section
     class="rp-notice"
@@ -4196,39 +4738,7 @@ img, svg, video, canvas {
     /* Current year */
     const yearElement = document.getElementById("currentYear");
     if (yearElement) { yearElement.textContent = new Date().getFullYear(); }
-
-    /* Homepage ration search (uses existing trackCard() from app.js) */
-    const searchForm = document.getElementById("rationSearchForm");
-    const searchInput = document.getElementById("rationSearchInput");
-    const searchResult = document.getElementById("rationSearchResult");
-
-    if (searchForm && searchInput) {
-        searchForm.addEventListener("submit", function (event) {
-            event.preventDefault();
-            const value = searchInput.value.trim();
-
-            if (!value) {
-                if (searchResult) { searchResult.textContent = "Please enter a Ration Card Number, Ration ID or Member ID."; }
-                searchInput.focus();
-                return;
-            }
-
-            if (searchResult) { searchResult.textContent = "Checking your ration record..."; }
-
-            if (typeof window.trackCard === "function") {
-                try {
-                    window.trackCard();
-                } catch (error) {
-                    console.error("Ration search error:", error);
-                    if (searchResult) { searchResult.textContent = "Unable to complete the search right now. Please try again."; }
-                }
-            } else if (searchResult) {
-                searchResult.textContent = "Search service is being prepared. Please sign in to use secure ration search.";
-            }
-        });
-    }
-
-    /* Back to top */
+   /* Back to top */
     const topButton = document.getElementById("rpTopButton");
 
     function updateTopButton() {
@@ -4245,13 +4755,6 @@ img, svg, video, canvas {
                 top: 0,
                 behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
             });
-        });
-    }
-
-    /* Clear search message while typing */
-    if (searchInput) {
-        searchInput.addEventListener("input", function () {
-            if (searchResult) { searchResult.textContent = ""; }
         });
     }
 })();
