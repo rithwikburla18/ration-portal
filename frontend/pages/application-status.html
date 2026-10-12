@@ -251,7 +251,8 @@
             border: 1px solid #f1d98d;
         }
 
-        .main-status.processing {
+        .main-status.processing,
+        .main-status.verified {
             color: #075b91;
             background: #eaf5fd;
             border: 1px solid #b9dff5;
@@ -868,7 +869,7 @@
                             reviewed and verified.
                         </p>
 
-                        <div class="timeline-date">
+                        <div id="timelineVerificationStatus" class="timeline-date">
                             Pending
                         </div>
 
@@ -891,7 +892,7 @@
                             approval or rejection decision.
                         </p>
 
-                        <div class="timeline-date">
+                        <div id="timelineDecisionStatus" class="timeline-date">
                             Pending
                         </div>
 
@@ -914,7 +915,7 @@
                             citizen notification.
                         </p>
 
-                        <div class="timeline-date">
+                        <div id="timelineCompletionStatus" class="timeline-date">
                             Pending
                         </div>
 
@@ -1110,30 +1111,39 @@ document.addEventListener(
 
         function normalizeStatus(value) {
 
-            const status =
-                String(
-                    value || "PENDING"
-                ).toUpperCase();
+            const status = String(value || "SUBMITTED")
+                .trim()
+                .toUpperCase()
+                .replace(/[\\s-]+/g, "_");
 
-            if (
-                status.includes("APPROV")
-            ) {
+            /*
+             * Keep backend workflow states distinct. In particular,
+             * VERIFIED must never be collapsed into PROCESSING.
+             */
+            if (status === "APPROVED" || status.includes("APPROV")) {
                 return "APPROVED";
             }
 
-            if (
-                status.includes("REJECT")
-            ) {
+            if (status === "REJECTED" || status.includes("REJECT")) {
                 return "REJECTED";
             }
 
-            if (
-                status.includes("PROCESS") ||
-                status.includes("VERIF")
-            ) {
+            if (status === "VERIFIED" || status === "VERIFICATION_COMPLETED") {
+                return "VERIFIED";
+            }
+
+            if (status === "PROCESSING" || status === "UNDER_REVIEW" || status === "IN_REVIEW") {
                 return "PROCESSING";
             }
 
+            if (status === "SUBMITTED" || status === "PENDING" || status === "APPLICATION_SUBMITTED") {
+                return "PENDING";
+            }
+
+            /*
+             * Unknown values should not falsely imply approval or completion.
+             */
+            console.warn("Unrecognized application status from API:", status);
             return "PENDING";
         }
 
@@ -1188,106 +1198,60 @@ document.addEventListener(
         }
 
 
-        function updateTimeline(
-            application
-        ) {
+        function updateTimeline(application) {
 
-            const status =
-                normalizeStatus(
-                    application.status
-                );
+            const status = normalizeStatus(application.status);
 
+            const submitted = document.getElementById("timelineSubmitted");
+            const verification = document.getElementById("timelineVerification");
+            const decision = document.getElementById("timelineDecision");
+            const completion = document.getElementById("timelineCompletion");
 
-            const submitted =
-                document.getElementById(
-                    "timelineSubmitted"
-                );
+            const verificationStatus = document.getElementById("timelineVerificationStatus");
+            const decisionStatus = document.getElementById("timelineDecisionStatus");
+            const completionStatus = document.getElementById("timelineCompletionStatus");
 
-            const verification =
-                document.getElementById(
-                    "timelineVerification"
-                );
+            submitted.className = "timeline-item completed";
+            verification.className = "timeline-item";
+            decision.className = "timeline-item";
+            completion.className = "timeline-item";
 
-            const decision =
-                document.getElementById(
-                    "timelineDecision"
-                );
+            verificationStatus.textContent = "Pending";
+            decisionStatus.textContent = "Pending";
+            completionStatus.textContent = "Pending";
 
-            const completion =
-                document.getElementById(
-                    "timelineCompletion"
-                );
+            const submittedDate = document.getElementById("timelineSubmittedDate");
+            submittedDate.textContent = formatDate(
+                application.createdAt ||
+                application.submittedAt ||
+                application.applicationDate
+            );
 
-
-            submitted.className =
-                "timeline-item completed";
-
-
-            verification.className =
-                "timeline-item";
-
-
-            decision.className =
-                "timeline-item";
-
-
-            completion.className =
-                "timeline-item";
-
-
-            const submittedDate =
-                document.getElementById(
-                    "timelineSubmittedDate"
-                );
-
-            submittedDate.textContent =
-                formatDate(
-                    application.createdAt ||
-                    application.submittedAt ||
-                    application.applicationDate
-                );
-
-
-            if (
-                status === "PROCESSING"
-            ) {
-
-                verification.className =
-                    "timeline-item current";
-
+            if (status === "PENDING") {
+                verification.className = "timeline-item current";
+                verificationStatus.textContent = "Pending";
+            } else if (status === "PROCESSING") {
+                verification.className = "timeline-item current";
+                verificationStatus.textContent = "In progress";
+            } else if (status === "VERIFIED") {
+                verification.className = "timeline-item completed";
+                verificationStatus.textContent = "Verified";
+                decision.className = "timeline-item current";
+                decisionStatus.textContent = "Pending";
+            } else if (status === "APPROVED") {
+                verification.className = "timeline-item completed";
+                verificationStatus.textContent = "Verified";
+                decision.className = "timeline-item completed";
+                decisionStatus.textContent = "Approved";
+                completion.className = "timeline-item current";
+                completionStatus.textContent = "In progress";
+            } else if (status === "REJECTED") {
+                verification.className = "timeline-item completed";
+                verificationStatus.textContent = "Verified";
+                decision.className = "timeline-item current";
+                decisionStatus.textContent = "Rejected";
+                completionStatus.textContent = "Not applicable";
             }
-            else if (
-                status === "APPROVED"
-            ) {
-
-                verification.className =
-                    "timeline-item completed";
-
-                decision.className =
-                    "timeline-item completed";
-
-                completion.className =
-                    "timeline-item current";
-
-            }
-            else if (
-                status === "REJECTED"
-            ) {
-
-                verification.className =
-                    "timeline-item completed";
-
-                decision.className =
-                    "timeline-item current";
-
-            }
-            else {
-
-                verification.className =
-                    "timeline-item current";
-
-            }
-
         }
 
 
