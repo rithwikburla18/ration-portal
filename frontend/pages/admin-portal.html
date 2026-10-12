@@ -1694,7 +1694,8 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
 
             clearAuthentication();
 
-            window.location.reload();
+            // Always return to the single, standalone administrator login page.
+            window.location.replace("./admin-login.html");
 
         }
     );
@@ -1728,7 +1729,8 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
 
         }
 
-        showLogin();
+        // Keep all unauthenticated admin entry points on one canonical login page.
+        window.location.replace("./admin-login.html");
 
     }
 
