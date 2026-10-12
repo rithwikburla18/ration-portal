@@ -296,6 +296,15 @@
         return response;
     }
 
+    // Public interface for authenticated pages.
+    // Logout clears the local JWT session; the backend validates tokens on every protected request.
+    window.rationAuth = Object.freeze({
+        authenticatedFetch: authenticatedFetch,
+        logout: async function () {
+            clearSession();
+        }
+    });
+
     /*
      * ============================================================
      * PAGE HELPERS
