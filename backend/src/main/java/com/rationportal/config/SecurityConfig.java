@@ -66,7 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/onorc/**").hasAnyRole("CITIZEN", "ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(approvedCitizenAccessFilter, JwtAuthenticationFilter.class);
+                .addFilterAfter(approvedCitizenAccessFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
