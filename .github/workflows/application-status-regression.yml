@@ -1,0 +1,27 @@
+name: Ration Portal regression checks
+
+on:
+  pull_request:
+    paths:
+      - "frontend/pages/application-status.html"
+      - "frontend/tests/**"
+      - ".github/workflows/application-status-regression.yml"
+  push:
+    branches: [main]
+    paths:
+      - "frontend/pages/application-status.html"
+      - "frontend/tests/**"
+      - ".github/workflows/application-status-regression.yml"
+
+jobs:
+  application-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Test application status mapping and timeline
+        run: node frontend/tests/application-status-regression.mjs
