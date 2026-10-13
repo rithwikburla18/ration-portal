@@ -152,6 +152,16 @@ public class DashboardController {
                     card == null ? null : card.getRationCardNumber());
             ownCard.put("type",
                     card == null ? null : card.getCardType());
+            ownCard.put("headOfFamily",
+                    card == null ? null : card.getHeadOfFamily());
+            ownCard.put("address",
+                    card == null ? null : card.getAddress());
+            ownCard.put("district",
+                    card == null ? null : card.getDistrict());
+            ownCard.put("state",
+                    card == null ? null : card.getState());
+            ownCard.put("issuedAt",
+                    card == null ? null : card.getIssuedAt());
             ownCard.put("status",
                     latestCard == null ? "NOT_ISSUED" : latestCard.getStatus());
             ownCard.put("approvalStatus",

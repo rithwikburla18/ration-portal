@@ -2252,6 +2252,7 @@
 
 <script src="../js/i18n.js?v=20261004"></script>    <script src="../js/auth-guard.js?v=20261012"></script>
     <link rel="stylesheet" href="../css/final-theme.css?v=20261009">
+    <link rel="stylesheet" href="../css/citizen-dashboard-redesign.css?v=20261014">
     <meta name="theme-color" content="#0a2f57">
 </head>
 
@@ -2916,8 +2917,8 @@
                     My Ration Card
                 </h3>
 
-                <span class="status">
-                    Active
+                <span class="status" id="dashboardCardStatusBadge">
+                    Not issued yet
                 </span>
 
             </div>
@@ -2931,8 +2932,8 @@
                         Ration Card Number
                     </div>
 
-                    <div class="card-number">
-                        XXXX-XXXX-XXXX
+                    <div class="card-number" id="dashboardRationNumber">
+                        —
                     </div>
 
 
@@ -2944,9 +2945,7 @@
                                 Head of Family
                             </span>
 
-                            <span class="value">
-                                Citizen
-                            </span>
+                            <span class="value" id="dashboardHeadName">—</span>
 
                         </div>
 
@@ -2957,9 +2956,7 @@
                                 Card Type
                             </span>
 
-                            <span class="value">
-                                Food Security Card
-                            </span>
+                            <span class="value" id="dashboardCardType">—</span>
 
                         </div>
 
@@ -2970,9 +2967,7 @@
                                 District
                             </span>
 
-                            <span class="value">
-                                Telangana
-                            </span>
+                            <span class="value" id="dashboardDistrict">—</span>
 
                         </div>
 
@@ -2983,9 +2978,7 @@
                                 Status
                             </span>
 
-                            <span class="value">
-                                Active
-                            </span>
+                            <span class="value" id="dashboardCardPanelStatus">Not issued yet</span>
 
                         </div>
 
@@ -3029,9 +3022,7 @@
 
                     <div class="family-box">
 
-                        <strong>
-                            4
-                        </strong>
+                        <strong id="dashboardMemberCount">—</strong>
 
                         <span>
                             Total Members
@@ -3403,12 +3394,22 @@ async function loadLiveDashboard(){
         if(!response.ok) throw new Error("Dashboard API returned "+response.status);
         var data=await response.json();
         var card=data.rationCard||{};
-        setText("dashboardCardStatus", card.status||"NOT ISSUED");
-        setText("dashboardRiceQuota", ((data.familyRiceQuotaKg==null?0:data.familyRiceQuotaKg))+" kg");
-        setText("dashboardFamilyCount", data.familyMembers==null?0:data.familyMembers);
-        setText("dashboardAdultCount", data.adultCount==null?0:data.adultCount);
-        setText("dashboardChildCount", data.childCount==null?0:data.childCount);
-        setText("dashboardFamilyRiceQuota", ((data.familyRiceQuotaKg==null?0:data.familyRiceQuotaKg))+" kg");
+        var hasCard=!!card.number && ["ACTIVE","APPROVED"].includes(String(card.status||"").toUpperCase());
+        var appStatus=String(data.applicationStatus||"NONE").toUpperCase();
+        var displayStatus=hasCard ? card.status : (appStatus==="REJECTED" ? "Application rejected" : (["SUBMITTED","PENDING","VERIFIED"].includes(appStatus) ? "Pending approval" : "Not issued yet"));
+        setText("dashboardCardStatus", displayStatus);
+        setText("dashboardCardStatusBadge", displayStatus);
+        setText("dashboardRationNumber", hasCard ? card.number : "—");
+        setText("dashboardHeadName", hasCard ? (card.headOfFamily||"—") : "—");
+        setText("dashboardCardType", hasCard ? (card.type||"—") : "—");
+        setText("dashboardDistrict", hasCard ? (card.district||"—") : "—");
+        setText("dashboardCardPanelStatus", displayStatus);
+        setText("dashboardRiceQuota", hasCard ? ((data.familyRiceQuotaKg==null?0:data.familyRiceQuotaKg)+" kg") : "—");
+        setText("dashboardFamilyCount", hasCard ? (data.familyMembers==null?0:data.familyMembers) : "—");
+        setText("dashboardMemberCount", hasCard ? (data.familyMembers==null?0:data.familyMembers) : "—");
+        setText("dashboardAdultCount", hasCard ? (data.adultCount==null?0:data.adultCount) : "—");
+        setText("dashboardChildCount", hasCard ? (data.childCount==null?0:data.childCount) : "—");
+        setText("dashboardFamilyRiceQuota", hasCard ? ((data.familyRiceQuotaKg==null?0:data.familyRiceQuotaKg)+" kg") : "—");
         setText("dashboardApplicationStatus", data.applicationStatus||"NONE");
         var rows=document.querySelectorAll(".distribution-table tbody tr");
         var records=Array.isArray(data.recentDistribution)?data.recentDistribution:[];
