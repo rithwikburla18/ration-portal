@@ -620,6 +620,8 @@ document.addEventListener(
 
                 event.preventDefault();
 
+                if (document.getElementById("registrationType") && document.getElementById("registrationType").value === "FPS_DEALER") { window.location.href = "fps-register.html"; return; }
+
                 hideAlert();
 
                 hideError("nameError");
