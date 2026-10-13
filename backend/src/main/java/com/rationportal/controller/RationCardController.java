@@ -165,42 +165,66 @@ public class RationCardController {
             @RequestBody @NonNull RationCard card,
             Authentication authentication) {
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(401)
-                    .body(Map.of("message", "Authentication required."));
+        if (!isAdmin(authentication)) {
+            return ResponseEntity.status(403).body(Map.of(
+                    "message", "Citizens must submit a ration-card application. Only administrators can create a manual ration-card record."));
+        }
+        if (card == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Ration-card details are required."));
+        }
+        String validation = validateManualCard(card);
+        if (validation != null) {
+            return ResponseEntity.badRequest().body(Map.of("message", validation));
         }
 
-        if (isAdmin(authentication)) {
-
-            if (card.getOwnerEmail() == null
-                    || card.getOwnerEmail().isBlank()) {
-
-                return ResponseEntity.badRequest()
-                        .body(Map.of(
-                                "message",
-                                "Owner email is required when an administrator creates a ration card."
-                        ));
-            }
-
-            card.setOwnerEmail(
-                    card.getOwnerEmail().trim().toLowerCase()
-            );
-
-            card.setStatus("PENDING");
-
-            return ResponseEntity.status(201)
-                    .body(service.save(card));
-        }
-
-        card.setOwnerEmail(
-                authentication.getName().trim().toLowerCase()
-        );
-
+        card.setRationCardNumber(card.getRationCardNumber().trim());
+        card.setCardType(card.getCardType().trim());
+        card.setHeadOfFamily(card.getHeadOfFamily().trim());
+        card.setAddress(card.getAddress().trim());
+        card.setDistrict(card.getDistrict().trim());
+        card.setState(card.getState().trim());
+        card.setOwnerEmail(card.getOwnerEmail().trim().toLowerCase(java.util.Locale.ROOT));
+        if (card.getMobile() != null) card.setMobile(card.getMobile().trim());
+        if (card.getPincode() != null) card.setPincode(card.getPincode().trim());
         card.setStatus("PENDING");
-
-        return ResponseEntity.status(201)
-                .body(service.save(card));
+        card.setApprovalStatus("PENDING");
+        return ResponseEntity.status(201).body(service.save(card));
     }
+
+    private String validateManualCard(RationCard card) {
+        String number = card.getRationCardNumber();
+        if (number == null || !number.trim().matches("^[0-9]{12}$")) {
+            return "Ration-card number must contain exactly 12 digits.";
+        }
+        if (card.getCardType() == null || card.getCardType().isBlank() || card.getCardType().trim().length() > 20) {
+            return "Card type is required and must not exceed 20 characters.";
+        }
+        if (card.getHeadOfFamily() == null || card.getHeadOfFamily().isBlank() || card.getHeadOfFamily().trim().length() > 120) {
+            return "Head-of-family name is required and must not exceed 120 characters.";
+        }
+        if (card.getAddress() == null || card.getAddress().isBlank() || card.getAddress().trim().length() > 2000) {
+            return "Address is required and must not exceed 2000 characters.";
+        }
+        if (card.getDistrict() == null || card.getDistrict().isBlank() || card.getDistrict().trim().length() > 100
+                || card.getState() == null || card.getState().isBlank() || card.getState().trim().length() > 100) {
+            return "District and state are required and must not exceed 100 characters each.";
+        }
+        String email = card.getOwnerEmail();
+        if (email == null || email.isBlank() || email.trim().length() > 150
+                || !email.trim().matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+            return "A valid owner email address is required.";
+        }
+        if (card.getMobile() != null && !card.getMobile().isBlank()
+                && !card.getMobile().trim().matches("^(?:\\+91)?[6-9][0-9]{9}$")) {
+            return "Enter a valid Indian mobile number.";
+        }
+        if (card.getPincode() != null && !card.getPincode().isBlank()
+                && !card.getPincode().trim().matches("^[0-9]{6}$")) {
+            return "Pincode must contain exactly six digits.";
+        }
+        return null;
+    }
+
 
     @GetMapping("/admin/pending")
     public ResponseEntity<?> getPending(Authentication authentication) {

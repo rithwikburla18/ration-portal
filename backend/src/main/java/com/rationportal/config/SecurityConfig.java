@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/fps-distribution/**").hasRole("FPS_DEALER")
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/ration-cards/verify/**").permitAll()
                         .requestMatchers("/api/ration-cards/admin/**").hasRole("ADMIN")
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/ration-cards").hasAnyRole("CITIZEN", "ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/ration-cards").hasRole("ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/ration-cards/**").hasAnyRole("CITIZEN", "ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/family-members/**").hasAnyRole("CITIZEN", "ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/family-members/**").hasRole("ADMIN")
