@@ -7,6 +7,8 @@ import com.rationportal.model.RationCardApplication;
 import com.rationportal.repository.RationCardApplicationRepository;
 import com.rationportal.repository.RationCardRepository;
 import com.rationportal.service.NotificationService;
+import com.rationportal.service.RationCardIssuanceService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
@@ -28,6 +30,7 @@ public class RationCardApplicationController {
     private final RationCardRepository rationCardRepository;
     private final ObjectMapper objectMapper;
     private final NotificationService notificationService;
+    private final RationCardIssuanceService rationCardIssuanceService;
 
     private static final Set<String> ALLOWED_STATUSES = Set.of(
             "SUBMITTED",
@@ -41,12 +44,14 @@ public class RationCardApplicationController {
             RationCardApplicationRepository repository,
             RationCardRepository rationCardRepository,
             ObjectMapper objectMapper,
-            NotificationService notificationService) {
+            NotificationService notificationService,
+            RationCardIssuanceService rationCardIssuanceService) {
 
         this.repository = repository;
         this.rationCardRepository = rationCardRepository;
         this.objectMapper = objectMapper;
         this.notificationService = notificationService;
+        this.rationCardIssuanceService = rationCardIssuanceService;
     }
 
     @PostMapping
@@ -254,6 +259,7 @@ public class RationCardApplicationController {
     }
 
     @PutMapping("/{applicationNumber}/status")
+    @Transactional
     public ResponseEntity<?> updateApplicationStatus(
             @PathVariable @NonNull String applicationNumber,
             @RequestBody @NonNull Map<String, Object> request,
@@ -315,13 +321,18 @@ public class RationCardApplicationController {
         }
 
         String previousStatus = application.getStatus();
-
         application.setStatus(normalizedStatus);
-
-        RationCardApplication savedApplication =
-                repository.save(application);
-
-        syncRationCardForApplication(savedApplication);
+        if ("REJECTED".equals(normalizedStatus)) {
+            String reason = getString(request, "rejectionReason");
+            if (reason.isBlank()) reason = getString(request, "reason");
+            application.setRejectionReason(reason.isBlank() ? "Your application did not meet the verification requirements." : reason);
+            application.setCompletionStatus("NOT_APPLICABLE");
+        } else if ("APPROVED".equals(normalizedStatus)) {
+            application.setRejectionReason(null);
+        }
+        RationCardApplication savedApplication = repository.save(application);
+        rationCardIssuanceService.processApplicationStatus(savedApplication);
+        savedApplication = repository.save(savedApplication);
 
         try {
             notificationService.sendApplicationStatusEmail(
@@ -402,47 +413,4 @@ public class RationCardApplicationController {
 
         return value.toString().trim();
     }
-    private void syncRationCardForApplication(
-            RationCardApplication application) {
-
-        String ownerEmail = application.getEmail() == null
-                ? ""
-                : application.getEmail().trim().toLowerCase();
-
-        if (ownerEmail.isBlank()) {
-            return;
-        }
-
-        String cardNumber = "RC-" + application.getApplicationNumber();
-
-        RationCard card = rationCardRepository
-                .findByRationCardNumber(cardNumber)
-                .orElseGet(RationCard::new);
-
-        card.setRationCardNumber(cardNumber);
-        card.setCardType(application.getCardType());
-        card.setHeadOfFamily(application.getApplicantName());
-        card.setAddress(application.getAddress());
-        card.setDistrict(application.getDistrict());
-        card.setState(application.getState());
-        card.setOwnerEmail(ownerEmail);
-
-        String applicationStatus = application.getStatus() == null
-                ? "PENDING"
-                : application.getStatus().trim().toUpperCase();
-
-        if ("APPROVED".equals(applicationStatus)) {
-            card.setStatus("APPROVED");
-            card.setApprovalStatus("APPROVED");
-        } else if ("REJECTED".equals(applicationStatus)) {
-            card.setStatus("REJECTED");
-            card.setApprovalStatus("REJECTED");
-        } else {
-            card.setStatus("PENDING");
-            card.setApprovalStatus("PENDING");
-        }
-
-        rationCardRepository.save(card);
-    }
-
 }

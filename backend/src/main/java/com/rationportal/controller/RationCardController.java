@@ -72,6 +72,29 @@ public class RationCardController {
         return ResponseEntity.ok(card);
     }
 
+    @GetMapping("/verify/{number}")
+    public ResponseEntity<?> verifyCard(@PathVariable String number) {
+        RationCard card = service.getByNumber(number);
+        if (card == null || card.getStatus() == null
+                || !("ACTIVE".equalsIgnoreCase(card.getStatus())
+                || "APPROVED".equalsIgnoreCase(card.getStatus()))) {
+            return ResponseEntity.status(404).body(Map.of(
+                    "verified", false,
+                    "message", "No active ration card was found for this number."
+            ));
+        }
+        Map<String, Object> verification = new java.util.LinkedHashMap<>();
+        verification.put("verified", true);
+        verification.put("rationCardNumber", card.getRationCardNumber());
+        verification.put("cardType", card.getCardType());
+        verification.put("district", card.getDistrict());
+        verification.put("state", card.getState());
+        verification.put("status", card.getStatus());
+        verification.put("issuedAt", card.getIssuedAt());
+        verification.put("message", "This ration card is active in the Ration Portal.");
+        return ResponseEntity.ok(verification);
+    }
+
     @GetMapping("/{number}")
     public ResponseEntity<?> getByNumber(
             @PathVariable String number,

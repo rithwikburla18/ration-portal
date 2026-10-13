@@ -26,6 +26,14 @@ public class RationCard {
     private String approvalStatus;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+    @Column(name = "application_number", unique = true, length = 50)
+    private String applicationNumber;
+    @Column(name = "mobile", length = 15)
+    private String mobile;
+    @Column(name = "pincode", length = 10)
+    private String pincode;
+    @Column(name = "issued_at")
+    private LocalDateTime issuedAt;
 
     @PrePersist
     protected void onCreate() {
@@ -55,4 +63,12 @@ public class RationCard {
     public void setApprovalStatus(String value) { this.approvalStatus = value; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime value) { this.createdAt = value; }
+    public String getApplicationNumber() { return applicationNumber; }
+    public void setApplicationNumber(String value) { this.applicationNumber = value; }
+    public String getMobile() { return mobile; }
+    public void setMobile(String value) { this.mobile = value; }
+    public String getPincode() { return pincode; }
+    public void setPincode(String value) { this.pincode = value; }
+    public LocalDateTime getIssuedAt() { return issuedAt; }
+    public void setIssuedAt(LocalDateTime value) { this.issuedAt = value; }
 }

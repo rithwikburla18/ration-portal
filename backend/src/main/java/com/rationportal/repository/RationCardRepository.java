@@ -10,6 +10,10 @@ public interface RationCardRepository extends JpaRepository<RationCard, Long> {
 
     Optional<RationCard> findByRationCardNumber(String rationCardNumber);
 
+    Optional<RationCard> findByApplicationNumber(String applicationNumber);
+
+    boolean existsByRationCardNumber(String rationCardNumber);
+
     List<RationCard> findByStatusIgnoreCase(String status);
 
     Optional<RationCard> findByRationCardNumberAndOwnerEmailIgnoreCase(
