@@ -72,8 +72,8 @@ class FpsDistributionControllerTests {
         otp.setRationCardNumber(number);
         otp.setDealerEmail(email);
         otp.setOtpHash("stored-hash");
-        otp.setCreatedAt(LocalDateTime.now().minusMinutes(1));
-        otp.setExpiresAt(LocalDateTime.now().plusMinutes(4));
+        otp.setCreatedAt(LocalDateTime.now(java.time.ZoneId.of("Asia/Kolkata")).minusMinutes(1));
+        otp.setExpiresAt(LocalDateTime.now(java.time.ZoneId.of("Asia/Kolkata")).plusMinutes(4));
         otp.setAttempts(2);
         otp.setUsed(false);
         when(otps.findTopByRationCardNumberAndDealerEmailOrderByCreatedAtDesc(number, email))
