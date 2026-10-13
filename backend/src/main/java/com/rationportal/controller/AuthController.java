@@ -59,7 +59,7 @@ public class AuthController {
         String email = request
                 .getOrDefault("email", "")
                 .trim()
-                .toLowerCase();
+                .toLowerCase(java.util.Locale.ROOT);
 
         if (email.isBlank()
                 || email.length() > 150
@@ -111,7 +111,7 @@ public class AuthController {
         String email =
                 request.getOrDefault("email", "")
                         .trim()
-                        .toLowerCase();
+                        .toLowerCase(java.util.Locale.ROOT);
 
         String password =
                 request.getOrDefault("password", "");
@@ -153,6 +153,7 @@ public class AuthController {
         }
 
         if (email.isBlank()
+                || email.length() > 150
                 || !EMAIL_PATTERN.matcher(email).matches()) {
 
             return ResponseEntity.badRequest().body(
@@ -219,7 +220,7 @@ public class AuthController {
         String email =
                 request.getOrDefault("email", "")
                         .trim()
-                        .toLowerCase();
+                        .toLowerCase(java.util.Locale.ROOT);
 
         String password =
                 request.getOrDefault("password", "");
@@ -332,7 +333,7 @@ public class AuthController {
                                 authentication
                                         .getName()
                                         .trim()
-                                        .toLowerCase()
+                                        .toLowerCase(java.util.Locale.ROOT)
                         )
                         .orElse(null);
 
@@ -375,10 +376,11 @@ public class AuthController {
         String email =
                 request.getOrDefault("email", "")
                         .trim()
-                        .toLowerCase();
+                        .toLowerCase(java.util.Locale.ROOT);
 
         if (
                 email.isBlank()
+                        || email.length() > 150
                         || !EMAIL_PATTERN
                         .matcher(email)
                         .matches()
@@ -424,6 +426,10 @@ public class AuthController {
         try {
             mailService.sendPasswordResetEmail(email, resetToken);
         } catch (Exception mailException) {
+            // Never leave a reset credential active when its delivery has failed.
+            user.setResetPasswordToken(null);
+            user.setResetPasswordTokenExpiry(null);
+            userRepository.save(user);
             System.err.println("PASSWORD RESET EMAIL WARNING: delivery failed (" + mailException.getClass().getSimpleName() + ").");
         }
 

@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 class AuthControllerSecurityTests {
@@ -69,8 +70,33 @@ class AuthControllerSecurityTests {
         ResponseEntity<?> response = controller.forgotPassword(Map.of("email", "known@example.com"));
         assertEquals(200, response.getStatusCode().value());
         assertEquals(Map.of("message", PUBLIC_MESSAGE), response.getBody());
+        assertEquals(null, known.getResetPasswordToken());
+        assertEquals(null, known.getResetPasswordTokenExpiry());
     }
 
+    @Test
+    void authEndpointsRejectOversizedEmailsBeforeDatabaseLookup() {
+        UserRepository repository = mock(UserRepository.class);
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+        JwtService jwtService = mock(JwtService.class);
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        MailService mailService = mock(MailService.class);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
+        String oversizedEmail = "a".repeat(140) + "@example.com";
+
+        ResponseEntity<?> registration = controller.register(Map.of(
+                "fullName", "Test Citizen",
+                "email", oversizedEmail,
+                "password", "SafePassword123",
+                "termsAccepted", "true"));
+        ResponseEntity<?> resetRequest = controller.forgotPassword(Map.of("email", oversizedEmail));
+
+        assertEquals(400, registration.getStatusCode().value());
+        assertEquals(400, resetRequest.getStatusCode().value());
+        verify(repository, never()).findByEmail(oversizedEmail);
+        verify(repository, never()).save(org.mockito.ArgumentMatchers.any(User.class));
+    }
 
     @Test
     void resetPasswordLooksUpOnlyTheHashOfTheDeliveredResetToken() throws Exception {
