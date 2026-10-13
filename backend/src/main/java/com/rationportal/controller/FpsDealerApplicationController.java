@@ -36,6 +36,7 @@ public class FpsDealerApplicationController {
     }
 
     @PostMapping("/register")
+    @Transactional
     public ResponseEntity<?> register(@RequestBody Map<String,Object> body) {
         String dealerName=value(body,"dealerName"), shopName=value(body,"shopName");
         String license=value(body,"licenseNumber").toUpperCase(Locale.ROOT);

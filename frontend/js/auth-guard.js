@@ -11,12 +11,10 @@
         "family.html", "distribution.html", "onorc.html", "apply-ration-card.html",
         "applications.html", "application-status.html", "grievance.html",
         "grievance-dashboard.html", "grievance-status.html", "transparency.html",
-        "fair-price-shop.html"
+        "fps-dashboard.html", "fps-distribution.html", "fps-records.html"
     ];
     const APPROVAL_REQUIRED_SERVICE_FILES = [
-        "ration-card.html", "e-ration-card.html", "family.html", "distribution.html",
-        "onorc.html", "grievance.html", "grievance-dashboard.html", "grievance-status.html",
-        "transparency.html", "fair-price-shop.html"
+        "onorc.html"
     ];
 
     function currentFile() {
@@ -100,6 +98,15 @@
             return;
         }
         const role = String(user.role || localStorage.getItem(ROLE_KEY) || "").toUpperCase();
+        const dealerFiles = ["fps-dashboard.html", "fps-distribution.html", "fps-records.html"];
+        if (dealerFiles.includes(file) && role !== "FPS_DEALER") {
+            window.location.replace("./fps-login.html");
+            return;
+        }
+        if (role === "FPS_DEALER" && !dealerFiles.includes(file)) {
+            window.location.replace("./fps-dashboard.html");
+            return;
+        }
         if (role === "ADMIN") return;
         if (APPROVAL_REQUIRED_SERVICE_FILES.includes(file) && !(await hasApprovedCard(token))) {
             showApprovalRequired();
