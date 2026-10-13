@@ -2,6 +2,7 @@ package com.rationportal.controller;
 
 import com.rationportal.model.User;
 import com.rationportal.repository.UserRepository;
+import com.rationportal.repository.FpsDealerApplicationRepository;
 import com.rationportal.service.MailService;
 import com.rationportal.security.JwtService;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class AuthController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final MailService mailService;
+    private final FpsDealerApplicationRepository dealerApplications;
 
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
@@ -33,13 +35,15 @@ public class AuthController {
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
             AuthenticationManager authenticationManager,
-            MailService mailService
+            MailService mailService,
+            FpsDealerApplicationRepository dealerApplications
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.mailService = mailService;
+        this.dealerApplications = dealerApplications;
     }
 
     @PostMapping("/check-email")
@@ -209,6 +213,26 @@ public class AuthController {
 
         String password =
                 request.getOrDefault("password", "");
+        String portal = request.getOrDefault("portal", "GENERAL").trim().toUpperCase(java.util.Locale.ROOT);
+        User existingUser = userRepository.findByEmail(email).orElse(null);
+        if (existingUser != null) {
+            String role = existingUser.getRole() == null ? "" : existingUser.getRole().trim().toUpperCase(java.util.Locale.ROOT);
+            String status = existingUser.getStatus() == null ? "" : existingUser.getStatus().trim().toUpperCase(java.util.Locale.ROOT);
+            if ("FPS_DEALER".equals(portal) && !"FPS_DEALER".equals(role))
+                return ResponseEntity.status(403).body(Map.of("message", "This account is not registered as a ration-shop dealer."));
+            if ("FPS_DEALER".equals(role) && !"FPS_DEALER".equals(portal))
+                return ResponseEntity.status(403).body(Map.of("message", "Please use the separate Ration Shop Login page."));
+            if ("FPS_DEALER".equals(role) && "PENDING".equals(status))
+                return ResponseEntity.status(403).body(Map.of("code","DEALER_PENDING","message", "Your application is pending. Please get approval from the admin first and then try again."));
+            if ("FPS_DEALER".equals(role) && "REJECTED".equals(status)) {
+                String reason = dealerApplications.findByEmailIgnoreCase(email).map(a -> a.getRejectionReason()).orElse("");
+                return ResponseEntity.status(403).body(Map.of("code","DEALER_REJECTED","message", reason == null || reason.isBlank() ? "Your ration-shop dealer application was rejected. Contact the administrator for details." : "Your dealer application was rejected: " + reason));
+            }
+            if ("FPS_DEALER".equals(role) && !"ACTIVE".equals(status))
+                return ResponseEntity.status(403).body(Map.of("message","Your dealer account is not active. Please contact the administrator."));
+        } else if ("FPS_DEALER".equals(portal)) {
+            return ResponseEntity.status(401).body(Map.of("message","No ration-shop dealer account was found for this email."));
+        }
 
         try {
 
