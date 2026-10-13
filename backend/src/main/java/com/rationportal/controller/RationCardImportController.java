@@ -1,6 +1,7 @@
 package com.rationportal.controller;
 
 import com.rationportal.service.RationCardImportService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,10 @@ public class RationCardImportController {
             return ResponseEntity.badRequest().body(Map.of(
                     "status", "error",
                     "message", ex.getMessage() == null ? "CSV validation failed." : ex.getMessage()));
+        } catch (DataIntegrityViolationException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                    "status", "error",
+                    "message", "At least one record conflicts with existing data. No rows were imported."));
         } catch (Exception ex) {
             System.err.println("RATION_CARD_CSV_IMPORT_FAILED errorType=" + ex.getClass().getSimpleName());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(

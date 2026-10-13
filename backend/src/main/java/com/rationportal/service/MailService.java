@@ -160,18 +160,7 @@ public class MailService {
             int statusCode =
                     response.statusCode();
 
-            String responseBody =
-                    response.body();
-
-            System.out.println(
-                    "BREVO HTTP STATUS: "
-                            + statusCode
-            );
-
-            System.out.println(
-                    "BREVO RESPONSE BODY: "
-                            + responseBody
-            );
+            System.out.println("BREVO EMAIL HTTP STATUS: " + statusCode);
 
             if (
                     statusCode < 200
@@ -179,10 +168,7 @@ public class MailService {
             ) {
 
                 throw new IllegalStateException(
-                        "Brevo rejected email. HTTP "
-                                + statusCode
-                                + " Response: "
-                                + responseBody
+                        "Brevo rejected email. HTTP " + statusCode
                 );
             }
 
@@ -201,14 +187,11 @@ public class MailService {
 
         } catch (Exception exception) {
 
-            System.err.println(
-                    "BREVO EMAIL ERROR: "
-                            + exception.getMessage()
-            );
+            System.err.println("BREVO_PASSWORD_RESET_EMAIL_FAILED errorType="
+                    + exception.getClass().getSimpleName());
 
             throw new IllegalStateException(
-                    "Password reset email could not be sent: "
-                            + exception.getMessage(),
+                    "Password reset email could not be sent.",
                     exception
             );
         }
@@ -444,10 +427,7 @@ public class MailService {
 
             if (statusCode < 200 || statusCode >= 300) {
                 throw new IllegalStateException(
-                        "Brevo rejected login alert email. HTTP "
-                                + statusCode
-                                + " Response: "
-                                + response.body()
+                        "Brevo rejected login alert email. HTTP " + statusCode
                 );
             }
 
@@ -466,14 +446,11 @@ public class MailService {
 
         } catch (Exception exception) {
 
-            System.err.println(
-                    "LOGIN NOTIFICATION EMAIL ERROR: "
-                            + exception.getMessage()
-            );
+            System.err.println("BREVO_LOGIN_ALERT_EMAIL_FAILED errorType="
+                    + exception.getClass().getSimpleName());
 
             throw new IllegalStateException(
-                    "Login notification email could not be sent: "
-                            + exception.getMessage(),
+                    "Login notification email could not be sent.",
                     exception
             );
         }

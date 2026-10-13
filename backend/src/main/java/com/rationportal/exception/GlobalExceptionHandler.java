@@ -2,6 +2,7 @@ package com.rationportal.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -34,6 +35,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> invalidArgument(IllegalArgumentException ex, HttpServletRequest request) {
         return response(HttpStatus.BAD_REQUEST, ex.getMessage() == null ? "Invalid request." : ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> dataConflict(DataIntegrityViolationException ex, HttpServletRequest request) {
+        return response(HttpStatus.CONFLICT, "The request conflicts with existing data.", request);
     }
 
     @ExceptionHandler(RuntimeException.class)

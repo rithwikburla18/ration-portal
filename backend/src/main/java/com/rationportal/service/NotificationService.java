@@ -187,10 +187,7 @@ public class NotificationService {
                     || response.statusCode() >= 300) {
 
                 throw new IllegalStateException(
-                        "Brevo SMS rejected request. HTTP "
-                                + response.statusCode()
-                                + ": "
-                                + response.body()
+                        "Brevo SMS rejected request. HTTP " + response.statusCode()
                 );
             }
 
