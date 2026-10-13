@@ -38,8 +38,8 @@ public class FpsDealerApplicationController {
 
     @PostMapping("/register")
     @Transactional
-    public ResponseEntity<?> register(@RequestBody Map<String,Object> body)
-        if (body == null) return ResponseEntity.badRequest().body(Map.of("message", "Dealer registration details are required.")); {
+    public ResponseEntity<?> register(@RequestBody Map<String,Object> body) {
+        if (body == null) return ResponseEntity.badRequest().body(Map.of("message", "Dealer registration details are required."));
         String dealerName=value(body,"dealerName"), shopName=value(body,"shopName");
         String license=value(body,"licenseNumber").toUpperCase(Locale.ROOT);
         String mobile=value(body,"mobile"), email=value(body,"email").toLowerCase(Locale.ROOT);
