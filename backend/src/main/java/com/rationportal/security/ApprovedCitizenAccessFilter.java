@@ -41,11 +41,14 @@ public class ApprovedCitizenAccessFilter extends OncePerRequestFilter {
             return true;
         }
         if (HttpMethod.OPTIONS.matches(request.getMethod())) return true;
-        if (path.startsWith(request.getContextPath() + "/api/auth/")
-                || path.equals(request.getContextPath() + "/api/health")
-                || path.equals(request.getContextPath() + "/api/ration-cards/my")
-                || path.equals(request.getContextPath() + "/api/applications")
-                || path.startsWith(request.getContextPath() + "/api/applications/")) {
+        if (path.startsWith(contextPath + "/api/auth/")
+                || path.equals(contextPath + "/api/health")
+                || path.equals(contextPath + "/api/ration-cards/my")
+                || path.startsWith(contextPath + "/api/ration-cards/verify/")
+                || path.equals(contextPath + "/api/fair-price-shops")
+                || path.startsWith(contextPath + "/api/fair-price-shops/")
+                || path.equals(contextPath + "/api/applications")
+                || path.startsWith(contextPath + "/api/applications/")) {
             return true;
         }
         return false;
