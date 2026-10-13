@@ -34,6 +34,8 @@ public class RationCard {
     private String pincode;
     @Column(name = "issued_at")
     private LocalDateTime issuedAt;
+    @Column(name = "document_emailed_at")
+    private LocalDateTime documentEmailedAt;
 
     @PrePersist
     protected void onCreate() {
@@ -71,4 +73,6 @@ public class RationCard {
     public void setPincode(String value) { this.pincode = value; }
     public LocalDateTime getIssuedAt() { return issuedAt; }
     public void setIssuedAt(LocalDateTime value) { this.issuedAt = value; }
+    public LocalDateTime getDocumentEmailedAt() { return documentEmailedAt; }
+    public void setDocumentEmailedAt(LocalDateTime value) { this.documentEmailedAt = value; }
 }

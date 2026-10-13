@@ -59,7 +59,6 @@ public class RationCardIssuanceService {
         }
         String appNo = app.getApplicationNumber().trim();
         RationCard card = found.orElseGet(RationCard::new);
-        boolean firstIssue = card.getId() == null || !appNo.equals(card.getApplicationNumber());
         card.setApplicationNumber(appNo);
         if (card.getRationCardNumber() == null || !card.getRationCardNumber().matches("\\d{12}")) card.setRationCardNumber(newNumber());
         card.setCardType(required(app.getCardType(), "Application card type is missing."));
@@ -74,7 +73,7 @@ public class RationCardIssuanceService {
         if (family.isEmpty()) family = members.saveAll(makeMembers(app, card));
         app.setIssuedRationCardNumber(card.getRationCardNumber());
         app.setCompletionStatus("COMPLETED");
-        if (firstIssue) {
+        if (card.getDocumentEmailedAt() == null) {
             try {
                 byte[] pdf = makePdf(card, family);
                 String html = "<div style='font-family:Arial;color:#17365f'><div style='height:6px;background:linear-gradient(90deg,#ff9933 0 33%,#fff 33% 66%,#138808 66%)'></div><h2>Ration Portal — Digital Ration Card</h2><p>Dear "
@@ -83,6 +82,8 @@ public class RationCardIssuanceService {
                     + "</p><p>Your digital ration card PDF is attached.</p><small>Automated message from Ration Portal.</small></div>";
                 notifications.sendEmailWithAttachment(card.getOwnerEmail(), "Ration Portal - Your Digital Ration Card",
                     html, pdf, "ration-card-" + card.getRationCardNumber() + ".pdf");
+                card.setDocumentEmailedAt(LocalDateTime.now(IST));
+                cards.save(card);
             } catch (Exception ex) {
                 System.err.println("RATION_CARD_EMAIL_FAILED application=" + appNo + " errorType=" + ex.getClass().getSimpleName());
             }
