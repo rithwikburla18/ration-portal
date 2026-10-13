@@ -49,49 +49,20 @@ public class DashboardController {
                     .body(Map.of("message", "Authentication required."));
         }
 
-        List<RationCard> cards = rationCardRepository.findAll();
-        List<DistributionLog> distributions = distributionLogRepository.findAll();
-
-        BigDecimal totalRice = BigDecimal.ZERO;
-        for (DistributionLog distribution : distributions) {
-            if (distribution == null) {
-                continue;
-            }
-            BigDecimal quantity = distribution.getQuantityKg();
-            if (quantity != null) {
-                totalRice = totalRice.add(quantity);
-            }
+        long totalCards = rationCardRepository.count();
+        BigDecimal totalRice = distributionLogRepository.sumQuantityKg();
+        if (totalRice == null) {
+            totalRice = BigDecimal.ZERO;
         }
-
-        List<String> fpsIds = new ArrayList<>();
-        for (DistributionLog distribution : distributions) {
-            if (distribution == null) {
-                continue;
-            }
-            String fpsId = distribution.getFpsId();
-            if (fpsId == null || fpsId.isBlank()) {
-                continue;
-            }
-            String trimmedFpsId = fpsId.trim();
-            if (!fpsIds.contains(trimmedFpsId)) {
-                fpsIds.add(trimmedFpsId);
-            }
-        }
-
-        long activeFps = fpsIds.size();
-
-        long approvedCards = 0;
-        for (RationCard card : cards) {
-            if (isApproved(card)) {
-                approvedCards++;
-            }
-        }
+        long activeFps = distributionLogRepository.countDistinctFpsIds();
+        long approvedCards = rationCardRepository.countByStatusIgnoreCase("ACTIVE")
+                + rationCardRepository.countByStatusIgnoreCase("APPROVED");
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", "UP");
         result.put("authenticated", true);
         result.put("role", isAdmin(authentication) ? "ADMIN" : "CITIZEN");
-        result.put("totalRationCards", cards.size());
+        result.put("totalRationCards", totalCards);
         result.put("approvedRationCards", approvedCards);
         result.put("riceDistributedKg", totalRice);
         result.put("activeFps", activeFps);

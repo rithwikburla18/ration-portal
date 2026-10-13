@@ -16,6 +16,8 @@ public interface RationCardRepository extends JpaRepository<RationCard, Long> {
 
     List<RationCard> findByStatusIgnoreCase(String status);
 
+    long countByStatusIgnoreCase(String status);
+
     Optional<RationCard> findByRationCardNumberAndOwnerEmailIgnoreCase(
         String rationCardNumber,
         String ownerEmail
