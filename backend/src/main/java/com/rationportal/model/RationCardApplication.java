@@ -181,3 +181,4 @@ public class RationCardApplication {
     public void setRejectionReason(String value) { this.rejectionReason = value; }
     public String getIssuedRationCardNumber() { return issuedRationCardNumber; }
     public void setIssuedRationCardNumber(String value) { this.issuedRationCardNumber = value; }
+}
