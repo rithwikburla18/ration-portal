@@ -1,7 +1,8 @@
 /* Non-blocking Render wake-up helper. Safe to include on public and protected pages. */
 (function () {
   "use strict";
-  var backend = (window.RATION_API_BASE_URL || "https://ration-portal-backend.onrender.com").replace(/\/$/, "");
+  var local = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  var backend = local ? "http://localhost:8080" : "https://ration-portal-backend.onrender.com";
   var shown = false;
   var banner;
   var started = Date.now();
