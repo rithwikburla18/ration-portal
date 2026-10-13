@@ -3,70 +3,61 @@ $backendRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $backendRoot
 
 Write-Host ""
-Write-Host "Ration Portal local backend launcher" -ForegroundColor Cyan
-Write-Host "IMPORTANT: Flyway migrations run during startup. Use a Neon DEVELOPMENT branch, not your live production database." -ForegroundColor Yellow
+Write-Host "Ration Portal isolated local backend" -ForegroundColor Cyan
+Write-Host "Database: temporary in-memory H2. No Neon connection and no Flyway migrations." -ForegroundColor Green
+Write-Host "Outbound Brevo email/SMS are disabled. Local data is erased when the app stops." -ForegroundColor Yellow
 Write-Host ""
 
-$secureConnection = Read-Host "Paste the PostgreSQL URI from Neon (hidden input)" -AsSecureString
-$connPtr = [IntPtr]::Zero
-$connectionUri = $null
+$secureAdmin = $null
+$adminPtr = [IntPtr]::Zero
 $rng = $null
 $secretBytes = New-Object byte[] 32
-$secureBrevo = $null
-$brevoPtr = [IntPtr]::Zero
+$adminPassword = $null
 try {
-    $connPtr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureConnection)
-    $connectionUri = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($connPtr)
-    $uri = [Uri]$connectionUri
-    if ($uri.Scheme -notin @("postgresql", "postgres") -or -not $uri.UserInfo.Contains(":") -or [string]::IsNullOrWhiteSpace($uri.AbsolutePath) -or $uri.AbsolutePath -eq "/") {
-        throw "Connection URI is invalid. Copy the full PostgreSQL URI from Neon Connect."
+    $adminEmail = (Read-Host "Enter the local administrator email").Trim().ToLowerInvariant()
+    if ($adminEmail -notmatch '^[^\s@]+@[^\s@]+\.[^\s@]+$' -or $adminEmail.Length -gt 150) {
+        throw "Enter a valid administrator email address."
     }
 
-    $userPassword = $uri.UserInfo.Split(":", 2)
-    $env:DB_USERNAME = [Uri]::UnescapeDataString($userPassword[0])
-    $env:DB_PASSWORD = [Uri]::UnescapeDataString($userPassword[1])
-    $query = $uri.Query
-    if ($query -notmatch "(?i)(^|[?&])sslmode=") {
-        $query = if ([string]::IsNullOrEmpty($query)) { "?sslmode=require" } else { "$query&sslmode=require" }
+    $secureAdmin = Read-Host "Enter a temporary local administrator password (hidden input)" -AsSecureString
+    $adminPtr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureAdmin)
+    $adminPassword = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($adminPtr)
+    if ([string]::IsNullOrWhiteSpace($adminPassword) -or $adminPassword.Length -lt 8 -or [Text.Encoding]::UTF8.GetByteCount($adminPassword) -gt 72) {
+        throw "The local administrator password must be at least 8 characters and no more than 72 UTF-8 bytes."
     }
-    $env:DB_URL = "jdbc:postgresql://$($uri.Authority)$($uri.AbsolutePath)$query"
 
     $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
     $rng.GetBytes($secretBytes)
+    $env:SPRING_PROFILES_ACTIVE = "local"
     $env:JWT_SECRET = [Convert]::ToBase64String($secretBytes)
     $env:JWT_EXPIRATION_MS = "86400000"
-    $env:APP_CORS_ALLOWED_ORIGINS = "http://localhost:5500,http://127.0.0.1:5500"
+    $env:ADMIN_EMAIL = $adminEmail
+    $env:ADMIN_PASSWORD = $adminPassword
+    $env:BREVO_API_KEY = ""
+    $env:BREVO_FROM_EMAIL = ""
+    $env:BREVO_SMS_SENDER = "RationPortalLocal"
+    $env:MAIL_USERNAME = ""
+    $env:MAIL_PASSWORD = ""
     $env:APP_PUBLIC_API_BASE_URL = "http://localhost:8080"
+    $env:APP_CORS_ALLOWED_ORIGINS = "http://localhost:5500,http://127.0.0.1:5500"
 
-    $sender = Read-Host "Brevo verified sender email (press Enter to skip outgoing notifications)"
-    if (-not [string]::IsNullOrWhiteSpace($sender)) {
-        $env:BREVO_FROM_EMAIL = $sender.Trim()
-        $secureBrevo = Read-Host "Brevo API key (hidden input; press Enter to skip)" -AsSecureString
-        $brevoPtr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureBrevo)
-        $env:BREVO_API_KEY = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($brevoPtr)
-    }
-
-    Write-Host ""
-    Write-Host "Database host: $($uri.Host)" -ForegroundColor Green
-    Write-Host "Database name: $($uri.AbsolutePath.TrimStart('/'))" -ForegroundColor Green
-    Write-Host "Credentials are loaded only into this PowerShell process and are not written to a file." -ForegroundColor Green
-    $confirm = Read-Host "Type START to run the backend against this database"
+    $confirm = Read-Host "Type START to launch the local-only backend"
     if ($confirm -cne "START") {
         Write-Host "Cancelled. No application started." -ForegroundColor Yellow
         return
     }
+
+    Write-Host "Starting with local profile and a temporary admin account..." -ForegroundColor Green
     & .\gradlew.bat bootRun
     if ($LASTEXITCODE -ne 0) {
         throw "Backend exited with code $LASTEXITCODE. Review the error above; do not deploy."
     }
 }
 finally {
-    if ($connPtr -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($connPtr) }
-    if ($brevoPtr -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($brevoPtr) }
+    if ($adminPtr -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($adminPtr) }
     if ($rng) { $rng.Dispose() }
     [Array]::Clear($secretBytes, 0, $secretBytes.Length)
-    $connectionUri = $null
-    $secureConnection.Dispose()
-    if ($secureBrevo) { $secureBrevo.Dispose() }
-    Remove-Item Env:DB_URL, Env:DB_USERNAME, Env:DB_PASSWORD, Env:JWT_SECRET, Env:JWT_EXPIRATION_MS, Env:APP_CORS_ALLOWED_ORIGINS, Env:APP_PUBLIC_API_BASE_URL, Env:BREVO_API_KEY, Env:BREVO_FROM_EMAIL -ErrorAction SilentlyContinue
+    $adminPassword = $null
+    if ($secureAdmin) { $secureAdmin.Dispose() }
+    Remove-Item Env:SPRING_PROFILES_ACTIVE, Env:JWT_SECRET, Env:JWT_EXPIRATION_MS, Env:ADMIN_EMAIL, Env:ADMIN_PASSWORD, Env:BREVO_API_KEY, Env:BREVO_FROM_EMAIL, Env:BREVO_SMS_SENDER, Env:MAIL_USERNAME, Env:MAIL_PASSWORD, Env:APP_PUBLIC_API_BASE_URL, Env:APP_CORS_ALLOWED_ORIGINS -ErrorAction SilentlyContinue
 }

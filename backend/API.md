@@ -4,7 +4,7 @@ Base path: `/api`. Except for health, sign-in/registration, approved-FPS lookup,
 
 ## Local configuration
 
-The backend requires `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, and `JWT_SECRET`. Never commit real values. For the guided PowerShell launcher, use `backend/scripts/start-local.ps1`; it deliberately asks for confirmation because Flyway migrations modify the selected database. Use a Neon development branch for local work.
+The backend requires `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, and `JWT_SECRET`. Never commit real values. For safe local testing, run `backend/scripts/start-local.ps1`. It uses an in-memory H2 database, creates a temporary local administrator, disables external notifications, and does not connect to Neon or run Flyway migrations. Data resets when the process stops. Production uses the configured Neon environment variables and Flyway migrations.
 
 Notification delivery uses `BREVO_API_KEY` and `BREVO_FROM_EMAIL`; SMS additionally uses `BREVO_SMS_SENDER`. Admin bootstrap requires `ADMIN_EMAIL` and `ADMIN_PASSWORD` to be set in the intended environment. Do not set bootstrap credentials while connecting local code to a production database.
 
