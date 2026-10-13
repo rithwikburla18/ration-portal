@@ -38,8 +38,8 @@ public class FpsDistributionService {
         int day=now.getDayOfMonth();
         if(day<startDay||day>endDay)throw new IllegalStateException("Rice distribution is allowed only from the "+startDay+"st through the "+endDay+"th of each month.");
         RationCard card=cards.findByRationCardNumber(number).orElse(null);
-        if(card==null||!"ACTIVE".equalsIgnoreCase(card.getStatus()))
-            throw new IllegalArgumentException("This ration number does not exist or is not active. Please go and apply for a new ration card.");
+        if (!isEligibleCard(card))
+            throw new IllegalArgumentException("This ration number does not exist or is not approved for distribution. Please go and apply for a new ration card.");
         String month=YearMonth.from(now).toString();
         if(logs.existsByRationCardIdAndDistributionMonth(card.getId(),month)) {
             DistributionLog old=logs.findByRationCardId(card.getId()).stream()
@@ -65,6 +65,12 @@ public class FpsDistributionService {
         jdbc.update("INSERT INTO audit_logs(event_type,actor_email,target_reference,outcome,details) VALUES (?,?,?,?,?)",
                 "DISTRIBUTION_SUBMIT",dealerEmail,mask(number),"SUCCESS","Monthly family distribution recorded.");
         return saved;
+    }
+
+    private boolean isEligibleCard(RationCard card) {
+        if (card == null || card.getStatus() == null) return false;
+        String status = card.getStatus().trim().toUpperCase(Locale.ROOT);
+        return "ACTIVE".equals(status) || "APPROVED".equals(status);
     }
 
     public BigDecimal calculateFamilyQuota(int membersCount){return riceKg.multiply(BigDecimal.valueOf(Math.max(0,membersCount)));}

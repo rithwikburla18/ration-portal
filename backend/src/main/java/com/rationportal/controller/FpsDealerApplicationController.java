@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -37,7 +38,8 @@ public class FpsDealerApplicationController {
 
     @PostMapping("/register")
     @Transactional
-    public ResponseEntity<?> register(@RequestBody Map<String,Object> body) {
+    public ResponseEntity<?> register(@RequestBody Map<String,Object> body)
+        if (body == null) return ResponseEntity.badRequest().body(Map.of("message", "Dealer registration details are required.")); {
         String dealerName=value(body,"dealerName"), shopName=value(body,"shopName");
         String license=value(body,"licenseNumber").toUpperCase(Locale.ROOT);
         String mobile=value(body,"mobile"), email=value(body,"email").toLowerCase(Locale.ROOT);
@@ -47,7 +49,7 @@ public class FpsDealerApplicationController {
             return ResponseEntity.badRequest().body(Map.of("message","Complete all required ration-shop registration fields."));
         if (!EMAIL.matcher(email).matches()) return ResponseEntity.badRequest().body(Map.of("message","Enter a valid email address."));
         if (!mobile.matches("^(?:\\+91)?[6-9][0-9]{9}$")) return ResponseEntity.badRequest().body(Map.of("message","Enter a valid Indian mobile number."));
-        if (password.length()<8) return ResponseEntity.badRequest().body(Map.of("message","Password must contain at least 8 characters."));
+        if (password.length()<8 || password.getBytes(StandardCharsets.UTF_8).length>72) return ResponseEntity.badRequest().body(Map.of("message","Password must contain 8 to 72 UTF-8 bytes."));
         if (!"true".equalsIgnoreCase(value(body,"termsAccepted"))) return ResponseEntity.badRequest().body(Map.of("message","Please accept the declaration before registering."));
         Double lat=number(body.get("latitude")), lon=number(body.get("longitude"));
         if (lat==null||lon==null||lat < -90||lat > 90||lon < -180||lon > 180)
@@ -111,7 +113,7 @@ public class FpsDealerApplicationController {
     }
 
     private boolean isAdmin(Authentication auth){return auth!=null&&auth.isAuthenticated()&&auth.getAuthorities().stream().anyMatch(a->"ROLE_ADMIN".equals(a.getAuthority()));}
-    private String value(Map<String,Object> body,String key){Object v=body.get(key);return v==null?"":v.toString().trim();}
+    private String value(Map<String,Object> body,String key){if(body==null)return "";Object v=body.get(key);return v==null?"":v.toString().trim();}
     private Double number(Object value){try{return value==null?null:Double.valueOf(value.toString());}catch(NumberFormatException ex){return null;}}
     private String escape(String s){return s==null?"":s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\"","&quot;").replace("'","&#39;");}
     private static final class ListFields { static boolean blank(String... values){for(String value:values)if(value==null||value.isBlank())return true;return false;} }

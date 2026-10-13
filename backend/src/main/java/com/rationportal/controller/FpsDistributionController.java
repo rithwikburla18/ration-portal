@@ -47,7 +47,7 @@ public class FpsDistributionController {
     public ResponseEntity<?> requestOtp(@RequestBody Map<String,String> body,Authentication auth) {
         String number=value(body,"rationCardNumber");if(number.isBlank())return ResponseEntity.badRequest().body(Map.of("message","Enter the ration card number."));
         RationCard card=cards.findByRationCardNumber(number).orElse(null);
-        if(card==null||!"ACTIVE".equalsIgnoreCase(card.getStatus()))
+        if(!isEligibleCard(card))
             return ResponseEntity.status(404).body(Map.of("message","This ration number does not exist. Please go and apply for a new ration card."));
         FpsDealerApplication dealer=approvedDealer(auth);if(dealer==null)return ResponseEntity.status(403).body(Map.of("message","Approved ration-shop dealer access is required."));
         if(card.getOwnerEmail()==null||card.getOwnerEmail().isBlank())return ResponseEntity.status(409).body(Map.of("message","No verified email is registered on this ration card. Please contact the administrator."));
@@ -85,7 +85,7 @@ public class FpsDistributionController {
             return ResponseEntity.badRequest().body(Map.of("message",otp.getAttempts()>=3?"Maximum OTP attempts reached. Request a new OTP.":"The OTP is incorrect. Please check the email and try again.","attemptsRemaining",Math.max(0,3-otp.getAttempts())));
         }
         RationCard card=cards.findByRationCardNumber(number).orElse(null);
-        if(card==null||!"ACTIVE".equalsIgnoreCase(card.getStatus()))return ResponseEntity.status(404).body(Map.of("message","This ration number does not exist or is not active."));
+        if(!isEligibleCard(card))return ResponseEntity.status(404).body(Map.of("message","This ration number does not exist or is not active."));
         List<FamilyMember> family=members.findByRationCardId(card.getId());
         if(family.isEmpty())return ResponseEntity.status(409).body(Map.of("message","No registered family members were found for this ration card."));
         String verificationToken=UUID.randomUUID().toString()+UUID.randomUUID();
@@ -131,6 +131,12 @@ public class FpsDistributionController {
             row.put("receiptId",log.getReceiptId());row.put("transactionId",log.getTransactionId());row.put("fpsId",log.getFpsId());items.add(row);
         }
         return ResponseEntity.ok(Map.of("records",items,"page",data.getNumber(),"size",data.getSize(),"totalElements",data.getTotalElements(),"totalPages",data.getTotalPages()));
+    }
+
+    private boolean isEligibleCard(RationCard card) {
+        if (card == null || card.getStatus() == null) return false;
+        String status = card.getStatus().trim().toUpperCase(Locale.ROOT);
+        return "ACTIVE".equals(status) || "APPROVED".equals(status);
     }
 
     private FpsDealerApplication approvedDealer(Authentication auth){
