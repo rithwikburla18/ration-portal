@@ -72,3 +72,8 @@ Notification delivery uses `BREVO_API_KEY` and `BREVO_FROM_EMAIL`; SMS additiona
 ## Database migrations
 
 Flyway migration files are under `src/main/resources/db/migration`. They run on application startup. Do not point local testing at a production database unless you intentionally accept schema migrations and existing-data backfill.
+
+
+## Input validation notes
+
+Ration-card applications require an Indian mobile number, six-digit pincode, and 1–50 complete family-member rows. Application review transitions are restricted to Submitted → Pending/Verified/Approved/Rejected, Pending → Verified/Approved/Rejected, and Verified → Approved/Rejected. Dealer registration validates database column lengths before saving.

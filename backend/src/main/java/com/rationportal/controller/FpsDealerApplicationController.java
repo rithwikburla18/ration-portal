@@ -47,7 +47,13 @@ public class FpsDealerApplicationController {
         String mandal=value(body,"mandalVillage"), address=value(body,"shopAddress");
         if (ListFields.blank(dealerName,shopName,license,mobile,email,password,district,mandal,address))
             return ResponseEntity.badRequest().body(Map.of("message","Complete all required ration-shop registration fields."));
-        if (!EMAIL.matcher(email).matches()) return ResponseEntity.badRequest().body(Map.of("message","Enter a valid email address."));
+        if (!EMAIL.matcher(email).matches() || email.length() > 150)
+            return ResponseEntity.badRequest().body(Map.of("message","Enter a valid email address of at most 150 characters."));
+        if (dealerName.length() > 120 || shopName.length() > 150 || license.length() > 80
+                || mobile.length() > 15 || district.length() > 100 || mandal.length() > 150
+                || address.length() > 2000) {
+            return ResponseEntity.badRequest().body(Map.of("message","One or more dealer registration fields exceed the allowed length."));
+        }
         if (!mobile.matches("^(?:\\+91)?[6-9][0-9]{9}$")) return ResponseEntity.badRequest().body(Map.of("message","Enter a valid Indian mobile number."));
         if (password.length()<8 || password.getBytes(StandardCharsets.UTF_8).length>72) return ResponseEntity.badRequest().body(Map.of("message","Password must contain 8 to 72 UTF-8 bytes."));
         if (!"true".equalsIgnoreCase(value(body,"termsAccepted"))) return ResponseEntity.badRequest().body(Map.of("message","Please accept the declaration before registering."));

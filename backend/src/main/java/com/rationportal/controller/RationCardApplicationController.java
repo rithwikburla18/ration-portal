@@ -91,6 +91,21 @@ public class RationCardApplicationController {
                         ));
             }
 
+            if (headOfFamily.length() > 120 || cardType.length() > 20
+                    || address.length() > 2000 || district.length() > 100
+                    || state.length() > 100) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "One or more application fields exceed the allowed length."));
+            }
+            if (!mobile.matches("^(?:\\+91)?[6-9][0-9]{9}$")) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "Enter a valid Indian mobile number."));
+            }
+            if (!pincode.matches("^[0-9]{6}$")) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "Pincode must contain exactly six digits."));
+            }
+
             if (!(familyMembersObject instanceof List<?> familyMembers)) {
 
                 return ResponseEntity.badRequest()
@@ -107,6 +122,35 @@ public class RationCardApplicationController {
                                 "message",
                                 "At least one family member is required."
                         ));
+            }
+
+            if (familyMembers.size() > 50) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "A maximum of 50 family members can be submitted per application."));
+            }
+            for (int index = 0; index < familyMembers.size(); index++) {
+                Object item = familyMembers.get(index);
+                if (!(item instanceof Map<?, ?> member)) {
+                    return ResponseEntity.badRequest().body(Map.of(
+                            "message", "Family member row " + (index + 1) + " must be an object."));
+                }
+                String name = member.get("name") == null ? "" : member.get("name").toString().trim();
+                String ageText = member.get("age") == null ? "" : member.get("age").toString().trim();
+                String gender = member.get("gender") == null ? "" : member.get("gender").toString().trim();
+                String relationship = member.get("relationship") == null ? "" : member.get("relationship").toString().trim();
+                int age;
+                try {
+                    age = Integer.parseInt(ageText);
+                } catch (NumberFormatException exception) {
+                    return ResponseEntity.badRequest().body(Map.of(
+                            "message", "Family member row " + (index + 1) + " must contain a valid whole-number age."));
+                }
+                if (name.isBlank() || name.length() > 120 || age < 0 || age > 120
+                        || gender.isBlank() || gender.length() > 20
+                        || relationship.isBlank() || relationship.length() > 60) {
+                    return ResponseEntity.badRequest().body(Map.of(
+                            "message", "Family member row " + (index + 1) + " contains invalid or incomplete details."));
+                }
             }
 
             RationCardApplication application =
@@ -316,6 +360,14 @@ public class RationCardApplicationController {
         }
 
         String previousStatus = application.getStatus();
+        if (!isAllowedTransition(previousStatus, normalizedStatus)) {
+            return ResponseEntity.status(409).body(Map.of(
+                    "message", "Application status cannot be changed from "
+                            + (previousStatus == null ? "UNKNOWN" : previousStatus)
+                            + " to " + normalizedStatus + ".",
+                    "previousStatus", previousStatus == null ? "" : previousStatus,
+                    "requestedStatus", normalizedStatus));
+        }
         application.setStatus(normalizedStatus);
         if ("REJECTED".equals(normalizedStatus)) {
             String reason = getString(request, "rejectionReason");
@@ -374,6 +426,18 @@ public class RationCardApplicationController {
                         savedApplication
                 )
         );
+    }
+
+    private boolean isAllowedTransition(String currentStatus, String nextStatus) {
+        String current = currentStatus == null ? "" : currentStatus.trim().toUpperCase(java.util.Locale.ROOT);
+        String next = nextStatus == null ? "" : nextStatus.trim().toUpperCase(java.util.Locale.ROOT);
+        if (current.equals(next)) return true;
+        return switch (current) {
+            case "SUBMITTED" -> Set.of("PENDING", "VERIFIED", "APPROVED", "REJECTED").contains(next);
+            case "PENDING" -> Set.of("VERIFIED", "APPROVED", "REJECTED").contains(next);
+            case "VERIFIED" -> Set.of("APPROVED", "REJECTED").contains(next);
+            default -> false;
+        };
     }
 
     private boolean isAuthenticated(Authentication authentication) {

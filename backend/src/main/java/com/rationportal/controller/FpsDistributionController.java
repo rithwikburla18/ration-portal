@@ -46,10 +46,11 @@ public class FpsDistributionController {
     @PostMapping("/otp")
     public ResponseEntity<?> requestOtp(@RequestBody Map<String,String> body,Authentication auth) {
         String number=value(body,"rationCardNumber");if(number.isBlank())return ResponseEntity.badRequest().body(Map.of("message","Enter the ration card number."));
+        FpsDealerApplication dealer=approvedDealer(auth);
+        if(dealer==null)return ResponseEntity.status(403).body(Map.of("message","Approved ration-shop dealer access is required."));
         RationCard card=cards.findByRationCardNumber(number).orElse(null);
         if(!isEligibleCard(card))
             return ResponseEntity.status(404).body(Map.of("message","This ration number does not exist. Please go and apply for a new ration card."));
-        FpsDealerApplication dealer=approvedDealer(auth);if(dealer==null)return ResponseEntity.status(403).body(Map.of("message","Approved ration-shop dealer access is required."));
         if(card.getOwnerEmail()==null||card.getOwnerEmail().isBlank())return ResponseEntity.status(409).body(Map.of("message","No verified email is registered on this ration card. Please contact the administrator."));
         LocalDateTime now=LocalDateTime.now(IST);
         Optional<DistributionOtp> latest=otps.findTopByRationCardNumberAndDealerEmailOrderByCreatedAtDesc(number,dealer.getEmail());
@@ -143,7 +144,7 @@ public class FpsDistributionController {
         if(auth==null||!auth.isAuthenticated()||auth.getName()==null)return null;
         return dealers.findByEmailIgnoreCase(auth.getName()).filter(d->"APPROVED".equalsIgnoreCase(d.getStatus())).orElse(null);
     }
-    private String value(Map<String,String> body,String key){String v=body.get(key);return v==null?"":v.trim();}
+    private String value(Map<String,String> body,String key){if(body==null)return "";String v=body.get(key);return v==null?"":v.trim();}
     private String maskEmail(String email){int at=email.indexOf('@');if(at<2)return "***"+(at>=0?email.substring(at):"");return email.substring(0,1)+"*****"+email.substring(at-1);}
     private String mask(String number){return number==null||number.length()<4?"****":"********"+number.substring(number.length()-4);}
     private String escape(String s){return s==null?"":s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\"","&quot;").replace("'","&#39;");}
