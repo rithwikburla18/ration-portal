@@ -41,12 +41,17 @@ public class OnorcPortabilityService {
             throw new IllegalArgumentException("Destination district is required and must not exceed 100 characters.");
         }
 
+        String normalizedEmail = email == null ? "" : email.trim().toLowerCase(java.util.Locale.ROOT);
+        if (normalizedEmail.isBlank()) {
+            throw new IllegalArgumentException("Authenticated account email is required.");
+        }
+
         RationCard card;
         if (admin) {
             card = rationCardRepository.findByRationCardNumber(cardNumber)
                 .orElseThrow(() -> new IllegalArgumentException("Ration card not found."));
         } else {
-            card = rationCardRepository.findByRationCardNumberAndOwnerEmailIgnoreCase(cardNumber, email)
+            card = rationCardRepository.findByRationCardNumberAndOwnerEmailIgnoreCase(cardNumber, normalizedEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Ration card not found or not owned by this account."));
         }
         if (!isApproved(card)) {
@@ -60,7 +65,7 @@ public class OnorcPortabilityService {
         request.setDestinationDistrict(destinationDistrict);
         request.setFpsName(clean(request.getFpsName()));
         request.setFpsCode(clean(request.getFpsCode()));
-        request.setRequestedBy(email.trim().toLowerCase(java.util.Locale.ROOT));
+        request.setRequestedBy(normalizedEmail);
         request.setStatus("REQUESTED");
         // The reference is generated server-side; a caller cannot choose or reuse it.
         request.setReferenceNumber("ONORC-" + UUID.randomUUID().toString().replace("-", "")
@@ -91,11 +96,14 @@ public class OnorcPortabilityService {
 
         String current = request.getStatus() == null ? "" : request.getStatus().trim().toUpperCase(java.util.Locale.ROOT);
         if (current.equals(status)) return request;
-        if ("REJECTED".equals(current) || "COMPLETED".equals(current)) {
-            throw new IllegalStateException("A rejected or completed ONORC request cannot be changed.");
-        }
-        if ("REQUESTED".equals(current) && "COMPLETED".equals(status)) {
-            throw new IllegalStateException("An ONORC request must be approved before it can be completed.");
+        boolean allowed = switch (current) {
+            case "REQUESTED" -> List.of("PROCESSING", "APPROVED", "REJECTED").contains(status);
+            case "PROCESSING" -> List.of("APPROVED", "REJECTED").contains(status);
+            case "APPROVED" -> "COMPLETED".equals(status);
+            default -> false;
+        };
+        if (!allowed) {
+            throw new IllegalStateException("Invalid ONORC status transition from " + current + " to " + status + ".");
         }
 
         request.setStatus(status);
