@@ -30,6 +30,20 @@ class ApprovedCitizenAccessFilterTests {
     }
 
     @Test
+    void dashboardTransparencyAndGrievancesRemainAvailableBeforeCardApproval() {
+        assertTrue(shouldNotFilter("GET", "/api/dashboard/metrics"));
+        assertTrue(shouldNotFilter("GET", "/api/transparency/summary"));
+        assertTrue(shouldNotFilter("GET", "/api/grievances"));
+        assertTrue(shouldNotFilter("POST", "/api/grievances"));
+    }
+
+    @Test
+    void portabilityAndFamilyServicesStillRequireCardApproval() {
+        assertFalse(shouldNotFilter("POST", "/api/onorc/portability"));
+        assertFalse(shouldNotFilter("GET", "/api/family-members/ration-card/1"));
+    }
+
+    @Test
     void applicationWorkflowRemainsAvailableBeforeCardApproval() {
         assertTrue(shouldNotFilter("POST", "/api/applications"));
         assertTrue(shouldNotFilter("GET", "/api/applications/RCAPP-123"));

@@ -48,7 +48,11 @@ public class ApprovedCitizenAccessFilter extends OncePerRequestFilter {
                 || path.equals(contextPath + "/api/fair-price-shops")
                 || path.startsWith(contextPath + "/api/fair-price-shops/")
                 || path.equals(contextPath + "/api/applications")
-                || path.startsWith(contextPath + "/api/applications/")) {
+                || path.startsWith(contextPath + "/api/applications/")
+                || path.equals(contextPath + "/api/grievances")
+                || path.startsWith(contextPath + "/api/grievances/")
+                || path.startsWith(contextPath + "/api/dashboard/")
+                || path.startsWith(contextPath + "/api/transparency/")) {
             return true;
         }
         return false;
