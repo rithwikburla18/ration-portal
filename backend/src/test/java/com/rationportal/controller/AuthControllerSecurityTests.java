@@ -2,6 +2,7 @@ package com.rationportal.controller;
 
 import com.rationportal.model.User;
 import com.rationportal.repository.UserRepository;
+import com.rationportal.repository.FpsDealerApplicationRepository;
 import com.rationportal.security.JwtService;
 import com.rationportal.service.MailService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,7 +32,8 @@ class AuthControllerSecurityTests {
         JwtService jwtService = mock(JwtService.class);
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         MailService mailService = mock(MailService.class);
-        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
         whenMissingEmail(repository);
         User known = new User();
         known.setEmail("known@example.com");
@@ -53,7 +55,8 @@ class AuthControllerSecurityTests {
         JwtService jwtService = mock(JwtService.class);
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         MailService mailService = mock(MailService.class);
-        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
         User known = new User();
         known.setEmail("known@example.com");
         known.setFullName("Test Citizen");
