@@ -19,8 +19,11 @@ public class FairPriceShopController {
             @RequestParam(required=false) Double longitude) {
         if (district!=null&&district.length()>100 || locality!=null&&locality.length()>100)
             return ResponseEntity.badRequest().body(Map.of("message","Search terms must be 100 characters or fewer."));
-        if ((latitude==null)!=(longitude==null) || latitude!=null&&(latitude < -90||latitude > 90||longitude < -180||longitude > 180))
-            return ResponseEntity.badRequest().body(Map.of("message","A valid latitude and longitude pair is required."));
+        if ((latitude == null) != (longitude == null))
+            return ResponseEntity.badRequest().body(Map.of("message", "A valid latitude and longitude pair is required."));
+        if (latitude != null && longitude != null
+                && (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180))
+            return ResponseEntity.badRequest().body(Map.of("message", "A valid latitude and longitude pair is required."));
         String d=clean(district), q=clean(locality);
         List<Map<String,Object>> results=new ArrayList<>();
         for(FpsDealerApplication shop:dealers.findByStatusIgnoreCase("APPROVED")) {
@@ -31,7 +34,12 @@ public class FairPriceShopController {
             item.put("dealerName",shop.getDealerName()); item.put("address",shop.getShopAddress());
             item.put("district",shop.getDistrict()); item.put("mandalVillage",shop.getMandalVillage());
             item.put("phone",shop.getMobile()); item.put("latitude",shop.getLatitude()); item.put("longitude",shop.getLongitude());
-            if(latitude!=null) item.put("distanceKm",Math.round(distance(latitude,longitude,shop.getLatitude(),shop.getLongitude())*100.0)/100.0);
+            if (latitude != null && longitude != null) {
+                if (shop.getLatitude() == null || shop.getLongitude() == null) continue;
+                double km = distance(latitude.doubleValue(), longitude.doubleValue(),
+                        shop.getLatitude().doubleValue(), shop.getLongitude().doubleValue());
+                item.put("distanceKm", Math.round(km * 100.0) / 100.0);
+            }
             results.add(item);
         }
         if(latitude!=null)results.sort(Comparator.comparingDouble(x->((Number)x.get("distanceKm")).doubleValue()));

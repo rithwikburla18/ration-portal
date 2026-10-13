@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,9 +33,11 @@ public class ApprovedCitizenAccessFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         String path = request.getRequestURI();
-        if (path == null || !path.startsWith(request.getContextPath() + "/api/")) {
+        String contextPath = request.getContextPath();
+        if (contextPath == null) contextPath = "";
+        if (path == null || !path.startsWith(contextPath + "/api/")) {
             return true;
         }
         if (HttpMethod.OPTIONS.matches(request.getMethod())) return true;
@@ -50,9 +53,9 @@ public class ApprovedCitizenAccessFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

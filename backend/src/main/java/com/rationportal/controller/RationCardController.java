@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/ration-cards")
@@ -88,7 +89,7 @@ public class RationCardController {
             byte[] pdf = issuanceService.downloadPdf(number, authentication.getName(), isAdmin(authentication));
             String filename = "ration-card-" + number + ".pdf";
             return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_PDF)
+                    .contentType(Objects.requireNonNull(MediaType.APPLICATION_PDF))
                     .header(HttpHeaders.CONTENT_DISPOSITION,
                             ContentDisposition.attachment().filename(filename, StandardCharsets.UTF_8).build().toString())
                     .body(pdf);

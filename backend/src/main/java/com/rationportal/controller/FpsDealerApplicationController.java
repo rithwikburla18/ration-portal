@@ -75,7 +75,7 @@ public class FpsDealerApplicationController {
 
     @PutMapping("/{id}/decision")
     @Transactional
-    public ResponseEntity<?> decide(@PathVariable Long id,@RequestBody Map<String,Object> body,Authentication auth) {
+    public ResponseEntity<?> decide(@PathVariable long id,@RequestBody Map<String,Object> body,Authentication auth) {
         if (!isAdmin(auth)) return ResponseEntity.status(403).body(Map.of("message","Only administrators can review dealer applications."));
         String decision=value(body,"status").toUpperCase(Locale.ROOT);
         String reason=value(body,"rejectionReason");

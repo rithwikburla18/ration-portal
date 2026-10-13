@@ -14,6 +14,7 @@ import com.rationportal.repository.FamilyMemberRepository;
 import com.rationportal.repository.RationCardRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -124,6 +125,7 @@ public class RationCardIssuanceService {
         throw new IllegalStateException("Unable to allocate a unique ration-card number. Retry approval.");
     }
 
+    @NonNull
     private List<FamilyMember> makeMembers(RationCardApplication app, RationCard card) {
         try {
             List<Map<String,Object>> rows = mapper.readValue(app.getFamilyMembersData(), new TypeReference<>() {});

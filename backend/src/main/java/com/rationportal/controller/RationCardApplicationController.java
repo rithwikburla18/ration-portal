@@ -2,10 +2,8 @@ package com.rationportal.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rationportal.model.RationCard;
 import com.rationportal.model.RationCardApplication;
 import com.rationportal.repository.RationCardApplicationRepository;
-import com.rationportal.repository.RationCardRepository;
 import com.rationportal.service.NotificationService;
 import com.rationportal.service.RationCardIssuanceService;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +25,6 @@ import java.util.UUID;
 public class RationCardApplicationController {
 
     private final RationCardApplicationRepository repository;
-    private final RationCardRepository rationCardRepository;
     private final ObjectMapper objectMapper;
     private final NotificationService notificationService;
     private final RationCardIssuanceService rationCardIssuanceService;
@@ -42,13 +39,11 @@ public class RationCardApplicationController {
 
     public RationCardApplicationController(
             RationCardApplicationRepository repository,
-            RationCardRepository rationCardRepository,
             ObjectMapper objectMapper,
             NotificationService notificationService,
             RationCardIssuanceService rationCardIssuanceService) {
 
         this.repository = repository;
-        this.rationCardRepository = rationCardRepository;
         this.objectMapper = objectMapper;
         this.notificationService = notificationService;
         this.rationCardIssuanceService = rationCardIssuanceService;
