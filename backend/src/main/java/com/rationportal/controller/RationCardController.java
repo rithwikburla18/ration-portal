@@ -2,7 +2,12 @@ package com.rationportal.controller;
 
 import com.rationportal.model.RationCard;
 import com.rationportal.service.RationCardService;
+import com.rationportal.service.RationCardIssuanceService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ContentDisposition;
+import java.nio.charset.StandardCharsets;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +19,11 @@ import java.util.Map;
 public class RationCardController {
 
     private final RationCardService service;
+    private final RationCardIssuanceService issuanceService;
 
-    public RationCardController(RationCardService service) {
+    public RationCardController(RationCardService service, RationCardIssuanceService issuanceService) {
         this.service = service;
+        this.issuanceService = issuanceService;
     }
 
     private boolean isAdmin(Authentication authentication) {
@@ -70,6 +77,28 @@ public class RationCardController {
         }
 
         return ResponseEntity.ok(card);
+    }
+
+    @GetMapping("/{number}/pdf")
+    public ResponseEntity<?> downloadPdf(@PathVariable String number, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).body(Map.of("message", "Authentication required."));
+        }
+        try {
+            byte[] pdf = issuanceService.downloadPdf(number, authentication.getName(), isAdmin(authentication));
+            String filename = "ration-card-" + number + ".pdf";
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            ContentDisposition.attachment().filename(filename, StandardCharsets.UTF_8).build().toString())
+                    .body(pdf);
+        } catch (SecurityException ex) {
+            return ResponseEntity.status(403).body(Map.of("message", ex.getMessage()));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(404).body(Map.of("message", ex.getMessage()));
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.internalServerError().body(Map.of("message", ex.getMessage()));
+        }
     }
 
     @GetMapping("/verify/{number}")

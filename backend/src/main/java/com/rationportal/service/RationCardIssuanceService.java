@@ -90,6 +90,24 @@ public class RationCardIssuanceService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public byte[] downloadPdf(String number, String email, boolean admin) {
+        RationCard card = cards.findByRationCardNumber(number).orElse(null);
+        if (card == null || card.getStatus() == null
+                || !("ACTIVE".equalsIgnoreCase(card.getStatus()) || "APPROVED".equalsIgnoreCase(card.getStatus()))) {
+            throw new IllegalArgumentException("No active ration card was found.");
+        }
+        if (!admin && (email == null || card.getOwnerEmail() == null
+                || !card.getOwnerEmail().equalsIgnoreCase(email))) {
+            throw new SecurityException("You are not authorized to download this ration card.");
+        }
+        try {
+            return makePdf(card, members.findByRationCardId(card.getId()));
+        } catch (Exception ex) {
+            throw new IllegalStateException("The ration-card PDF could not be generated.", ex);
+        }
+    }
+
     private Optional<RationCard> findFor(RationCardApplication app) {
         Optional<RationCard> linked = cards.findByApplicationNumber(app.getApplicationNumber());
         return linked.isPresent() ? linked : cards.findByRationCardNumber("RC-" + app.getApplicationNumber());
