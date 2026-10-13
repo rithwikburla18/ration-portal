@@ -81,9 +81,15 @@ public class FpsDistributionController {
             return ResponseEntity.badRequest().body(Map.of("message","This OTP has expired or has already been used. Request a new OTP."));
         if(otp.getAttempts()==null||otp.getAttempts()>=3){otp.setUsed(true);otps.save(otp);return ResponseEntity.status(429).body(Map.of("message","Maximum OTP attempts reached. Request a new OTP."));}
         if(code.length()!=6||!code.chars().allMatch(Character::isDigit)||!encoder.matches(code,otp.getOtpHash())){
-            otp.setAttempts(otp.getAttempts()+1);if(otp.getAttempts()>=3)otp.setUsed(true);otps.save(otp);
+            otp.setAttempts(otp.getAttempts()+1);
+            boolean locked = otp.getAttempts() >= 3;
+            if (locked) otp.setUsed(true);
+            otps.save(otp);
             try{jdbc.update("INSERT INTO audit_logs(event_type,actor_email,target_reference,outcome,details) VALUES (?,?,?,?,?)","DISTRIBUTION_OTP_VERIFY",dealer.getEmail(),mask(number),"FAILED","Invalid OTP attempt; code intentionally excluded.");}catch(Exception ignored){}
-            return ResponseEntity.badRequest().body(Map.of("message",otp.getAttempts()>=3?"Maximum OTP attempts reached. Request a new OTP.":"The OTP is incorrect. Please check the email and try again.","attemptsRemaining",Math.max(0,3-otp.getAttempts())));
+            Map<String,Object> result = new LinkedHashMap<>();
+            result.put("message", locked ? "Maximum OTP attempts reached. Request a new OTP." : "The OTP is incorrect. Please check the email and try again.");
+            result.put("attemptsRemaining", Math.max(0, 3 - otp.getAttempts()));
+            return ResponseEntity.status(locked ? 429 : 400).body(result);
         }
         RationCard card=cards.findByRationCardNumber(number).orElse(null);
         if(!isEligibleCard(card))return ResponseEntity.status(404).body(Map.of("message","This ration number does not exist or is not active."));
