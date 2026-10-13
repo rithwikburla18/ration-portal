@@ -65,6 +65,7 @@ Notification delivery uses `BREVO_API_KEY` and `BREVO_FROM_EMAIL`; SMS additiona
 | POST | `/onorc/portability` | Card owner/Admin | Request portability record |
 | GET | `/onorc/portability/{reference}` | Request owner/Admin | Read portability status |
 | GET | `/onorc/my-requests` | Authenticated | List current user's portability requests |
+| PUT | `/onorc/portability/{reference}/status` | Admin | Update ONORC request status |
 | POST | `/import/ration-cards` | Admin | Import validated CSV records (multipart field: `file`) |
 | GET | `/health` | Public | Application liveness check |
 
