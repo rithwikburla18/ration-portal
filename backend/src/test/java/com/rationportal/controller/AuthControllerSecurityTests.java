@@ -12,6 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.HexFormat;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -65,6 +69,41 @@ class AuthControllerSecurityTests {
         ResponseEntity<?> response = controller.forgotPassword(Map.of("email", "known@example.com"));
         assertEquals(200, response.getStatusCode().value());
         assertEquals(Map.of("message", PUBLIC_MESSAGE), response.getBody());
+    }
+
+
+    @Test
+    void resetPasswordLooksUpOnlyTheHashOfTheDeliveredResetToken() throws Exception {
+        UserRepository repository = mock(UserRepository.class);
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+        JwtService jwtService = mock(JwtService.class);
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        MailService mailService = mock(MailService.class);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
+
+        String rawToken = "single-use-reset-token";
+        String tokenHash = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+                .digest(rawToken.getBytes(StandardCharsets.UTF_8)));
+        User user = new User();
+        user.setEmail("known@example.com");
+        user.setPasswordHash("old-hash");
+        user.setResetPasswordToken(tokenHash);
+        user.setResetPasswordTokenExpiry(LocalDateTime.now().plusMinutes(10));
+        org.mockito.Mockito.when(repository.findByResetPasswordToken(tokenHash)).thenReturn(Optional.of(user));
+        org.mockito.Mockito.when(encoder.encode("new-safe-password")).thenReturn("encoded-new-password");
+
+        ResponseEntity<?> response = controller.resetPassword(Map.of(
+                "token", rawToken,
+                "newPassword", "new-safe-password",
+                "termsAccepted", "true"));
+
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals("encoded-new-password", user.getPasswordHash());
+        assertEquals(null, user.getResetPasswordToken());
+        assertEquals(null, user.getResetPasswordTokenExpiry());
+        verify(repository).findByResetPasswordToken(tokenHash);
+        verify(repository).save(user);
     }
 
     @Test
