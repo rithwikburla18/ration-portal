@@ -1,0 +1,28 @@
+name: Ration Portal Keep Alive
+
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub Actions schedules run no more frequently than every five minutes.
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ration-portal-keep-alive
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Wake Render backend health endpoint
+        continue-on-error: true
+        run: |
+          curl --fail --silent --show-error --location --max-time 120 --retry 2 --retry-delay 5 --retry-all-errors "https://ration-portal-backend.onrender.com/api/health"
+      - name: Ping Render frontend
+        continue-on-error: true
+        run: |
+          curl --fail --silent --show-error --location --max-time 60 --retry 2 --retry-delay 5 --retry-all-errors "https://ration-portal-frontend.onrender.com/"
