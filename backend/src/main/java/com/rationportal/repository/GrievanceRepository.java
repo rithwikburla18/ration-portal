@@ -1,1 +1,12 @@
-package com.rationportal.repository; import com.rationportal.model.Grievance; import org.springframework.data.jpa.repository.JpaRepository; import java.util.Optional; public interface GrievanceRepository extends JpaRepository<Grievance,Long> { Optional<Grievance> findByGrievanceNumber(String grievanceNumber); }
+package com.rationportal.repository;
+
+import com.rationportal.model.Grievance;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface GrievanceRepository extends JpaRepository<Grievance, Long> {
+    Optional<Grievance> findByGrievanceNumber(String grievanceNumber);
+    List<Grievance> findBySubmittedByEmailIgnoreCaseOrderByCreatedAtDesc(String submittedByEmail);
+}

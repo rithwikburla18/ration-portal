@@ -26,7 +26,7 @@ public class Grievance {
     @Column(name = "contact_number", nullable = false)
     private String contactNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)
