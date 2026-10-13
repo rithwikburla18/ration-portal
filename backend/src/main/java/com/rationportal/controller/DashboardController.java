@@ -8,6 +8,7 @@ import com.rationportal.repository.DistributionLogRepository;
 import com.rationportal.repository.FamilyMemberRepository;
 import com.rationportal.repository.RationCardApplicationRepository;
 import com.rationportal.repository.RationCardRepository;
+import com.rationportal.repository.FpsDealerApplicationRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,16 +31,19 @@ public class DashboardController {
     private final FamilyMemberRepository familyMemberRepository;
     private final DistributionLogRepository distributionLogRepository;
     private final RationCardApplicationRepository applicationRepository;
+    private final FpsDealerApplicationRepository fpsDealerApplicationRepository;
 
     public DashboardController(
             RationCardRepository rationCardRepository,
             FamilyMemberRepository familyMemberRepository,
             DistributionLogRepository distributionLogRepository,
-            RationCardApplicationRepository applicationRepository) {
+            RationCardApplicationRepository applicationRepository,
+            FpsDealerApplicationRepository fpsDealerApplicationRepository) {
         this.rationCardRepository = rationCardRepository;
         this.familyMemberRepository = familyMemberRepository;
         this.distributionLogRepository = distributionLogRepository;
         this.applicationRepository = applicationRepository;
+        this.fpsDealerApplicationRepository = fpsDealerApplicationRepository;
     }
 
     @GetMapping("/metrics")
@@ -54,7 +58,7 @@ public class DashboardController {
         if (totalRice == null) {
             totalRice = BigDecimal.ZERO;
         }
-        long activeFps = distributionLogRepository.countDistinctFpsIds();
+        long activeFps = fpsDealerApplicationRepository.countByStatusIgnoreCase("APPROVED");
         long approvedCards = rationCardRepository.countByStatusIgnoreCase("ACTIVE")
                 + rationCardRepository.countByStatusIgnoreCase("APPROVED");
 
@@ -71,7 +75,7 @@ public class DashboardController {
             String email = authentication.getName().trim().toLowerCase();
 
             List<RationCard> ownerCards =
-                    rationCardRepository.findByOwnerEmailIgnoreCase(email);
+                    rationCardRepository.findByOwnerEmailIgnoreCaseOrderByCreatedAtDesc(email);
 
             RationCard card = null;
             for (RationCard ownerCard : ownerCards) {
@@ -82,7 +86,7 @@ public class DashboardController {
             }
 
             RationCard latestCard =
-                    ownerCards.isEmpty() ? null : ownerCards.get(ownerCards.size() - 1);
+                    ownerCards.isEmpty() ? null : ownerCards.get(0);
 
             List<FamilyMember> family = card == null
                     ? List.of()
@@ -152,31 +156,9 @@ public class DashboardController {
 
             if (card != null) {
                 List<DistributionLog> cardDistributions =
-                        distributionLogRepository.findByRationCardId(card.getId());
+                        distributionLogRepository.findTop5ByRationCardIdOrderByDistributionDateDescDistributionTimeDesc(card.getId());
 
-                cardDistributions.sort((first, second) -> {
-                    if (first == null) {
-                        return 1;
-                    }
-                    if (second == null) {
-                        return -1;
-                    }
-                    if (first.getDistributionDate() == null
-                            && second.getDistributionDate() == null) {
-                        return 0;
-                    }
-                    if (first.getDistributionDate() == null) {
-                        return 1;
-                    }
-                    if (second.getDistributionDate() == null) {
-                        return -1;
-                    }
-
-                    return second.getDistributionDate()
-                            .compareTo(first.getDistributionDate());
-                });
-
-                int limit = Math.min(5, cardDistributions.size());
+                int limit = cardDistributions.size();
 
                 for (int i = 0; i < limit; i++) {
                     DistributionLog distribution = cardDistributions.get(i);

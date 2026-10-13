@@ -4,6 +4,7 @@ import com.rationportal.repository.DistributionLogRepository;
 import com.rationportal.repository.FamilyMemberRepository;
 import com.rationportal.repository.RationCardApplicationRepository;
 import com.rationportal.repository.RationCardRepository;
+import com.rationportal.repository.FpsDealerApplicationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,16 +27,17 @@ class DashboardControllerTests {
         FamilyMemberRepository members = mock(FamilyMemberRepository.class);
         DistributionLogRepository distributions = mock(DistributionLogRepository.class);
         RationCardApplicationRepository applications = mock(RationCardApplicationRepository.class);
+        FpsDealerApplicationRepository fps = mock(FpsDealerApplicationRepository.class);
 
         when(cards.count()).thenReturn(10L);
         when(cards.countByStatusIgnoreCase("ACTIVE")).thenReturn(4L);
         when(cards.countByStatusIgnoreCase("APPROVED")).thenReturn(1L);
-        when(cards.findByOwnerEmailIgnoreCase("citizen@example.com")).thenReturn(List.of());
+        when(cards.findByOwnerEmailIgnoreCaseOrderByCreatedAtDesc("citizen@example.com")).thenReturn(List.of());
         when(distributions.sumQuantityKg()).thenReturn(new BigDecimal("50.00"));
-        when(distributions.countDistinctFpsIds()).thenReturn(2L);
+        when(fps.countByStatusIgnoreCase("APPROVED")).thenReturn(2L);
         when(applications.findAllByEmailOrderByCreatedAtDesc("citizen@example.com")).thenReturn(List.of());
 
-        DashboardController controller = new DashboardController(cards, members, distributions, applications);
+        DashboardController controller = new DashboardController(cards, members, distributions, applications, fps);
         var authentication = new UsernamePasswordAuthenticationToken(
                 "citizen@example.com",
                 "test",

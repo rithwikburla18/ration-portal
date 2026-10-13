@@ -24,4 +24,6 @@ public interface RationCardRepository extends JpaRepository<RationCard, Long> {
     );
 
     List<RationCard> findByOwnerEmailIgnoreCase(String ownerEmail);
+
+    List<RationCard> findByOwnerEmailIgnoreCaseOrderByCreatedAtDesc(String ownerEmail);
 }

@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface DistributionLogRepository extends JpaRepository<DistributionLog, Long> {
     List<DistributionLog> findByRationCardId(Long rationCardId);
+    List<DistributionLog> findTop5ByRationCardIdOrderByDistributionDateDescDistributionTimeDesc(Long rationCardId);
     boolean existsByRationCardIdAndDistributionMonth(Long rationCardId,String distributionMonth);
 
     @Query("select sum(d.quantityKg) from DistributionLog d")

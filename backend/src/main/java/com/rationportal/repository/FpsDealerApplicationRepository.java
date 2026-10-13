@@ -10,4 +10,5 @@ public interface FpsDealerApplicationRepository extends JpaRepository<FpsDealerA
     Optional<FpsDealerApplication> findByLicenseNumberIgnoreCase(String licenseNumber);
     List<FpsDealerApplication> findByStatusIgnoreCaseOrderByCreatedAtDesc(String status);
     List<FpsDealerApplication> findByStatusIgnoreCase(String status);
+    long countByStatusIgnoreCase(String status);
 }
