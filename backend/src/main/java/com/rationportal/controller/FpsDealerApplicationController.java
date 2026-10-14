@@ -58,7 +58,7 @@ public class FpsDealerApplicationController {
         if (password.length()<8 || password.getBytes(StandardCharsets.UTF_8).length>72) return ResponseEntity.badRequest().body(Map.of("message","Password must contain 8 to 72 UTF-8 bytes."));
         if (!"true".equalsIgnoreCase(value(body,"termsAccepted"))) return ResponseEntity.badRequest().body(Map.of("message","Please accept the declaration before registering."));
         Double lat=number(body.get("latitude")), lon=number(body.get("longitude"));
-        if (lat==null||lon==null||lat < -90||lat > 90||lon < -180||lon > 180)
+        if (lat == null || lon == null || !Double.isFinite(lat) || !Double.isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180)
             return ResponseEntity.badRequest().body(Map.of("message","Enter valid shop latitude and longitude."));
         if (users.findByEmail(email).isPresent()||applications.findByLicenseNumberIgnoreCase(license).isPresent())
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message","This email or FPS licence number is already registered."));

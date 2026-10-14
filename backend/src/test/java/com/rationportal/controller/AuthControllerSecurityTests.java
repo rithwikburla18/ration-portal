@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.HashMap;
 import java.util.Map;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -150,6 +151,50 @@ class AuthControllerSecurityTests {
         assertFalse(json.has("resetPasswordTokenExpiry"));
         assertFalse(json.toString().contains("HASH_SHOULD_NOT_LEAK"));
         assertFalse(json.toString().contains("RESET_TOKEN_SHOULD_NOT_LEAK"));
+    }
+    @Test
+    void explicitlyNullRequestFieldsReturnControlledBadRequestResponses() {
+        UserRepository repository = mock(UserRepository.class);
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+        JwtService jwtService = mock(JwtService.class);
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        MailService mailService = mock(MailService.class);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+
+        AuthController controller = new AuthController(
+                repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
+
+        Map<String, String> nullEmail = new HashMap<>();
+        nullEmail.put("email", null);
+        assertEquals(400, controller.checkEmail(nullEmail).getStatusCode().value());
+        assertEquals(400, controller.forgotPassword(nullEmail).getStatusCode().value());
+        assertEquals(400, controller.login(nullEmail).getStatusCode().value());
+
+        Map<String, String> nullName = new HashMap<>();
+        nullName.put("fullName", null);
+        nullName.put("email", "citizen@example.com");
+        nullName.put("password", "Valid-password-123");
+        nullName.put("termsAccepted", "true");
+        assertEquals(400, controller.register(nullName).getStatusCode().value());
+
+        Map<String, String> nullPassword = new HashMap<>();
+        nullPassword.put("fullName", "Test Citizen");
+        nullPassword.put("email", "citizen@example.com");
+        nullPassword.put("password", null);
+        nullPassword.put("termsAccepted", "true");
+        assertEquals(400, controller.register(nullPassword).getStatusCode().value());
+
+        Map<String, String> nullToken = new HashMap<>();
+        nullToken.put("token", null);
+        nullToken.put("newPassword", "Valid-password-123");
+        nullToken.put("termsAccepted", "true");
+        assertEquals(400, controller.resetPassword(nullToken).getStatusCode().value());
+
+        Map<String, String> nullResetPassword = new HashMap<>();
+        nullResetPassword.put("token", "unknown-token");
+        nullResetPassword.put("newPassword", null);
+        nullResetPassword.put("termsAccepted", "true");
+        assertEquals(400, controller.resetPassword(nullResetPassword).getStatusCode().value());
     }
     private static void whenMissingEmail(UserRepository repository) {
         org.mockito.Mockito.when(repository.findByEmail("missing@example.com")).thenReturn(Optional.empty());

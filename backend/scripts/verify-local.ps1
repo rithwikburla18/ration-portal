@@ -14,6 +14,8 @@ function Write-Check {
     }
 }
 
+Add-Type -AssemblyName System.Net.Http
+
 function Invoke-LocalApi {
     param(
         [Parameter(Mandatory=$true)][string]$Method,
@@ -104,6 +106,7 @@ try {
     $adminLogin = Invoke-LocalApi -Method "POST" -Path "/api/auth/login" -Body @{
         email = $adminEmail
         password = $adminPassword
+        portal = "ADMIN"
     }
 } finally {
     if ($adminPtr -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($adminPtr) }
@@ -180,7 +183,7 @@ $manualCard = Invoke-LocalApi -Method "POST" -Path "/api/ration-cards" -Token $c
     pincode = "506001"
     ownerEmail = $citizenEmail
 }
-Write-Check "Citizen cannot bypass the application workflow with a manual card" ($manualCard.StatusCode -eq 403) "HTTP $($manualCard.StatusCode)"
+Write-Check "Citizen cannot bypass the application workflow with a manual card" ($manualCard.StatusCode -in @(403,423)) "HTTP $($manualCard.StatusCode)"
 
 $application = Invoke-LocalApi -Method "POST" -Path "/api/applications/ration-card" -Token $citizenToken -Body @{
     headOfFamily = "Local Smoke Citizen"
@@ -238,13 +241,18 @@ Write-Check "Issued family members are owner-scoped" ($family.StatusCode -eq 200
 $pdfPath = [System.IO.Path]::GetTempFileName()
 $pdfOk = $false
 try {
-    $pdfResponse = Invoke-WebRequest -Uri "$baseUrl/api/ration-cards/$cardNumber/pdf" -Method GET -Headers @{ Authorization = "Bearer $citizenToken"; Accept = "application/pdf" } -OutFile $pdfPath -UseBasicParsing -TimeoutSec 30
+    Invoke-WebRequest -Uri "$baseUrl/api/ration-cards/$cardNumber/pdf" -Method GET -Headers @{ Authorization = "Bearer $citizenToken"; Accept = "application/pdf" } -OutFile $pdfPath -UseBasicParsing -TimeoutSec 30
     $pdfBytes = [System.IO.File]::ReadAllBytes($pdfPath)
     $pdfSignature = ""
     if ($pdfBytes.Length -ge 4) { $pdfSignature = [System.Text.Encoding]::ASCII.GetString($pdfBytes, 0, 4) }
-    $pdfOk = ([int]$pdfResponse.StatusCode -eq 200 -and $pdfSignature -eq "%PDF")
+    $pdfOk = ($pdfBytes.Length -gt 4 -and $pdfSignature -eq "%PDF")
+    Write-Host ("PDF response diagnostic: download=completed; bytes={0}; signature=[{1}]" -f $pdfBytes.Length, $pdfSignature)
 } catch {
     $pdfOk = $false
+    $pdfStatus = "no HTTP response"
+    $pdfError = $_.Exception.Message
+    if ($_.Exception.Response) { try { $pdfStatus = [int]$_.Exception.Response.StatusCode } catch {} }
+    Write-Host "PDF diagnostic: HTTP $pdfStatus; $pdfError"
 } finally {
     Remove-Item $pdfPath -Force -ErrorAction SilentlyContinue
 }

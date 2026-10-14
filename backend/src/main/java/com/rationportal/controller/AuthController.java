@@ -56,8 +56,7 @@ public class AuthController {
         if (request == null) return ResponseEntity.badRequest().body(Map.of("message", "Please provide an email address."));
 
 
-        String email = request
-                .getOrDefault("email", "")
+        String email = requestValue(request, "email", "")
                 .trim()
                 .toLowerCase(java.util.Locale.ROOT);
 
@@ -105,22 +104,19 @@ public class AuthController {
 
 
         String name =
-                request.getOrDefault("fullName", "")
+                requestValue(request, "fullName", "")
                         .trim();
 
         String email =
-                request.getOrDefault("email", "")
+                requestValue(request, "email", "")
                         .trim()
                         .toLowerCase(java.util.Locale.ROOT);
 
         String password =
-                request.getOrDefault("password", "");
+                requestValue(request, "password", "");
 
         String termsAccepted =
-                request.getOrDefault(
-                        "termsAccepted",
-                        "false"
-                );
+                requestValue(request, "termsAccepted", "false");
 
         /*
          * ========================================================
@@ -218,13 +214,20 @@ public class AuthController {
 
 
         String email =
-                request.getOrDefault("email", "")
+                requestValue(request, "email", "")
                         .trim()
                         .toLowerCase(java.util.Locale.ROOT);
 
         String password =
-                request.getOrDefault("password", "");
-        String portal = request.getOrDefault("portal", "GENERAL").trim().toUpperCase(java.util.Locale.ROOT);
+                requestValue(request, "password", "");
+        String portal = requestValue(request, "portal", "GENERAL").trim().toUpperCase(java.util.Locale.ROOT);
+        if (email.isBlank()
+                || email.length() > 150
+                || !EMAIL_PATTERN.matcher(email).matches()
+                || password.isBlank()) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("message", "Please enter a valid email address and password."));
+        }
         User existingUser = userRepository.findByEmail(email).orElse(null);
         if (existingUser != null) {
             String role = existingUser.getRole() == null ? "" : existingUser.getRole().trim().toUpperCase(java.util.Locale.ROOT);
@@ -374,7 +377,7 @@ public class AuthController {
 
 
         String email =
-                request.getOrDefault("email", "")
+                requestValue(request, "email", "")
                         .trim()
                         .toLowerCase(java.util.Locale.ROOT);
 
@@ -444,23 +447,14 @@ public class AuthController {
 
 
         String token =
-                request.getOrDefault(
-                        "token",
-                        ""
-                )
+                requestValue(request, "token", "")
                         .trim();
 
         String newPassword =
-                request.getOrDefault(
-                        "newPassword",
-                        ""
-                );
+                requestValue(request, "newPassword", "");
 
         String termsAccepted =
-                request.getOrDefault(
-                        "termsAccepted",
-                        "false"
-                );
+                requestValue(request, "termsAccepted", "false");
 
         /*
          * ========================================================
@@ -565,6 +559,10 @@ public class AuthController {
         );
     }
 
+    private String requestValue(Map<String, String> request, String key, String defaultValue) {
+        String value = request.get(key);
+        return value == null ? defaultValue : value;
+    }
     private boolean passwordWithinBcryptLimit(String password) {
         return password != null && password.getBytes(StandardCharsets.UTF_8).length <= 72;
     }

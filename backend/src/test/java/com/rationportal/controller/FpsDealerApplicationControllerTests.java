@@ -63,6 +63,30 @@ class FpsDealerApplicationControllerTests {
     }
 
     @Test
+    void registrationRejectsNonFiniteCoordinates() {
+        FpsDealerApplicationController endpoint = controller();
+
+        Map<String, Object> nanLatitude = validRegistration();
+        nanLatitude.put("latitude", "NaN");
+        assertEquals(400, endpoint.register(nanLatitude).getStatusCode().value());
+
+        Map<String, Object> nanLongitude = validRegistration();
+        nanLongitude.put("longitude", "NaN");
+        assertEquals(400, endpoint.register(nanLongitude).getStatusCode().value());
+
+        Map<String, Object> infiniteLatitude = validRegistration();
+        infiniteLatitude.put("latitude", "Infinity");
+        assertEquals(400, endpoint.register(infiniteLatitude).getStatusCode().value());
+
+        Map<String, Object> infiniteLongitude = validRegistration();
+        infiniteLongitude.put("longitude", "-Infinity");
+        assertEquals(400, endpoint.register(infiniteLongitude).getStatusCode().value());
+
+        verifyNoApplicationWasSaved();
+        verifyNoUserWasSaved();
+    }
+
+    @Test
     void registrationCreatesPendingDealerAndDisabledLoginAccount() {
         when(users.findByEmail("dealer@example.com"))
                 .thenReturn(Optional.empty());
