@@ -9,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -18,6 +17,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("null")
 class RationCardControllerTests {
     private final RationCardService service = mock(RationCardService.class);
     private final RationCardIssuanceService issuance = mock(RationCardIssuanceService.class);
@@ -33,7 +33,7 @@ class RationCardControllerTests {
     @Test
     void adminCanCreateValidatedManualCardAsPending() {
         RationCard card = validCard();
-        when(service.save(any(RationCard.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(service.save(any(RationCard.class))).thenAnswer(invocation -> java.util.Objects.requireNonNull(invocation.getArgument(0, RationCard.class), "Expected saved ration card"));
 
         ResponseEntity<?> response = controller.create(card, admin());
 

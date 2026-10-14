@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("null")
 class FpsDistributionServiceTests {
     @Test
     void approvedCardCanCompleteOtpVerifiedMonthlyDistribution() throws Exception {
@@ -69,7 +70,7 @@ class FpsDistributionServiceTests {
         otp.setUsed(true);
         when(otps.findByVerificationTokenHashAndDealerEmailAndRationCardNumber(tokenHash, dealerEmail, number))
                 .thenReturn(Optional.of(otp));
-        when(logs.saveAndFlush(any(DistributionLog.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(logs.saveAndFlush(any(DistributionLog.class))).thenAnswer(invocation -> java.util.Objects.requireNonNull(invocation.getArgument(0, DistributionLog.class), "Expected saved distribution log"));
 
         FpsDealerApplication dealer = new FpsDealerApplication();
         dealer.setFpsId("FPS-TEST-123");

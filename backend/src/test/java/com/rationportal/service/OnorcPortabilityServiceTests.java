@@ -15,6 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("null")
 class OnorcPortabilityServiceTests {
     @Test
     void serverAssignsReferenceAndAuthoritativeHomeAndStatusValues() {
@@ -29,7 +30,7 @@ class OnorcPortabilityServiceTests {
         card.setDistrict("Warangal");
         when(cards.findByRationCardNumberAndOwnerEmailIgnoreCase("123456789012", "citizen@example.com"))
                 .thenReturn(Optional.of(card));
-        when(requests.save(any(OnorcPortability.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(requests.save(any(OnorcPortability.class))).thenAnswer(invocation -> java.util.Objects.requireNonNull(invocation.getArgument(0, OnorcPortability.class), "Expected saved ONORC request"));
 
         OnorcPortability request = new OnorcPortability();
         request.setRationCardNumber("123456789012");
@@ -75,7 +76,7 @@ class OnorcPortabilityServiceTests {
         request.setReferenceNumber("ONORC-TEST1234567890");
         request.setStatus("REQUESTED");
         when(requests.findByReferenceNumber("ONORC-TEST1234567890")).thenReturn(Optional.of(request));
-        when(requests.save(any(OnorcPortability.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(requests.save(any(OnorcPortability.class))).thenAnswer(invocation -> java.util.Objects.requireNonNull(invocation.getArgument(0, OnorcPortability.class), "Expected saved ONORC request"));
 
         assertEquals("PROCESSING", service.updateStatus("ONORC-TEST1234567890", "processing").getStatus());
         request.setStatus("REJECTED");

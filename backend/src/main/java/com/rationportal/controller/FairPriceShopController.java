@@ -21,9 +21,15 @@ public class FairPriceShopController {
             return ResponseEntity.badRequest().body(Map.of("message","Search terms must be 100 characters or fewer."));
         if ((latitude == null) != (longitude == null))
             return ResponseEntity.badRequest().body(Map.of("message", "A valid latitude and longitude pair is required."));
-        if (latitude != null && longitude != null
-                && (latitude.doubleValue() < -90.0 || latitude.doubleValue() > 90.0 || longitude.doubleValue() < -180.0 || longitude.doubleValue() > 180.0))
-            return ResponseEntity.badRequest().body(Map.of("message", "A valid latitude and longitude pair is required."));
+        if (latitude != null && longitude != null) {
+            double lat = latitude.doubleValue();
+            double lon = longitude.doubleValue();
+            if (!Double.isFinite(lat) || !Double.isFinite(lon)
+                    || lat < -90.0 || lat > 90.0 || lon < -180.0 || lon > 180.0) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("message", "A valid latitude and longitude pair is required."));
+            }
+        }
         String d=clean(district), q=clean(locality);
         List<Map<String,Object>> results=new ArrayList<>();
         for(FpsDealerApplication shop:dealers.findByStatusIgnoreCase("APPROVED")) {
@@ -42,7 +48,7 @@ public class FairPriceShopController {
             }
             results.add(item);
         }
-        if(latitude!=null)results.sort(Comparator.comparingDouble(x->((Number)x.get("distanceKm")).doubleValue()));
+        if(latitude!=null&&longitude!=null)results.sort(Comparator.comparingDouble(x->((Number)x.get("distanceKm")).doubleValue()));
         else results.sort(Comparator.comparing(x->String.valueOf(x.get("shopName")),String.CASE_INSENSITIVE_ORDER));
         return ResponseEntity.ok(results);
     }

@@ -23,6 +23,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("null")
 class RationCardApplicationControllerTests {
     private final RationCardApplicationRepository repository = mock(RationCardApplicationRepository.class);
     private final NotificationService notifications = mock(NotificationService.class);
@@ -57,12 +58,12 @@ class RationCardApplicationControllerTests {
     void acceptsValidApplicationAndUsesAuthenticatedEmail() {
         Map<String, Object> request = validRequest();
         request.put("email", "attacker@example.test");
-        when(repository.save(any(RationCardApplication.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(repository.save(any(RationCardApplication.class))).thenAnswer(invocation -> java.util.Objects.requireNonNull(invocation.getArgument(0, RationCardApplication.class), "Expected saved application"));
 
         ResponseEntity<?> response = controller.submitApplication(request, citizen());
 
         assertEquals(200, response.getStatusCode().value());
-        RationCardApplication saved = (RationCardApplication) response.getBody();
+        RationCardApplication saved = (RationCardApplication) java.util.Objects.requireNonNull(response.getBody(), "Expected submitted application body");
         assertEquals("citizen@example.com", saved.getEmail());
         assertEquals("SUBMITTED", saved.getStatus());
         assertEquals(1, saved.getFamilyMembers());

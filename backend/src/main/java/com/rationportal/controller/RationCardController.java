@@ -169,9 +169,7 @@ public class RationCardController {
             return ResponseEntity.status(403).body(Map.of(
                     "message", "Citizens must submit a ration-card application. Only administrators can create a manual ration-card record."));
         }
-        if (card == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Ration-card details are required."));
-        }
+
         String validation = validateManualCard(card);
         if (validation != null) {
             return ResponseEntity.badRequest().body(Map.of("message", validation));
@@ -253,11 +251,14 @@ public class RationCardController {
                     ));
         }
 
-        RationCard card = service.approve(number);
-
-        return card == null
-                ? ResponseEntity.notFound().build()
-                : ResponseEntity.ok(card);
+        RationCard card = service.getByNumber(number);
+        if (card == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.status(409).body(Map.of(
+                "message", "Direct ration-card approval is disabled. Use the application-management workflow so issuance, family members, and the digital card are processed together.",
+                "applicationNumber", card.getApplicationNumber() == null ? "" : card.getApplicationNumber()
+        ));
     }
 
     @PutMapping("/admin/{number}/reject")
@@ -273,10 +274,13 @@ public class RationCardController {
                     ));
         }
 
-        RationCard card = service.reject(number);
-
-        return card == null
-                ? ResponseEntity.notFound().build()
-                : ResponseEntity.ok(card);
+        RationCard card = service.getByNumber(number);
+        if (card == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.status(409).body(Map.of(
+                "message", "Direct ration-card rejection is disabled. Reject the linked application through the application-management workflow.",
+                "applicationNumber", card.getApplicationNumber() == null ? "" : card.getApplicationNumber()
+        ));
     }
 }

@@ -174,7 +174,7 @@ public class RationCardIssuanceService {
         for(String h:List.of("No.","Name","Age","Gender","Relationship")){PdfPCell c=new PdfPCell(new Phrase(h,new Font(Font.HELVETICA,8,Font.BOLD,java.awt.Color.WHITE)));c.setBackgroundColor(new java.awt.Color(8,44,92));c.setPadding(6);table.addCell(c);}
         int n=1; for(FamilyMember m:family){table.addCell(new Phrase(String.valueOf(n++),normal));table.addCell(new Phrase(dash(m.getName()),normal));table.addCell(new Phrase(m.getAge()==null?"—":m.getAge().toString(),normal));table.addCell(new Phrase(dash(m.getGender()),normal));table.addCell(new Phrase(dash(m.getRelationship()),normal));}
         doc.add(table);
-        Paragraph quota=new Paragraph("Monthly family entitlement: "+riceKg.multiply(BigDecimal.valueOf(family.size())).stripTrailingZeros().toPlainString()+" kg (6 kg per member)",bold); quota.setSpacingBefore(10); doc.add(quota);
+        Paragraph quota = new Paragraph("Monthly family entitlement: " + riceKg.multiply(BigDecimal.valueOf(family.size())).stripTrailingZeros().toPlainString() + " kg (" + riceKg.stripTrailingZeros().toPlainString() + " kg per member)", bold); quota.setSpacingBefore(10); doc.add(quota);
         ByteArrayOutputStream qr=new ByteArrayOutputStream(); String verify=apiBase+"/api/ration-cards/verify/"+card.getRationCardNumber();
         MatrixToImageWriter.writeToStream(new QRCodeWriter().encode(verify,BarcodeFormat.QR_CODE,180,180),"PNG",qr);
         Image image=Image.getInstance(qr.toByteArray()); image.scaleToFit(105,105); image.setAlignment(Element.ALIGN_CENTER); doc.add(image);

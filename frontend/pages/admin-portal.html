@@ -962,6 +962,14 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                         .toUpperCase();
 
 
+                const allowedNextStatuses = {
+                    SUBMITTED: ["SUBMITTED", "PENDING", "VERIFIED", "APPROVED", "REJECTED"],
+                    PENDING: ["PENDING", "VERIFIED", "APPROVED", "REJECTED"],
+                    VERIFIED: ["VERIFIED", "APPROVED", "REJECTED"],
+                    APPROVED: ["APPROVED"],
+                    REJECTED: ["REJECTED"]
+                };
+                const allowedStatuses = allowedNextStatuses[currentStatus] || [currentStatus];
                 const safeApplicationNumber =
                     escapeHtml(
                         application.applicationNumber
@@ -1027,6 +1035,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="SUBMITTED"
                                 ${currentStatus === "SUBMITTED" ? "selected" : ""}
+                                ${!allowedStatuses.includes("SUBMITTED") ? "disabled" : ""}
                             >
                                 SUBMITTED
                             </option>
@@ -1034,6 +1043,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="PENDING"
                                 ${currentStatus === "PENDING" ? "selected" : ""}
+                                ${!allowedStatuses.includes("PENDING") ? "disabled" : ""}
                             >
                                 PENDING
                             </option>
@@ -1041,6 +1051,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="VERIFIED"
                                 ${currentStatus === "VERIFIED" ? "selected" : ""}
+                                ${!allowedStatuses.includes("VERIFIED") ? "disabled" : ""}
                             >
                                 VERIFIED
                             </option>
@@ -1048,6 +1059,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="APPROVED"
                                 ${currentStatus === "APPROVED" ? "selected" : ""}
+                                ${!allowedStatuses.includes("APPROVED") ? "disabled" : ""}
                             >
                                 APPROVED
                             </option>
@@ -1055,6 +1067,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="REJECTED"
                                 ${currentStatus === "REJECTED" ? "selected" : ""}
+                                ${!allowedStatuses.includes("REJECTED") ? "disabled" : ""}
                             >
                                 REJECTED
                             </option>

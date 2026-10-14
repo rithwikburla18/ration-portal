@@ -40,7 +40,8 @@ public class ApprovedCitizenAccessFilter extends OncePerRequestFilter {
         if (path == null || !path.startsWith(contextPath + "/api/")) {
             return true;
         }
-        if (HttpMethod.OPTIONS.matches(request.getMethod())) return true;
+        String method = request.getMethod();
+        if (method != null && HttpMethod.OPTIONS.matches(method)) return true;
         if (path.startsWith(contextPath + "/api/auth/")
                 || path.equals(contextPath + "/api/health")
                 || path.equals(contextPath + "/api/ration-cards/my")

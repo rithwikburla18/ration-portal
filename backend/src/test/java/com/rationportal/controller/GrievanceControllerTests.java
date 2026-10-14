@@ -22,6 +22,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("null")
 class GrievanceControllerTests {
     private final GrievanceRepository grievances = mock(GrievanceRepository.class);
     private final RationCardRepository cards = mock(RationCardRepository.class);
@@ -34,7 +35,7 @@ class GrievanceControllerTests {
         card.setOwnerEmail("citizen@example.com");
         when(cards.findByRationCardNumberAndOwnerEmailIgnoreCase(
                 "123456789012", "citizen@example.com")).thenReturn(Optional.of(card));
-        when(grievances.save(any(Grievance.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(grievances.save(any(Grievance.class))).thenAnswer(invocation -> java.util.Objects.requireNonNull(invocation.getArgument(0, Grievance.class), "Expected saved grievance"));
 
         Grievance request = validGrievance();
         request.setGrievanceNumber("FAKE-REFERENCE");
@@ -42,7 +43,7 @@ class GrievanceControllerTests {
         ResponseEntity<?> response = controller.submit(request, citizen());
 
         assertEquals(201, response.getStatusCode().value());
-        Grievance saved = (Grievance) response.getBody();
+        Grievance saved = (Grievance) java.util.Objects.requireNonNull(response.getBody(), "Expected submitted grievance body");
         assertNotEquals("FAKE-REFERENCE", saved.getGrievanceNumber());
         assertTrue(saved.getGrievanceNumber().startsWith("GRV"));
         assertEquals("SUBMITTED", saved.getStatus());
@@ -70,7 +71,7 @@ class GrievanceControllerTests {
         existing.setGrievanceNumber("GRV123456789ABC");
         existing.setStatus("PROCESSING");
         when(grievances.findByGrievanceNumber("GRV123456789ABC")).thenReturn(Optional.of(existing));
-        when(grievances.save(any(Grievance.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(grievances.save(any(Grievance.class))).thenAnswer(invocation -> java.util.Objects.requireNonNull(invocation.getArgument(0, Grievance.class), "Expected saved grievance"));
 
         ResponseEntity<?> denied = controller.updateStatus(
                 "GRV123456789ABC", Map.of("status", "RESOLVED"), citizen());

@@ -27,6 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+@SuppressWarnings("null")
 class AuthControllerSecurityTests {
     private static final String PUBLIC_MESSAGE = "If an account exists for this email, password reset instructions will be provided.";
 
@@ -116,7 +117,7 @@ class AuthControllerSecurityTests {
         user.setPasswordHash("old-hash");
         user.setResetPasswordToken(tokenHash);
         user.setResetPasswordTokenExpiry(LocalDateTime.now().plusMinutes(10));
-        org.mockito.Mockito.when(repository.findByResetPasswordToken(tokenHash)).thenReturn(Optional.of(user));
+        org.mockito.Mockito.doReturn(Optional.of(user)).when(repository).findByResetPasswordToken(tokenHash);
         org.mockito.Mockito.when(encoder.encode("new-safe-password")).thenReturn("encoded-new-password");
 
         ResponseEntity<?> response = controller.resetPassword(Map.of(
