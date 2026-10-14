@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,12 +69,13 @@ class FpsDistributionControllerTests {
         dealer.setStatus("APPROVED");
         when(dealers.findByEmailIgnoreCase(email)).thenReturn(Optional.of(dealer));
 
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Kolkata"));
         DistributionOtp otp = new DistributionOtp();
         otp.setRationCardNumber(number);
         otp.setDealerEmail(email);
         otp.setOtpHash("stored-hash");
-        otp.setCreatedAt(LocalDateTime.now(java.time.ZoneId.of("Asia/Kolkata")).minusMinutes(1));
-        otp.setExpiresAt(LocalDateTime.now(java.time.ZoneId.of("Asia/Kolkata")).plusMinutes(4));
+        otp.setCreatedAt(now.minusMinutes(1));
+        otp.setExpiresAt(now.plusMinutes(10));
         otp.setAttempts(2);
         otp.setUsed(false);
         when(otps.findTopByRationCardNumberAndDealerEmailOrderByCreatedAtDesc(number, email))
@@ -84,7 +86,8 @@ class FpsDistributionControllerTests {
                 Map.of("rationCardNumber", number, "otp", "123456"),
                 dealerAuthentication(email));
 
-        assertEquals(429, response.getStatusCode().value());
+        assertEquals(429, response.getStatusCode().value(),
+                "The third incorrect OTP attempt must be rate-limited and lock the OTP.");
         assertEquals(3, otp.getAttempts());
         assertEquals(true, otp.getUsed());
         verify(otps).save(otp);
