@@ -452,7 +452,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
 
     </section>
 
-</main>
+<section id="fpsDealerAdminPanel" style="display:none;margin:28px auto;padding:22px;background:#fff;border:1px solid #dce6f2;border-radius:16px;max-width:1400px"><h2 style="color:#0a2240">Ration Shop Dealer Applications</h2><p>Review pending dealer registrations. Rejections require a reason.</p><p id="fpsAdminMessage" role="status" style="padding:10px;background:#eef5ff;border-radius:8px">Loading dealer applications…</p><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse"><thead><tr><th>Dealer / Shop</th><th>Licence</th><th>Location</th><th>Contact</th><th>Status</th><th>Decision</th></tr></thead><tbody id="fpsDealerRows"></tbody></table></div></section></main>
 
 
 <script>
@@ -962,6 +962,14 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                         .toUpperCase();
 
 
+                const allowedNextStatuses = {
+                    SUBMITTED: ["SUBMITTED", "PENDING", "VERIFIED", "APPROVED", "REJECTED"],
+                    PENDING: ["PENDING", "VERIFIED", "APPROVED", "REJECTED"],
+                    VERIFIED: ["VERIFIED", "APPROVED", "REJECTED"],
+                    APPROVED: ["APPROVED"],
+                    REJECTED: ["REJECTED"]
+                };
+                const allowedStatuses = allowedNextStatuses[currentStatus] || [currentStatus];
                 const safeApplicationNumber =
                     escapeHtml(
                         application.applicationNumber
@@ -1027,6 +1035,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="SUBMITTED"
                                 ${currentStatus === "SUBMITTED" ? "selected" : ""}
+                                ${!allowedStatuses.includes("SUBMITTED") ? "disabled" : ""}
                             >
                                 SUBMITTED
                             </option>
@@ -1034,6 +1043,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="PENDING"
                                 ${currentStatus === "PENDING" ? "selected" : ""}
+                                ${!allowedStatuses.includes("PENDING") ? "disabled" : ""}
                             >
                                 PENDING
                             </option>
@@ -1041,6 +1051,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="VERIFIED"
                                 ${currentStatus === "VERIFIED" ? "selected" : ""}
+                                ${!allowedStatuses.includes("VERIFIED") ? "disabled" : ""}
                             >
                                 VERIFIED
                             </option>
@@ -1048,6 +1059,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="APPROVED"
                                 ${currentStatus === "APPROVED" ? "selected" : ""}
+                                ${!allowedStatuses.includes("APPROVED") ? "disabled" : ""}
                             >
                                 APPROVED
                             </option>
@@ -1055,6 +1067,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
                             <option
                                 value="REJECTED"
                                 ${currentStatus === "REJECTED" ? "selected" : ""}
+                                ${!allowedStatuses.includes("REJECTED") ? "disabled" : ""}
                             >
                                 REJECTED
                             </option>
@@ -1740,6 +1753,11 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
 </script>
 
 
-</body>
+<script>
+(function(){ "use strict";
+function initDealerAdmin(){var panel=document.getElementById("fpsDealerAdminPanel");if(!panel)return;var token=localStorage.getItem("rationPortalToken");if(!token)return;var api=(window.RATION_API_BASE||"https://ration-portal-backend.onrender.com/api").replace(/\/$/,"");var msg=document.getElementById("fpsAdminMessage"),rows=document.getElementById("fpsDealerRows");function cell(tr,value){var td=document.createElement("td");td.style.cssText="padding:10px;border-bottom:1px solid #e2e8f0;vertical-align:top";td.textContent=value==null?"—":String(value);tr.appendChild(td);return td}async function load(){try{var res=await fetch(api+"/fps-dealer-applications",{headers:{Authorization:"Bearer "+token,Accept:"application/json"}});var data=await res.json().catch(function(){return []});if(!res.ok)throw new Error(data.message||"Unable to load dealer applications.");panel.style.display="block";rows.replaceChildren();(Array.isArray(data)?data:[]).forEach(function(app){var tr=document.createElement("tr");cell(tr,(app.dealerName||"—")+" / "+(app.shopName||"—"));cell(tr,app.licenseNumber);cell(tr,(app.mandalVillage||"—")+", "+(app.district||"—")+"\n"+(app.shopAddress||""));cell(tr,(app.mobile||"—")+"\n"+(app.email||"—"));cell(tr,app.status);var td=cell(tr,"");if(String(app.status||"").toUpperCase()==="PENDING"){var approve=document.createElement("button");approve.type="button";approve.textContent="Approve";approve.style.cssText="padding:7px 10px;margin:3px;background:#137333;color:#fff;border:0;border-radius:6px;cursor:pointer";approve.addEventListener("click",function(){decide(app.id,"APPROVED","")});var reject=document.createElement("button");reject.type="button";reject.textContent="Reject";reject.style.cssText="padding:7px 10px;margin:3px;background:#a12a20;color:#fff;border:0;border-radius:6px;cursor:pointer";reject.addEventListener("click",function(){var reason=window.prompt("Enter the reason for rejecting this dealer application:");if(reason&&reason.trim())decide(app.id,"REJECTED",reason.trim())});td.append(approve,reject)}else td.textContent=app.rejectionReason||"No action required"});msg.textContent=(Array.isArray(data)?data.length:0)+" dealer application(s) loaded."}catch(e){panel.style.display="block";msg.textContent=e.message;msg.style.background="#fff0ed";msg.style.color="#8b251b"}}async function decide(id,status,reason){try{var res=await fetch(api+"/fps-dealer-applications/"+encodeURIComponent(id)+"/decision",{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({status:status,rejectionReason:reason})});var data=await res.json().catch(function(){return {}});if(!res.ok)throw new Error(data.message||"Decision could not be saved.");msg.textContent=data.message||"Decision saved.";await load()}catch(e){msg.textContent=e.message;msg.style.background="#fff0ed";msg.style.color="#8b251b"}}load()}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initDealerAdmin);else initDealerAdmin();
+})();
+</script></body>
 
 </html>

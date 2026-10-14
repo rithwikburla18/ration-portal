@@ -2,6 +2,7 @@ package com.rationportal.controller;
 
 import com.rationportal.model.User;
 import com.rationportal.repository.UserRepository;
+import com.rationportal.repository.FpsDealerApplicationRepository;
 import com.rationportal.security.JwtService;
 import com.rationportal.service.MailService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,7 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.HashMap;
 import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.HexFormat;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,8 +25,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+@SuppressWarnings("null")
 class AuthControllerSecurityTests {
     private static final String PUBLIC_MESSAGE = "If an account exists for this email, password reset instructions will be provided.";
 
@@ -31,7 +39,8 @@ class AuthControllerSecurityTests {
         JwtService jwtService = mock(JwtService.class);
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         MailService mailService = mock(MailService.class);
-        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
         whenMissingEmail(repository);
         User known = new User();
         known.setEmail("known@example.com");
@@ -53,7 +62,8 @@ class AuthControllerSecurityTests {
         JwtService jwtService = mock(JwtService.class);
         AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
         MailService mailService = mock(MailService.class);
-        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
         User known = new User();
         known.setEmail("known@example.com");
         known.setFullName("Test Citizen");
@@ -62,6 +72,66 @@ class AuthControllerSecurityTests {
         ResponseEntity<?> response = controller.forgotPassword(Map.of("email", "known@example.com"));
         assertEquals(200, response.getStatusCode().value());
         assertEquals(Map.of("message", PUBLIC_MESSAGE), response.getBody());
+        assertEquals(null, known.getResetPasswordToken());
+        assertEquals(null, known.getResetPasswordTokenExpiry());
+    }
+
+    @Test
+    void authEndpointsRejectOversizedEmailsBeforeDatabaseLookup() {
+        UserRepository repository = mock(UserRepository.class);
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+        JwtService jwtService = mock(JwtService.class);
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        MailService mailService = mock(MailService.class);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
+        String oversizedEmail = "a".repeat(140) + "@example.com";
+
+        ResponseEntity<?> registration = controller.register(Map.of(
+                "fullName", "Test Citizen",
+                "email", oversizedEmail,
+                "password", "SafePassword123",
+                "termsAccepted", "true"));
+        ResponseEntity<?> resetRequest = controller.forgotPassword(Map.of("email", oversizedEmail));
+
+        assertEquals(400, registration.getStatusCode().value());
+        assertEquals(400, resetRequest.getStatusCode().value());
+        verify(repository, never()).findByEmail(oversizedEmail);
+        verify(repository, never()).save(org.mockito.ArgumentMatchers.any(User.class));
+    }
+
+    @Test
+    void resetPasswordLooksUpOnlyTheHashOfTheDeliveredResetToken() throws Exception {
+        UserRepository repository = mock(UserRepository.class);
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+        JwtService jwtService = mock(JwtService.class);
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        MailService mailService = mock(MailService.class);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+        AuthController controller = new AuthController(repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
+
+        String rawToken = "single-use-reset-token";
+        String tokenHash = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+                .digest(rawToken.getBytes(StandardCharsets.UTF_8)));
+        User user = new User();
+        user.setEmail("known@example.com");
+        user.setPasswordHash("old-hash");
+        user.setResetPasswordToken(tokenHash);
+        user.setResetPasswordTokenExpiry(LocalDateTime.now().plusMinutes(10));
+        org.mockito.Mockito.doReturn(Optional.of(user)).when(repository).findByResetPasswordToken(tokenHash);
+        org.mockito.Mockito.when(encoder.encode("new-safe-password")).thenReturn("encoded-new-password");
+
+        ResponseEntity<?> response = controller.resetPassword(Map.of(
+                "token", rawToken,
+                "newPassword", "new-safe-password",
+                "termsAccepted", "true"));
+
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals("encoded-new-password", user.getPasswordHash());
+        assertEquals(null, user.getResetPasswordToken());
+        assertEquals(null, user.getResetPasswordTokenExpiry());
+        verify(repository).findByResetPasswordToken(tokenHash);
+        verify(repository).save(user);
     }
 
     @Test
@@ -81,6 +151,50 @@ class AuthControllerSecurityTests {
         assertFalse(json.has("resetPasswordTokenExpiry"));
         assertFalse(json.toString().contains("HASH_SHOULD_NOT_LEAK"));
         assertFalse(json.toString().contains("RESET_TOKEN_SHOULD_NOT_LEAK"));
+    }
+    @Test
+    void explicitlyNullRequestFieldsReturnControlledBadRequestResponses() {
+        UserRepository repository = mock(UserRepository.class);
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+        JwtService jwtService = mock(JwtService.class);
+        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+        MailService mailService = mock(MailService.class);
+        FpsDealerApplicationRepository dealerApplications = mock(FpsDealerApplicationRepository.class);
+
+        AuthController controller = new AuthController(
+                repository, encoder, jwtService, authenticationManager, mailService, dealerApplications);
+
+        Map<String, String> nullEmail = new HashMap<>();
+        nullEmail.put("email", null);
+        assertEquals(400, controller.checkEmail(nullEmail).getStatusCode().value());
+        assertEquals(400, controller.forgotPassword(nullEmail).getStatusCode().value());
+        assertEquals(400, controller.login(nullEmail).getStatusCode().value());
+
+        Map<String, String> nullName = new HashMap<>();
+        nullName.put("fullName", null);
+        nullName.put("email", "citizen@example.com");
+        nullName.put("password", "Valid-password-123");
+        nullName.put("termsAccepted", "true");
+        assertEquals(400, controller.register(nullName).getStatusCode().value());
+
+        Map<String, String> nullPassword = new HashMap<>();
+        nullPassword.put("fullName", "Test Citizen");
+        nullPassword.put("email", "citizen@example.com");
+        nullPassword.put("password", null);
+        nullPassword.put("termsAccepted", "true");
+        assertEquals(400, controller.register(nullPassword).getStatusCode().value());
+
+        Map<String, String> nullToken = new HashMap<>();
+        nullToken.put("token", null);
+        nullToken.put("newPassword", "Valid-password-123");
+        nullToken.put("termsAccepted", "true");
+        assertEquals(400, controller.resetPassword(nullToken).getStatusCode().value());
+
+        Map<String, String> nullResetPassword = new HashMap<>();
+        nullResetPassword.put("token", "unknown-token");
+        nullResetPassword.put("newPassword", null);
+        nullResetPassword.put("termsAccepted", "true");
+        assertEquals(400, controller.resetPassword(nullResetPassword).getStatusCode().value());
     }
     private static void whenMissingEmail(UserRepository repository) {
         org.mockito.Mockito.when(repository.findByEmail("missing@example.com")).thenReturn(Optional.empty());

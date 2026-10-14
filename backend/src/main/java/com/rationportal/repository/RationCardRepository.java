@@ -10,7 +10,13 @@ public interface RationCardRepository extends JpaRepository<RationCard, Long> {
 
     Optional<RationCard> findByRationCardNumber(String rationCardNumber);
 
+    Optional<RationCard> findByApplicationNumber(String applicationNumber);
+
+    boolean existsByRationCardNumber(String rationCardNumber);
+
     List<RationCard> findByStatusIgnoreCase(String status);
+
+    long countByStatusIgnoreCase(String status);
 
     Optional<RationCard> findByRationCardNumberAndOwnerEmailIgnoreCase(
         String rationCardNumber,
@@ -18,4 +24,6 @@ public interface RationCardRepository extends JpaRepository<RationCard, Long> {
     );
 
     List<RationCard> findByOwnerEmailIgnoreCase(String ownerEmail);
+
+    List<RationCard> findByOwnerEmailIgnoreCaseOrderByCreatedAtDesc(String ownerEmail);
 }

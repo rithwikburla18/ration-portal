@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,17 +33,27 @@ public class ApprovedCitizenAccessFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         String path = request.getRequestURI();
-        if (path == null || !path.startsWith(request.getContextPath() + "/api/")) {
+        String contextPath = request.getContextPath();
+        if (contextPath == null) contextPath = "";
+        if (path == null || !path.startsWith(contextPath + "/api/")) {
             return true;
         }
-        if (HttpMethod.OPTIONS.matches(request.getMethod())) return true;
-        if (path.startsWith(request.getContextPath() + "/api/auth/")
-                || path.equals(request.getContextPath() + "/api/health")
-                || path.equals(request.getContextPath() + "/api/ration-cards/my")
-                || path.equals(request.getContextPath() + "/api/applications")
-                || path.startsWith(request.getContextPath() + "/api/applications/")) {
+        String method = request.getMethod();
+        if (method != null && HttpMethod.OPTIONS.matches(method)) return true;
+        if (path.startsWith(contextPath + "/api/auth/")
+                || path.equals(contextPath + "/api/health")
+                || path.equals(contextPath + "/api/ration-cards/my")
+                || path.startsWith(contextPath + "/api/ration-cards/verify/")
+                || path.equals(contextPath + "/api/fair-price-shops")
+                || path.startsWith(contextPath + "/api/fair-price-shops/")
+                || path.equals(contextPath + "/api/applications")
+                || path.startsWith(contextPath + "/api/applications/")
+                || path.equals(contextPath + "/api/grievances")
+                || path.startsWith(contextPath + "/api/grievances/")
+                || path.startsWith(contextPath + "/api/dashboard/")
+                || path.startsWith(contextPath + "/api/transparency/")) {
             return true;
         }
         return false;
@@ -50,9 +61,9 @@ public class ApprovedCitizenAccessFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

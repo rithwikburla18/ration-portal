@@ -111,6 +111,38 @@ public class OnorcController {
         }
     }
 
+    @PutMapping("/portability/{reference}/status")
+    public ResponseEntity<?> updateStatus(
+            @PathVariable String reference,
+            @RequestBody Map<String, String> body,
+            Authentication authentication) {
+        if (!isAuthenticated(authentication)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Authentication required."));
+        }
+        if (!isAdmin(authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "Only administrators can update ONORC status."));
+        }
+        String requestedStatus = body == null ? "" : body.getOrDefault("status", "");
+        try {
+            OnorcPortability updated = service.updateStatus(reference == null ? "" : reference.trim(), requestedStatus);
+            if (updated == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("message", "ONORC request not found."));
+            }
+            Map<String, Object> response = new java.util.LinkedHashMap<>();
+            response.put("message", "ONORC status updated successfully.");
+            response.put("referenceNumber", updated.getReferenceNumber());
+            response.put("status", updated.getStatus());
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
     @GetMapping("/my-requests")
     public ResponseEntity<?> myRequests(
             Authentication authentication) {

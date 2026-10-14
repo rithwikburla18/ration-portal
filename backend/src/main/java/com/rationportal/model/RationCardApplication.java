@@ -50,6 +50,13 @@ public class RationCardApplication {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "completion_status", nullable = false, length = 30)
+    private String completionStatus = "IN_PROGRESS";
+    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    private String rejectionReason;
+    @Column(name = "issued_ration_card_number", length = 20)
+    private String issuedRationCardNumber;
+
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {
@@ -168,4 +175,10 @@ public class RationCardApplication {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+    public String getCompletionStatus() { return completionStatus; }
+    public void setCompletionStatus(String value) { this.completionStatus = value; }
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String value) { this.rejectionReason = value; }
+    public String getIssuedRationCardNumber() { return issuedRationCardNumber; }
+    public void setIssuedRationCardNumber(String value) { this.issuedRationCardNumber = value; }
 }

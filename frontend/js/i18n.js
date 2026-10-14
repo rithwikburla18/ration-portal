@@ -40,6 +40,7 @@
             "header.service": "Serving citizens through digital public distribution services",
 
             "auth.login": "Citizen Login",
+            "auth.fpsLogin": "Ration Shop Login",
             "auth.register": "Register",
 
             "nav.home": "Home",
@@ -287,6 +288,8 @@
 
             "auth.login":
                 "नागरिक लॉगिन",
+            "auth.fpsLogin":
+                "राशन दुकान लॉगिन",
 
             "auth.register":
                 "पंजीकरण",
@@ -580,6 +583,8 @@
 
             "auth.login":
                 "పౌర లాగిన్",
+            "auth.fpsLogin":
+                "రేషన్ షాప్ లాగిన్",
 
             "auth.register":
                 "నమోదు",

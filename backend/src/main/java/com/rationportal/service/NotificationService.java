@@ -43,144 +43,46 @@ public class NotificationService {
                 .build();
     }
 
-    public void sendEmail(
-            String recipientEmail,
-            String subject,
-            String htmlContent
-    ) {
+    public void sendEmail(String recipientEmail, String subject, String htmlContent) {
+        sendEmailInternal(recipientEmail, subject, htmlContent, null, null);
+    }
 
+    public void sendEmailWithAttachment(String recipientEmail, String subject, String htmlContent,
+                                        byte[] attachmentBytes, String attachmentFileName) {
+        if (attachmentBytes == null || attachmentBytes.length == 0) throw new IllegalArgumentException("Email attachment is required.");
+        if (attachmentFileName == null || attachmentFileName.isBlank()) throw new IllegalArgumentException("Email attachment filename is required.");
+        sendEmailInternal(recipientEmail, subject, htmlContent, attachmentBytes, attachmentFileName);
+    }
+
+    private void sendEmailInternal(String recipientEmail, String subject, String htmlContent,
+                                   byte[] attachmentBytes, String attachmentFileName) {
         validateEmailConfiguration();
-
-        if (recipientEmail == null || recipientEmail.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Recipient email is required."
-            );
-        }
-
-        if (subject == null || subject.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Email subject is required."
-            );
-        }
-
-        if (htmlContent == null || htmlContent.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Email content is required."
-            );
-        }
-
+        if (recipientEmail == null || recipientEmail.isBlank()) throw new IllegalArgumentException("Recipient email is required.");
+        if (subject == null || subject.isBlank()) throw new IllegalArgumentException("Email subject is required.");
+        if (htmlContent == null || htmlContent.isBlank()) throw new IllegalArgumentException("Email content is required.");
         try {
-
             Map<String, Object> sender = new HashMap<>();
-
-            sender.put(
-                    "name",
-                    "Ration Portal"
-            );
-
-            sender.put(
-                    "email",
-                    brevoFromEmail
-            );
-
-            Map<String, Object> recipient = new HashMap<>();
-
-            recipient.put(
-                    "email",
-                    recipientEmail
-            );
-
+            sender.put("name", "Ration Portal"); sender.put("email", brevoFromEmail);
+            Map<String, Object> recipient = new HashMap<>(); recipient.put("email", recipientEmail);
             Map<String, Object> payload = new HashMap<>();
-
-            payload.put(
-                    "sender",
-                    sender
-            );
-
-            payload.put(
-                    "to",
-                    List.of(recipient)
-            );
-
-            payload.put(
-                    "subject",
-                    subject
-            );
-
-            payload.put(
-                    "htmlContent",
-                    htmlContent
-            );
-
-            String json =
-                    objectMapper.writeValueAsString(payload);
-
-            HttpRequest request =
-                    HttpRequest.newBuilder()
-                            .uri(
-                                    URI.create(
-                                            BREVO_EMAIL_API
-                                    )
-                            )
-                            .timeout(
-                                    Duration.ofSeconds(30)
-                            )
-                            .header(
-                                    "api-key",
-                                    brevoApiKey
-                            )
-                            .header(
-                                    "accept",
-                                    "application/json"
-                            )
-                            .header(
-                                    "Content-Type",
-                                    "application/json"
-                            )
-                            .POST(
-                                    HttpRequest.BodyPublishers
-                                            .ofString(json)
-                            )
-                            .build();
-
-            HttpResponse<String> response =
-                    httpClient.send(
-                            request,
-                            HttpResponse.BodyHandlers
-                                    .ofString()
-                    );
-
-            if (response.statusCode() < 200
-                    || response.statusCode() >= 300) {
-
-                throw new IllegalStateException(
-                        "Brevo email rejected request. HTTP "
-                                + response.statusCode()
-                                + ": "
-                                + response.body()
-                );
-            }
-
-            System.out.println(
-                    "NOTIFICATION EMAIL SENT. HTTP STATUS: "
-                            + response.statusCode()
-            );
-
+            payload.put("sender", sender); payload.put("to", List.of(recipient));
+            payload.put("subject", subject); payload.put("htmlContent", htmlContent);
+            if (attachmentBytes != null) payload.put("attachment", List.of(Map.of(
+                    "name", attachmentFileName,
+                    "content", java.util.Base64.getEncoder().encodeToString(attachmentBytes))));
+            String json = objectMapper.writeValueAsString(payload);
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BREVO_EMAIL_API))
+                    .timeout(Duration.ofSeconds(30)).header("api-key", brevoApiKey)
+                    .header("accept", "application/json").header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json)).build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() < 200 || response.statusCode() >= 300)
+                throw new IllegalStateException("Brevo email rejected request. HTTP " + response.statusCode());
         } catch (InterruptedException exception) {
-
             Thread.currentThread().interrupt();
-
-            throw new IllegalStateException(
-                    "Email notification was interrupted.",
-                    exception
-            );
-
+            throw new IllegalStateException("Email notification was interrupted.", exception);
         } catch (Exception exception) {
-
-            throw new IllegalStateException(
-                    "Email notification failed.",
-                    exception
-            );
+            throw new IllegalStateException("Email notification failed.", exception);
         }
     }
 
@@ -285,10 +187,7 @@ public class NotificationService {
                     || response.statusCode() >= 300) {
 
                 throw new IllegalStateException(
-                        "Brevo SMS rejected request. HTTP "
-                                + response.statusCode()
-                                + ": "
-                                + response.body()
+                        "Brevo SMS rejected request. HTTP " + response.statusCode()
                 );
             }
 

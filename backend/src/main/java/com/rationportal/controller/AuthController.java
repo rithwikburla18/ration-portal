@@ -2,6 +2,7 @@ package com.rationportal.controller;
 
 import com.rationportal.model.User;
 import com.rationportal.repository.UserRepository;
+import com.rationportal.repository.FpsDealerApplicationRepository;
 import com.rationportal.service.MailService;
 import com.rationportal.security.JwtService;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.HexFormat;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -24,6 +28,7 @@ public class AuthController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final MailService mailService;
+    private final FpsDealerApplicationRepository dealerApplications;
 
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
@@ -33,26 +38,30 @@ public class AuthController {
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
             AuthenticationManager authenticationManager,
-            MailService mailService
+            MailService mailService,
+            FpsDealerApplicationRepository dealerApplications
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.mailService = mailService;
+        this.dealerApplications = dealerApplications;
     }
 
     @PostMapping("/check-email")
     public ResponseEntity<?> checkEmail(
             @RequestBody Map<String, String> request
     ) {
+        if (request == null) return ResponseEntity.badRequest().body(Map.of("message", "Please provide an email address."));
 
-        String email = request
-                .getOrDefault("email", "")
+
+        String email = requestValue(request, "email", "")
                 .trim()
-                .toLowerCase();
+                .toLowerCase(java.util.Locale.ROOT);
 
         if (email.isBlank()
+                || email.length() > 150
                 || !EMAIL_PATTERN.matcher(email).matches()) {
 
             return ResponseEntity.badRequest().body(
@@ -91,24 +100,23 @@ public class AuthController {
     public ResponseEntity<?> register(
             @RequestBody Map<String, String> request
     ) {
+        if (request == null) return ResponseEntity.badRequest().body(Map.of("message", "Registration details are required."));
+
 
         String name =
-                request.getOrDefault("fullName", "")
+                requestValue(request, "fullName", "")
                         .trim();
 
         String email =
-                request.getOrDefault("email", "")
+                requestValue(request, "email", "")
                         .trim()
-                        .toLowerCase();
+                        .toLowerCase(java.util.Locale.ROOT);
 
         String password =
-                request.getOrDefault("password", "");
+                requestValue(request, "password", "");
 
         String termsAccepted =
-                request.getOrDefault(
-                        "termsAccepted",
-                        "false"
-                );
+                requestValue(request, "termsAccepted", "false");
 
         /*
          * ========================================================
@@ -130,7 +138,7 @@ public class AuthController {
             );
         }
 
-        if (name.isBlank()) {
+        if (name.isBlank() || name.length() > 120) {
 
             return ResponseEntity.badRequest().body(
                     Map.of(
@@ -141,6 +149,7 @@ public class AuthController {
         }
 
         if (email.isBlank()
+                || email.length() > 150
                 || !EMAIL_PATTERN.matcher(email).matches()) {
 
             return ResponseEntity.badRequest().body(
@@ -151,12 +160,12 @@ public class AuthController {
             );
         }
 
-        if (password.length() < 8) {
+        if (password.length() < 8 || !passwordWithinBcryptLimit(password)) {
 
             return ResponseEntity.badRequest().body(
                     Map.of(
                             "message",
-                            "Password must contain at least 8 characters."
+                            "Password must contain 8 to 72 UTF-8 bytes."
                     )
             );
         }
@@ -201,14 +210,43 @@ public class AuthController {
     public ResponseEntity<?> login(
             @RequestBody Map<String, String> request
     ) {
+        if (request == null) return ResponseEntity.badRequest().body(Map.of("message", "Email and password are required."));
+
 
         String email =
-                request.getOrDefault("email", "")
+                requestValue(request, "email", "")
                         .trim()
-                        .toLowerCase();
+                        .toLowerCase(java.util.Locale.ROOT);
 
         String password =
-                request.getOrDefault("password", "");
+                requestValue(request, "password", "");
+        String portal = requestValue(request, "portal", "GENERAL").trim().toUpperCase(java.util.Locale.ROOT);
+        if (email.isBlank()
+                || email.length() > 150
+                || !EMAIL_PATTERN.matcher(email).matches()
+                || password.isBlank()) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("message", "Please enter a valid email address and password."));
+        }
+        User existingUser = userRepository.findByEmail(email).orElse(null);
+        if (existingUser != null) {
+            String role = existingUser.getRole() == null ? "" : existingUser.getRole().trim().toUpperCase(java.util.Locale.ROOT);
+            String status = existingUser.getStatus() == null ? "" : existingUser.getStatus().trim().toUpperCase(java.util.Locale.ROOT);
+            if ("FPS_DEALER".equals(portal) && !"FPS_DEALER".equals(role))
+                return ResponseEntity.status(403).body(Map.of("message", "This account is not registered as a ration-shop dealer."));
+            if ("FPS_DEALER".equals(role) && !"FPS_DEALER".equals(portal))
+                return ResponseEntity.status(403).body(Map.of("message", "Please use the separate Ration Shop Login page."));
+            if ("FPS_DEALER".equals(role) && "PENDING".equals(status))
+                return ResponseEntity.status(403).body(Map.of("code","DEALER_PENDING","message", "Your application is pending. Please get approval from the admin first and then try again."));
+            if ("FPS_DEALER".equals(role) && "REJECTED".equals(status)) {
+                String reason = dealerApplications.findByEmailIgnoreCase(email).map(a -> a.getRejectionReason()).orElse("");
+                return ResponseEntity.status(403).body(Map.of("code","DEALER_REJECTED","message", reason == null || reason.isBlank() ? "Your ration-shop dealer application was rejected. Contact the administrator for details." : "Your dealer application was rejected: " + reason));
+            }
+            if ("FPS_DEALER".equals(role) && !"ACTIVE".equals(status))
+                return ResponseEntity.status(403).body(Map.of("message","Your dealer account is not active. Please contact the administrator."));
+        } else if ("FPS_DEALER".equals(portal)) {
+            return ResponseEntity.status(401).body(Map.of("message","No ration-shop dealer account was found for this email."));
+        }
 
         try {
 
@@ -298,7 +336,7 @@ public class AuthController {
                                 authentication
                                         .getName()
                                         .trim()
-                                        .toLowerCase()
+                                        .toLowerCase(java.util.Locale.ROOT)
                         )
                         .orElse(null);
 
@@ -335,14 +373,17 @@ public class AuthController {
     public ResponseEntity<?> forgotPassword(
             @RequestBody Map<String, String> request
     ) {
+        if (request == null) return ResponseEntity.badRequest().body(Map.of("message", "Please enter a valid email address."));
+
 
         String email =
-                request.getOrDefault("email", "")
+                requestValue(request, "email", "")
                         .trim()
-                        .toLowerCase();
+                        .toLowerCase(java.util.Locale.ROOT);
 
         if (
                 email.isBlank()
+                        || email.length() > 150
                         || !EMAIL_PATTERN
                         .matcher(email)
                         .matches()
@@ -376,7 +417,7 @@ public class AuthController {
                         .plusMinutes(15);
 
         user.setResetPasswordToken(
-                resetToken
+                hashResetToken(resetToken)
         );
 
         user.setResetPasswordTokenExpiry(
@@ -388,6 +429,10 @@ public class AuthController {
         try {
             mailService.sendPasswordResetEmail(email, resetToken);
         } catch (Exception mailException) {
+            // Never leave a reset credential active when its delivery has failed.
+            user.setResetPasswordToken(null);
+            user.setResetPasswordTokenExpiry(null);
+            userRepository.save(user);
             System.err.println("PASSWORD RESET EMAIL WARNING: delivery failed (" + mailException.getClass().getSimpleName() + ").");
         }
 
@@ -398,25 +443,18 @@ public class AuthController {
     public ResponseEntity<?> resetPassword(
             @RequestBody Map<String, String> request
     ) {
+        if (request == null) return ResponseEntity.badRequest().body(Map.of("message", "Reset token and new password are required."));
+
 
         String token =
-                request.getOrDefault(
-                        "token",
-                        ""
-                )
+                requestValue(request, "token", "")
                         .trim();
 
         String newPassword =
-                request.getOrDefault(
-                        "newPassword",
-                        ""
-                );
+                requestValue(request, "newPassword", "");
 
         String termsAccepted =
-                request.getOrDefault(
-                        "termsAccepted",
-                        "false"
-                );
+                requestValue(request, "termsAccepted", "false");
 
         /*
          * ========================================================
@@ -451,19 +489,20 @@ public class AuthController {
         if (
                 newPassword.isBlank()
                         || newPassword.length() < 8
+                        || !passwordWithinBcryptLimit(newPassword)
         ) {
 
             return ResponseEntity.badRequest().body(
                     Map.of(
                             "message",
-                            "Password must be at least 8 characters long."
+                            "Password must contain 8 to 72 UTF-8 bytes."
                     )
             );
         }
 
         User user =
                 userRepository
-                        .findByResetPasswordToken(token)
+                        .findByResetPasswordToken(hashResetToken(token))
                         .orElse(null);
 
         if (user == null) {
@@ -519,4 +558,23 @@ public class AuthController {
                 )
         );
     }
+
+    private String requestValue(Map<String, String> request, String key, String defaultValue) {
+        String value = request.get(key);
+        return value == null ? defaultValue : value;
+    }
+    private boolean passwordWithinBcryptLimit(String password) {
+        return password != null && password.getBytes(StandardCharsets.UTF_8).length <= 72;
+    }
+
+    private String hashResetToken(String token) {
+        try {
+            byte[] digest = MessageDigest.getInstance("SHA-256")
+                    .digest(token.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digest);
+        } catch (java.security.NoSuchAlgorithmException exception) {
+            throw new IllegalStateException("Secure password-reset token processing is unavailable.");
+        }
+    }
+
 }

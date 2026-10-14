@@ -2,11 +2,11 @@ package com.rationportal.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rationportal.model.RationCard;
 import com.rationportal.model.RationCardApplication;
 import com.rationportal.repository.RationCardApplicationRepository;
-import com.rationportal.repository.RationCardRepository;
 import com.rationportal.service.NotificationService;
+import com.rationportal.service.RationCardIssuanceService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
@@ -25,9 +25,9 @@ import java.util.UUID;
 public class RationCardApplicationController {
 
     private final RationCardApplicationRepository repository;
-    private final RationCardRepository rationCardRepository;
     private final ObjectMapper objectMapper;
     private final NotificationService notificationService;
+    private final RationCardIssuanceService rationCardIssuanceService;
 
     private static final Set<String> ALLOWED_STATUSES = Set.of(
             "SUBMITTED",
@@ -39,14 +39,14 @@ public class RationCardApplicationController {
 
     public RationCardApplicationController(
             RationCardApplicationRepository repository,
-            RationCardRepository rationCardRepository,
             ObjectMapper objectMapper,
-            NotificationService notificationService) {
+            NotificationService notificationService,
+            RationCardIssuanceService rationCardIssuanceService) {
 
         this.repository = repository;
-        this.rationCardRepository = rationCardRepository;
         this.objectMapper = objectMapper;
         this.notificationService = notificationService;
+        this.rationCardIssuanceService = rationCardIssuanceService;
     }
 
     @PostMapping
@@ -91,6 +91,21 @@ public class RationCardApplicationController {
                         ));
             }
 
+            if (headOfFamily.length() > 120 || cardType.length() > 20
+                    || address.length() > 2000 || district.length() > 100
+                    || state.length() > 100) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "One or more application fields exceed the allowed length."));
+            }
+            if (!mobile.matches("^(?:\\+91)?[6-9][0-9]{9}$")) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "Enter a valid Indian mobile number."));
+            }
+            if (!pincode.matches("^[0-9]{6}$")) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "Pincode must contain exactly six digits."));
+            }
+
             if (!(familyMembersObject instanceof List<?> familyMembers)) {
 
                 return ResponseEntity.badRequest()
@@ -107,6 +122,35 @@ public class RationCardApplicationController {
                                 "message",
                                 "At least one family member is required."
                         ));
+            }
+
+            if (familyMembers.size() > 50) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "A maximum of 50 family members can be submitted per application."));
+            }
+            for (int index = 0; index < familyMembers.size(); index++) {
+                Object item = familyMembers.get(index);
+                if (!(item instanceof Map<?, ?> member)) {
+                    return ResponseEntity.badRequest().body(Map.of(
+                            "message", "Family member row " + (index + 1) + " must be an object."));
+                }
+                String name = member.get("name") == null ? "" : member.get("name").toString().trim();
+                String ageText = member.get("age") == null ? "" : member.get("age").toString().trim();
+                String gender = member.get("gender") == null ? "" : member.get("gender").toString().trim();
+                String relationship = member.get("relationship") == null ? "" : member.get("relationship").toString().trim();
+                int age;
+                try {
+                    age = Integer.parseInt(ageText);
+                } catch (NumberFormatException exception) {
+                    return ResponseEntity.badRequest().body(Map.of(
+                            "message", "Family member row " + (index + 1) + " must contain a valid whole-number age."));
+                }
+                if (name.isBlank() || name.length() > 120 || age < 0 || age > 120
+                        || gender.isBlank() || gender.length() > 20
+                        || relationship.isBlank() || relationship.length() > 60) {
+                    return ResponseEntity.badRequest().body(Map.of(
+                            "message", "Family member row " + (index + 1) + " contains invalid or incomplete details."));
+                }
             }
 
             RationCardApplication application =
@@ -254,6 +298,7 @@ public class RationCardApplicationController {
     }
 
     @PutMapping("/{applicationNumber}/status")
+    @Transactional
     public ResponseEntity<?> updateApplicationStatus(
             @PathVariable @NonNull String applicationNumber,
             @RequestBody @NonNull Map<String, Object> request,
@@ -315,13 +360,26 @@ public class RationCardApplicationController {
         }
 
         String previousStatus = application.getStatus();
-
+        if (!isAllowedTransition(previousStatus, normalizedStatus)) {
+            return ResponseEntity.status(409).body(Map.of(
+                    "message", "Application status cannot be changed from "
+                            + (previousStatus == null ? "UNKNOWN" : previousStatus)
+                            + " to " + normalizedStatus + ".",
+                    "previousStatus", previousStatus == null ? "" : previousStatus,
+                    "requestedStatus", normalizedStatus));
+        }
         application.setStatus(normalizedStatus);
-
-        RationCardApplication savedApplication =
-                repository.save(application);
-
-        syncRationCardForApplication(savedApplication);
+        if ("REJECTED".equals(normalizedStatus)) {
+            String reason = getString(request, "rejectionReason");
+            if (reason.isBlank()) reason = getString(request, "reason");
+            application.setRejectionReason(reason.isBlank() ? "Your application did not meet the verification requirements." : reason);
+            application.setCompletionStatus("NOT_APPLICABLE");
+        } else if ("APPROVED".equals(normalizedStatus)) {
+            application.setRejectionReason(null);
+        }
+        RationCardApplication savedApplication = repository.save(application);
+        rationCardIssuanceService.processApplicationStatus(savedApplication);
+        savedApplication = repository.save(savedApplication);
 
         try {
             notificationService.sendApplicationStatusEmail(
@@ -370,6 +428,18 @@ public class RationCardApplicationController {
         );
     }
 
+    private boolean isAllowedTransition(String currentStatus, String nextStatus) {
+        String current = currentStatus == null ? "" : currentStatus.trim().toUpperCase(java.util.Locale.ROOT);
+        String next = nextStatus == null ? "" : nextStatus.trim().toUpperCase(java.util.Locale.ROOT);
+        if (current.equals(next)) return true;
+        return switch (current) {
+            case "SUBMITTED" -> Set.of("PENDING", "VERIFIED", "APPROVED", "REJECTED").contains(next);
+            case "PENDING" -> Set.of("VERIFIED", "APPROVED", "REJECTED").contains(next);
+            case "VERIFIED" -> Set.of("APPROVED", "REJECTED").contains(next);
+            default -> false;
+        };
+    }
+
     private boolean isAuthenticated(Authentication authentication) {
 
         return authentication != null
@@ -402,47 +472,4 @@ public class RationCardApplicationController {
 
         return value.toString().trim();
     }
-    private void syncRationCardForApplication(
-            RationCardApplication application) {
-
-        String ownerEmail = application.getEmail() == null
-                ? ""
-                : application.getEmail().trim().toLowerCase();
-
-        if (ownerEmail.isBlank()) {
-            return;
-        }
-
-        String cardNumber = "RC-" + application.getApplicationNumber();
-
-        RationCard card = rationCardRepository
-                .findByRationCardNumber(cardNumber)
-                .orElseGet(RationCard::new);
-
-        card.setRationCardNumber(cardNumber);
-        card.setCardType(application.getCardType());
-        card.setHeadOfFamily(application.getApplicantName());
-        card.setAddress(application.getAddress());
-        card.setDistrict(application.getDistrict());
-        card.setState(application.getState());
-        card.setOwnerEmail(ownerEmail);
-
-        String applicationStatus = application.getStatus() == null
-                ? "PENDING"
-                : application.getStatus().trim().toUpperCase();
-
-        if ("APPROVED".equals(applicationStatus)) {
-            card.setStatus("APPROVED");
-            card.setApprovalStatus("APPROVED");
-        } else if ("REJECTED".equals(applicationStatus)) {
-            card.setStatus("REJECTED");
-            card.setApprovalStatus("REJECTED");
-        } else {
-            card.setStatus("PENDING");
-            card.setApprovalStatus("PENDING");
-        }
-
-        rationCardRepository.save(card);
-    }
-
 }

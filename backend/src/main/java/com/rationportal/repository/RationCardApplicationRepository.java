@@ -16,4 +16,6 @@ public interface RationCardApplicationRepository
     List<RationCardApplication> findAllByEmailOrderByCreatedAtDesc(
             String email
     );
+
+    List<RationCardApplication> findByStatusIgnoreCase(String status);
 }

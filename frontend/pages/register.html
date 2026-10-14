@@ -183,6 +183,8 @@
             aria-live="polite"
         ></div>
 
+        <div style="margin:0 0 18px;padding:14px;border:1px solid #dce8f0;border-radius:10px;background:#f7fafc"><label for="registrationType" style="display:block;font-weight:700;margin-bottom:8px">Register as</label><select id="registrationType" style="width:100%;padding:10px;border:1px solid #bdcde0;border-radius:8px"><option value="CITIZEN">Citizen</option><option value="FPS_DEALER">Ration Shop Dealer</option></select><p style="margin:8px 0 0;font-size:12px;color:#61738a">Citizen registration stays unchanged. Dealer registration requires administrator approval.</p></div>
+
         <form
             id="registerForm"
             novalidate
@@ -619,6 +621,8 @@ document.addEventListener(
             async function (event) {
 
                 event.preventDefault();
+
+                if (document.getElementById("registrationType") && document.getElementById("registrationType").value === "FPS_DEALER") { window.location.href = "fps-register.html"; return; }
 
                 hideAlert();
 
