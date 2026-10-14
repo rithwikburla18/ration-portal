@@ -60,8 +60,68 @@ public class FpsDealerApplicationController {
         Double lat=number(body.get("latitude")), lon=number(body.get("longitude"));
         if (lat == null || lon == null || !Double.isFinite(lat) || !Double.isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180)
             return ResponseEntity.badRequest().body(Map.of("message","Enter valid shop latitude and longitude."));
-        if (users.findByEmail(email).isPresent()||applications.findByLicenseNumberIgnoreCase(license).isPresent())
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message","This email or FPS licence number is already registered."));
+        User existingUser = users.findByEmail(email).orElse(null);
+        FpsDealerApplication byEmail = applications.findByEmailIgnoreCase(email).orElse(null);
+        FpsDealerApplication byLicense = applications.findByLicenseNumberIgnoreCase(license).orElse(null);
+        FpsDealerApplication existingApplication = byEmail != null ? byEmail : byLicense;
+
+        if (existingApplication != null) {
+            String existingStatus = existingApplication.getStatus() == null
+                    ? "" : existingApplication.getStatus().trim().toUpperCase(Locale.ROOT);
+            if ("PENDING".equals(existingStatus)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                        "code", "DEALER_APPLICATION_PENDING",
+                        "status", "PENDING",
+                        "message", "Your dealer application is already submitted and is currently pending Administrator approval."));
+            }
+            if ("APPROVED".equals(existingStatus)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                        "code", "DEALER_ALREADY_APPROVED",
+                        "status", "APPROVED",
+                        "message", "This dealer application is already approved. Please sign in through Ration Shop Dealer Login."));
+            }
+            boolean sameRejectedApplication = "REJECTED".equals(existingStatus)
+                    && byEmail != null && byLicense != null
+                    && byEmail.getId() != null && byEmail.getId().equals(byLicense.getId());
+            if (!sameRejectedApplication || existingUser == null
+                    || !"FPS_DEALER".equalsIgnoreCase(existingUser.getRole())) {
+                String reason = existingApplication.getRejectionReason();
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                        "code", "DEALER_APPLICATION_REJECTED",
+                        "status", "REJECTED",
+                        "rejectionReason", reason == null ? "" : reason,
+                        "message", "The previous dealer application was rejected. Review the reason and reapply using the same email and FPS licence number, or contact the administrator."));
+            }
+
+            existingApplication.setDealerName(dealerName);
+            existingApplication.setShopName(shopName);
+            existingApplication.setMobile(mobile);
+            existingApplication.setDistrict(district);
+            existingApplication.setMandalVillage(mandal);
+            existingApplication.setShopAddress(address);
+            existingApplication.setLatitude(lat);
+            existingApplication.setLongitude(lon);
+            existingApplication.setStatus("PENDING");
+            existingApplication.setRejectionReason(null);
+            existingApplication.setDecidedAt(null);
+            applications.save(existingApplication);
+
+            existingUser.setFullName(dealerName);
+            existingUser.setPasswordHash(passwordEncoder.encode(password));
+            existingUser.setRole("FPS_DEALER");
+            existingUser.setStatus("PENDING");
+            users.save(existingUser);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Your revised dealer application has been resubmitted and is pending Administrator approval.",
+                    "status", "PENDING",
+                    "email", email));
+        }
+
+        if (existingUser != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                    "message", "This email or FPS licence number is already registered."));
+        }
+
         FpsDealerApplication app=new FpsDealerApplication();
         app.setDealerName(dealerName); app.setShopName(shopName); app.setLicenseNumber(license);
         app.setEmail(email); app.setMobile(mobile); app.setDistrict(district); app.setMandalVillage(mandal);

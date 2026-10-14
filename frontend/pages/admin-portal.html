@@ -98,10 +98,12 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
     <script src="../js/auth-guard.js?v=20261005"></script>
     
     <meta name="theme-color" content="#0a2240">
+<link rel="stylesheet" href="../css/indian-theme.css?v=20261015">
+<script defer src="../js/ration-theme.js?v=20261015"></script>
 </head>
 
 
-<body>
+<body class="rp-indian-theme">
 
 <div class="admin-top-line"></div>
 
@@ -1755,7 +1757,29 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradi
 
 <script>
 (function(){ "use strict";
-function initDealerAdmin(){var panel=document.getElementById("fpsDealerAdminPanel");if(!panel)return;var token=localStorage.getItem("rationPortalToken");if(!token)return;var api=(window.RATION_API_BASE||"https://ration-portal-backend.onrender.com/api").replace(/\/$/,"");var msg=document.getElementById("fpsAdminMessage"),rows=document.getElementById("fpsDealerRows");function cell(tr,value){var td=document.createElement("td");td.style.cssText="padding:10px;border-bottom:1px solid #e2e8f0;vertical-align:top";td.textContent=value==null?"—":String(value);tr.appendChild(td);return td}async function load(){try{var res=await fetch(api+"/fps-dealer-applications",{headers:{Authorization:"Bearer "+token,Accept:"application/json"}});var data=await res.json().catch(function(){return []});if(!res.ok)throw new Error(data.message||"Unable to load dealer applications.");panel.style.display="block";rows.replaceChildren();(Array.isArray(data)?data:[]).forEach(function(app){var tr=document.createElement("tr");cell(tr,(app.dealerName||"—")+" / "+(app.shopName||"—"));cell(tr,app.licenseNumber);cell(tr,(app.mandalVillage||"—")+", "+(app.district||"—")+"\n"+(app.shopAddress||""));cell(tr,(app.mobile||"—")+"\n"+(app.email||"—"));cell(tr,app.status);var td=cell(tr,"");if(String(app.status||"").toUpperCase()==="PENDING"){var approve=document.createElement("button");approve.type="button";approve.textContent="Approve";approve.style.cssText="padding:7px 10px;margin:3px;background:#137333;color:#fff;border:0;border-radius:6px;cursor:pointer";approve.addEventListener("click",function(){decide(app.id,"APPROVED","")});var reject=document.createElement("button");reject.type="button";reject.textContent="Reject";reject.style.cssText="padding:7px 10px;margin:3px;background:#a12a20;color:#fff;border:0;border-radius:6px;cursor:pointer";reject.addEventListener("click",function(){var reason=window.prompt("Enter the reason for rejecting this dealer application:");if(reason&&reason.trim())decide(app.id,"REJECTED",reason.trim())});td.append(approve,reject)}else td.textContent=app.rejectionReason||"No action required"});msg.textContent=(Array.isArray(data)?data.length:0)+" dealer application(s) loaded."}catch(e){panel.style.display="block";msg.textContent=e.message;msg.style.background="#fff0ed";msg.style.color="#8b251b"}}async function decide(id,status,reason){try{var res=await fetch(api+"/fps-dealer-applications/"+encodeURIComponent(id)+"/decision",{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({status:status,rejectionReason:reason})});var data=await res.json().catch(function(){return {}});if(!res.ok)throw new Error(data.message||"Decision could not be saved.");msg.textContent=data.message||"Decision saved.";await load()}catch(e){msg.textContent=e.message;msg.style.background="#fff0ed";msg.style.color="#8b251b"}}load()}
+function initDealerAdmin(){
+var panel=document.getElementById("fpsDealerAdminPanel");if(!panel)return;
+var token=localStorage.getItem("rationPortalToken")||sessionStorage.getItem("rationPortalToken");if(!token)return;
+var api=(window.RATION_API_BASE||"https://ration-portal-backend.onrender.com/api").replace(/\/$/,"");
+var msg=document.getElementById("fpsAdminMessage"),rows=document.getElementById("fpsDealerRows");
+function cell(tr,value){var td=document.createElement("td");td.style.cssText="padding:10px;border-bottom:1px solid rgba(229,169,59,.3);vertical-align:top;white-space:pre-line";td.textContent=value==null||value===""?"—":String(value);tr.appendChild(td);return td}
+function val(obj,names){for(var i=0;i<names.length;i++){var v=obj&&obj[names[i]];if(v!==undefined&&v!==null&&String(v).trim()!=="")return v}return ""}
+function statusCell(tr,status){var td=cell(tr,"");var badge=document.createElement("span");var st=String(status||"PENDING").toUpperCase();badge.textContent=st;badge.style.cssText="display:inline-block;padding:5px 9px;border-radius:999px;font-weight:800;font-size:12px;border:1px solid";if(st==="APPROVED")badge.style.cssText+=";color:#a9edb7;background:#174d31;border-color:#4b9a69";else if(st==="REJECTED")badge.style.cssText+=";color:#ffc0b5;background:#6d2626;border-color:#c96e62";else badge.style.cssText+=";color:#ffd06b;background:#684716;border-color:#c78b2c";td.appendChild(badge);return td}
+async function load(){try{
+var res=await fetch(api+"/fps-dealer-applications",{headers:{Authorization:"Bearer "+token,Accept:"application/json"},cache:"no-store"});
+var payload=await res.json().catch(function(){return []});if(!res.ok)throw new Error(payload.message||"Unable to load dealer applications.");
+var data=Array.isArray(payload)?payload:(Array.isArray(payload.content)?payload.content:(Array.isArray(payload.applications)?payload.applications:(Array.isArray(payload.data)?payload.data:[])));
+panel.style.display="block";rows.replaceChildren();
+if(!data.length){var tr=document.createElement("tr");var td=cell(tr,"No dealer applications are available.");td.colSpan=6;rows.appendChild(tr)}
+data.forEach(function(app){var id=val(app,["id","applicationId","dealerApplicationId"]);var name=val(app,["dealerName","fullName","name"]);var shop=val(app,["shopName","fpsName","shop"]);var license=val(app,["licenseNumber","fpsLicenceNumber","fpsLicenseNumber","licenceNumber","license","licence"]);var location=val(app,["mandalVillage","mandal","village","location"]);var district=val(app,["district"]);var address=val(app,["shopAddress","address"]);var mobile=val(app,["mobile","mobileNumber","phone"]);var email=val(app,["email","emailAddress"]);var status=val(app,["status","applicationStatus"])||"PENDING";var reason=val(app,["rejectionReason","reason"]);
+var tr=document.createElement("tr");cell(tr,(name||"—")+" / "+(shop||"—"));cell(tr,license);cell(tr,[location,district,address].filter(Boolean).join(", ")||"—");cell(tr,[mobile,email].filter(Boolean).join("\n")||"—");statusCell(tr,status);var td=cell(tr,"");
+if(String(status).toUpperCase()==="PENDING"){var approve=document.createElement("button");approve.type="button";approve.className="rp-approve-button";approve.textContent="Approve";approve.style.cssText="padding:7px 10px;margin:3px;background:#176b3b;color:#fff;border:0;border-radius:6px;cursor:pointer";approve.addEventListener("click",function(){decide(id,"APPROVED","")});var reject=document.createElement("button");reject.type="button";reject.className="rp-reject-button";reject.textContent="Reject";reject.style.cssText="padding:7px 10px;margin:3px;background:#a12a20;color:#fff;border:0;border-radius:6px;cursor:pointer";reject.addEventListener("click",function(){var value=window.prompt("Enter the reason for rejecting this dealer application (required):");if(value===null)return;if(!value.trim()){msg.textContent="A rejection reason is required before rejecting this application.";return}decide(id,"REJECTED",value.trim())});td.append(approve,reject)}
+else td.textContent=String(status).toUpperCase()==="REJECTED"?(reason||"Rejected; no reason recorded."):"No action required";
+rows.appendChild(tr)});
+msg.textContent=data.length+" dealer application(s) loaded.";msg.style.background="transparent";msg.style.color="#f5d88c";
+}catch(e){panel.style.display="block";msg.textContent=e.message||"Unable to load dealer applications.";msg.style.background="#602b26";msg.style.color="#ffe0c6"}}
+async function decide(id,status,reason){if(!id){msg.textContent="This dealer record has no application ID; refresh the dashboard and try again.";return}try{var res=await fetch(api+"/fps-dealer-applications/"+encodeURIComponent(id)+"/decision",{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({status:status,rejectionReason:reason})});var data=await res.json().catch(function(){return {}});if(!res.ok)throw new Error(data.message||"Decision could not be saved.");msg.textContent=data.message||"Decision saved.";await load()}catch(e){msg.textContent=e.message||"Decision could not be saved.";msg.style.background="#602b26";msg.style.color="#ffe0c6"}}
+load()}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initDealerAdmin);else initDealerAdmin();
 })();
 </script></body>

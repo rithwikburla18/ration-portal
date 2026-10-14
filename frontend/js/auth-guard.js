@@ -20,10 +20,10 @@
     function currentFile() {
         return (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
     }
-    function getToken() { return localStorage.getItem(TOKEN_KEY) || ""; }
+    function getToken() { return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem("ration_token") || sessionStorage.getItem("ration_token") || ""; }
     function clearSession() {
         [TOKEN_KEY, USER_KEY, ROLE_KEY, AUTHENTICATED_KEY, ...LEGACY_KEYS, "rationPortalRedirect"]
-            .forEach(function (key) { localStorage.removeItem(key); });
+            .forEach(function (key) { localStorage.removeItem(key); sessionStorage.removeItem(key); });
     }
     async function validateSession(token) {
         const response = await fetch(BACKEND_URL + "/api/auth/me", {
@@ -97,7 +97,7 @@
             window.location.replace("./login.html");
             return;
         }
-        const role = String(user.role || localStorage.getItem(ROLE_KEY) || "").toUpperCase();
+        const role = String(user.role || localStorage.getItem(ROLE_KEY) || sessionStorage.getItem(ROLE_KEY) || "").toUpperCase();
         const dealerFiles = ["fps-dashboard.html", "fps-distribution.html", "fps-records.html"];
         if (dealerFiles.includes(file) && role !== "FPS_DEALER") {
             window.location.replace("./fps-login.html");

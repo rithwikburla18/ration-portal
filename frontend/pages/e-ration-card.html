@@ -915,9 +915,11 @@
     </style>
 <script src="../js/i18n.js?v=20261004"></script>    <link rel="stylesheet" href="../css/final-theme.css?v=20261009">
     <meta name="theme-color" content="#0a2f57">
+<link rel="stylesheet" href="../css/indian-theme.css?v=20261015">
+<script defer src="../js/ration-theme.js?v=20261015"></script>
 </head>
 
-<body>
+<body class="rp-indian-theme">
 
 <div class="tricolor-line"><select id="languageSelector" aria-label="Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="te">తెలుగు</option></select></div>
 
@@ -2070,8 +2072,26 @@
                 "/ration-cards/" +
                 encodeURIComponent(number);
 
-            const payload =
-                await authenticatedGet(url);
+            let payload;
+            if (window.rationTheme && typeof window.rationTheme.loadCitizenProfile === "function") {
+                const profile = window.rationTheme.lastProfile || await window.rationTheme.loadCitizenProfile();
+                const ownCard = profile && profile.rationCard;
+                const ownNumber = String(ownCard && (ownCard.number || ownCard.rationCardNumber) || "").trim();
+                if (!ownCard || !ownNumber || ownNumber !== number) {
+                    throw new Error("This ration card number is not linked to your signed-in citizen account.");
+                }
+                payload = {
+                    rationCard: {
+                        ...ownCard,
+                        id: ownCard.id,
+                        rationCardNumber: ownNumber,
+                        cardType: ownCard.type || ownCard.cardType
+                    },
+                    familyMembers: Array.isArray(profile.familyMembers) ? profile.familyMembers : []
+                };
+            } else {
+                payload = await authenticatedGet(url);
+            }
 
             const record =
                 extractRecord(payload);
@@ -2161,17 +2181,9 @@
             params.get("ration") ||
             "";
 
-        const userNumber =
-            getUserRationNumber();
-
-        const initialNumber =
-            queryNumber || userNumber;
-
-        if (initialNumber) {
-            input.value =
-                initialNumber;
-
-            loadCard(initialNumber);
+        if (queryNumber) {
+            input.value = queryNumber;
+            loadCard(queryNumber);
         }
     }
 

@@ -245,7 +245,7 @@ public class AuthController {
             if ("FPS_DEALER".equals(role) && !"ACTIVE".equals(status))
                 return ResponseEntity.status(403).body(Map.of("message","Your dealer account is not active. Please contact the administrator."));
         } else if ("FPS_DEALER".equals(portal)) {
-            return ResponseEntity.status(401).body(Map.of("message","No ration-shop dealer account was found for this email."));
+            return ResponseEntity.status(401).body(Map.of("code","DEALER_ACCOUNT_NOT_FOUND","message","No ration-shop dealer account was found for this email."));
         }
 
         try {
