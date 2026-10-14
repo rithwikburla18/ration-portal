@@ -111,7 +111,7 @@ public class FpsDealerApplicationController {
             notifications.sendEmail(app.getEmail(),"Ration Portal - Dealer Application "+decision,message);
         } catch(Exception ex) { System.err.println("FPS_DEALER_DECISION_EMAIL_FAILED applicationId="+id+" errorType="+ex.getClass().getSimpleName()); }
         try { jdbc.update("INSERT INTO audit_logs(event_type,actor_email,target_reference,outcome,details) VALUES (?,?,?,?,?)",
-                "FPS_DEALER_"+decision,auth.getName(),"FPS-APP-"+id,"SUCCESS","Dealer application decision recorded."); }
+                "FPS_DEALER_"+decision,auth.getName() == null ? "unknown" : auth.getName(),"FPS-APP-"+id,"SUCCESS","Dealer application decision recorded."); }
         catch(Exception ex){ System.err.println("AUDIT_LOG_WRITE_FAILED event=FPS_DEALER_"+decision); }
         Map<String,Object> response=new LinkedHashMap<>(); response.put("message","Dealer application decision recorded.");
         response.put("status",app.getStatus()); response.put("fpsId",app.getFpsId()); response.put("rejectionReason",app.getRejectionReason());
