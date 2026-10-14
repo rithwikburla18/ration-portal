@@ -72,7 +72,10 @@ public class RationCardIssuanceService {
         if (card.getIssuedAt() == null) card.setIssuedAt(LocalDateTime.now(IST));
         card = cards.saveAndFlush(card);
         List<FamilyMember> family = members.findByRationCardId(card.getId());
-        if (family.isEmpty()) family = members.saveAll(makeMembers(app, card));
+        if (family.isEmpty()) {
+            members.saveAll(makeMembers(app, card));
+            family = members.findByRationCardId(card.getId());
+        }
         app.setIssuedRationCardNumber(card.getRationCardNumber());
         app.setCompletionStatus("COMPLETED");
         if (card.getDocumentEmailedAt() == null) {
