@@ -179,3 +179,10 @@ body.rp-indian-theme .admin-stat-card{
  color:#0a192f!important;background:repeating-radial-gradient(circle at 100% 0%,rgba(10,25,47,.05) 0 2px,transparent 2px 12px),linear-gradient(135deg,#f4d27b,#c78b2c)!important;border:1px solid #ffe4a0!important;
 }
 body.rp-indian-theme .admin-stat-card .admin-stat-label,body.rp-indian-theme .admin-stat-card .admin-stat-value{color:#0a192f!important}
+
+body.rp-indian-theme header,body.rp-indian-theme nav,body.rp-indian-theme main,body.rp-indian-theme footer,body.rp-indian-theme .container,body.rp-indian-theme .page-container,body.rp-indian-theme .content,body.rp-indian-theme .dashboard-container{position:relative;z-index:1}
+.rp-side-ornament{position:fixed;z-index:0;bottom:4px;width:clamp(64px,9vw,142px);height:auto;pointer-events:none;opacity:.9;filter:drop-shadow(0 4px 7px rgba(0,0,0,.55))}
+.rp-side-ornament svg{display:block;width:100%;height:auto;overflow:visible}
+.rp-side-ornament-left{left:3px}
+.rp-side-ornament-right{right:3px;transform:scaleX(-1)}
+@media(max-width:900px){.rp-side-ornament{display:none}}
