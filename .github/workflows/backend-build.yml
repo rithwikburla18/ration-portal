@@ -2,7 +2,7 @@ name: Backend build and tests
 
 on:
   push:
-    branches: [ "feat/citizen-card-and-fps-workflow" ]
+    branches: [ "feat/citizen-card-and-fps-workflow", "feat/workflow-hardening-on-remote" ]
   pull_request:
     branches: [ "main" ]
 
