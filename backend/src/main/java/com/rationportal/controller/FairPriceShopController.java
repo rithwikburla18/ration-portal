@@ -22,7 +22,7 @@ public class FairPriceShopController {
         if ((latitude == null) != (longitude == null))
             return ResponseEntity.badRequest().body(Map.of("message", "A valid latitude and longitude pair is required."));
         if (latitude != null && longitude != null
-                && (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180))
+                && (latitude.doubleValue() < -90.0 || latitude.doubleValue() > 90.0 || longitude.doubleValue() < -180.0 || longitude.doubleValue() > 180.0))
             return ResponseEntity.badRequest().body(Map.of("message", "A valid latitude and longitude pair is required."));
         String d=clean(district), q=clean(locality);
         List<Map<String,Object>> results=new ArrayList<>();
