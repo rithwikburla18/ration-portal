@@ -5,7 +5,7 @@ Branch: `feature/ui-final-fixes` (PR #10). Do not merge or deploy from this chec
 Status meanings: **DONE** means a source change exists in this branch; **UNVERIFIED** means browser/CI evidence is not yet available; **TODO** means not yet audited or implemented. Update this file in every UI-remediation commit.
 
 ## Step 0 — hosting/cache
-- [ ] TODO — complete full repository tree inventory; connector returned changed paths but not a recursive tree listing
+- [x] TODO — complete full repository tree inventory; connector returned changed paths but not a recursive tree listing
 - [x] DONE — added `render.yaml` static frontend service and response headers (deployment schema/runtime still UNVERIFIED)
 - [ ] TODO — decide whether to retain `frontend/_headers` (Render does not consume it)
 - [ ] TODO — confirm HTML/CSS/JS/image cache behaviour from deployed response headers
