@@ -48,6 +48,16 @@ for (const pagePath of pages) {
       expect(response, "navigation should return a response").not.toBeNull();
       expect(response.status(), "page should load successfully").toBeLessThan(400);
       await page.waitForTimeout(150);
+      const registrations = await page.evaluate(async () => {
+        if (!("serviceWorker" in navigator)) return [];
+        return (await navigator.serviceWorker.getRegistrations()).map((registration) => registration.scope);
+      });
+      expect(registrations, "no service worker should remain registered").toEqual([]);
+      const unversionedLocalRefs = await page.locator("link[href],script[src],img[src],source[src],video[poster]").evaluateAll((nodes) => nodes
+        .map((node) => ({ tag: node.tagName, attribute: node.hasAttribute("href") ? "href" : node.hasAttribute("poster") ? "poster" : "src", value: node.getAttribute(node.hasAttribute("href") ? "href" : node.hasAttribute("poster") ? "poster" : "src") }))
+        .filter((item) => item.value && !/^(?:[a-z]+:|\\/\\/|data:|#)/i.test(item.value) && /\\.(?:css|js|png|jpe?g|svg|webp|gif|ico|woff2?)(?:[?#]|$)/i.test(item.value) && !/[?&]v=[^&]+/.test(item.value))
+        .map((item) => item.tag + "[" + item.attribute + "] " + item.value));
+      expect(unversionedLocalRefs, "every local CSS/JS/image reference needs ?v=").toEqual([]);
       const images = await page.locator("img").evaluateAll((nodes) => nodes.map((img) => ({
         src: img.currentSrc || img.src, broken: !img.complete || img.naturalWidth === 0
       })).filter((img) => img.broken));
