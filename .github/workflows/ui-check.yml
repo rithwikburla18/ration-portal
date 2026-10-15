@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: frontend/tests/package-lock.json
       - name: Install Playwright test dependencies
         working-directory: frontend/tests
-        run: npm ci
+        run: npm install
       - name: Install browser
         working-directory: frontend/tests
         run: npx playwright install --with-deps chromium
