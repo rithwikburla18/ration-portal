@@ -186,3 +186,11 @@ body.rp-indian-theme header,body.rp-indian-theme nav,body.rp-indian-theme main,b
 .rp-side-ornament-left{left:3px}
 .rp-side-ornament-right{right:3px;transform:scaleX(-1)}
 @media(max-width:900px){.rp-side-ornament{display:none}}
+
+/* Login menu reliability: keep the menu above the navigation and never close it on pointer travel. */
+.rp-header,.rp-header-inner,.rp-header-actions{overflow:visible!important}
+.rp-header{position:relative!important;z-index:10050!important}
+.rp-header-inner,.rp-header-actions{position:relative;z-index:10051!important}
+.rp-login-wrap{position:relative!important;z-index:10060!important}
+.rp-login-menu{z-index:10070!important;max-height:min(70vh,480px);overflow-y:auto}
+.rp-nav-wrap{z-index:90!important}
