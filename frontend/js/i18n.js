@@ -23,6 +23,12 @@
            ENGLISH
         ======================================================== */
         en: {
+            "greeting.morning": "Good Morning",
+            "greeting.afternoon": "Good Afternoon",
+            "greeting.evening": "Good Evening",
+            "greeting.night": "Good Night",
+
+
 
             "site.name": "Ration Portal",
             "site.subtitle": "Digital Public Distribution System",
@@ -260,6 +266,12 @@
            HINDI
         ======================================================== */
         hi: {
+            "greeting.morning": "सुप्रभात",
+            "greeting.afternoon": "शुभ दोपहर",
+            "greeting.evening": "शुभ संध्या",
+            "greeting.night": "शुभ रात्रि",
+
+
 
             "site.name": "राशन पोर्टल",
             "site.subtitle": "डिजिटल सार्वजनिक वितरण प्रणाली",
@@ -547,6 +559,12 @@
            TELUGU
         ======================================================== */
         te: {
+            "greeting.morning": "శుభోదయం",
+            "greeting.afternoon": "శుభ మధ్యాహ్నం",
+            "greeting.evening": "శుభ సాయంత్రం",
+            "greeting.night": "శుభ రాత్రి",
+
+
 
             "site.name":
                 "రేషన్ పోర్టల్",
