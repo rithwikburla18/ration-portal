@@ -1,0 +1,50 @@
+name: UI browser checks
+
+on:
+  push:
+    branches: [feature/ui-final-fixes]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Playwright test dependencies
+        working-directory: frontend/tests
+        run: npm install
+      - name: Install browser
+        working-directory: frontend/tests
+        run: npx playwright install --with-deps chromium
+      - name: Start frontend static server
+        run: |
+          python3 -m http.server 4173 --directory frontend > /tmp/ration-portal-static.log 2>&1 &
+          echo $! > /tmp/ration-portal-static.pid
+          for i in $(seq 1 30); do curl --fail --silent http://127.0.0.1:4173/index.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/ration-portal-static.log
+          exit 1
+      - name: Run all-page viewport checks
+        working-directory: frontend/tests
+        env:
+          BASE_URL: http://127.0.0.1:4173
+        run: npm test
+      - name: Upload screenshots and Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ration-portal-ui-screenshots-${{ github.run_number }}
+          path: |
+            frontend/tests/artifacts/
+            frontend/tests/playwright-report/
+            frontend/tests/test-results/
+          if-no-files-found: warn
+          retention-days: 14

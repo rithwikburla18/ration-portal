@@ -15,7 +15,7 @@
 
     <!-- This page uses isolated styles so shared site themes cannot override the admin login design. -->
     <link rel="manifest" href="../manifest.json">
-    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="icon" type="image/png" href="../favicon.png?v=20261016">
 
     <style>
         body {
@@ -365,6 +365,9 @@
             }
         }
     </style>
+<link rel="stylesheet" href="../css/ration-theme.css?v=20261016">
+<script defer src="../js/pwa.js?v=20261016"></script>
+<script defer src="../js/server-wake.js?v=20261016"></script>
 </head>
 
 <body>
@@ -998,8 +1001,7 @@
                 window.setTimeout(
                     function () {
 
-                        window.location.href =
-                            "./admin-portal.html";
+                        window.location.href="./admin-portal.html";
 
                     },
                     700

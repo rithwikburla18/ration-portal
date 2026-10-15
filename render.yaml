@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: ration-portal-frontend
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: ./frontend
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache, must-revalidate
+      - path: /service-worker.js
+        name: Cache-Control
+        value: no-cache, must-revalidate
+      - path: /css/*
+        name: Cache-Control
+        value: no-cache
+      - path: /js/*
+        name: Cache-Control
+        value: no-cache
+      - path: /assets/*
+        name: Cache-Control
+        value: no-cache
