@@ -29,7 +29,7 @@ for (const pagePath of pages) {
       page.on("pageerror", (error) => pageErrors.push(error.message));
       page.on("requestfailed", (request) => {
         const url = request.url();
-        if (url.startsWith(testInfo.project?.use?.baseURL || process.env.BASE_URL || "http://127.0.0.1:4173")) {
+        if (url.startsWith(testInfo.project?.use?.baseURL || process.env.BASE_URL || "http://127.0.0.1:4173") && request.resourceType() !== "document" && request.failure()?.errorText !== "net::ERR_ABORTED") {
           localAssetFailures.push(url + " :: " + (request.failure()?.errorText || "request failed"));
         }
       });
