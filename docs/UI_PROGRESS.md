@@ -7,14 +7,14 @@ Status meanings: **DONE** means a source change exists in this branch; **UNVERIF
 ## Step 0 — hosting/cache
 - [x] TODO — complete full repository tree inventory; connector returned changed paths but not a recursive tree listing
 - [x] DONE — added `render.yaml` static frontend service and response headers (deployment schema/runtime still UNVERIFIED)
-- [ ] TODO — decide whether to retain `frontend/_headers` (Render does not consume it)
+- [x] DONE — deleted `frontend/_headers`; response headers remain in `render.yaml`
 - [ ] TODO — confirm HTML/CSS/JS/image cache behaviour from deployed response headers
 
 ## Step 1 — browser automation
 - [x] DONE — added `.github/workflows/ui-check.yml`, `frontend/tests/package.json`, `frontend/tests/playwright.config.cjs`, and `frontend/tests/ui.spec.cjs` to enumerate HTML pages and four viewports at runtime
 - [x] DONE — Playwright assertions added for console/page errors, broken images, failed local requests and homepage hero/date-pill layout (assertion accuracy UNVERIFIED)
 - [x] DONE — workflow uploads screenshots, test-results and HTML report as artifacts when generated
-- [ ] UNVERIFIED — first GitHub Actions / Playwright run and screenshots
+- [ ] UNVERIFIED — rerun GitHub Actions / Playwright after fixing the missing npm cache lockfile path
 
 ## Phase 1 — stale cache/session
 - [x] TODO — audit all frontend files and add one shared version query to local CSS/JS/image references
@@ -50,5 +50,5 @@ Status meanings: **DONE** means a source change exists in this branch; **UNVERIF
 
 ## Changes in this phase\n- DONE — `.github/workflows/ui-check.yml`\n- DONE — `frontend/tests/package.json`\n- DONE — `frontend/tests/playwright.config.cjs`\n- DONE — `frontend/tests/ui.spec.cjs`\n- DONE — `scripts/bump-version.js` (execution UNVERIFIED)\n- DONE — `render.yaml` (Render accepts/deploys this blueprint UNVERIFIED)\n\n## Evidence log
 - Initial PR #10 review: `frontend/index.html` already versions several CSS/JS references; `frontend/js/pwa.js` exists; `frontend/_headers` is present in the PR diff but is not a Render headers configuration.
-- No Playwright run or screenshot artifact is claimed until a completed GitHub Actions run is inspected.
+- Latest inspected UI browser run #108 failed before tests: `actions/setup-node@v4` could not resolve `frontend/tests/package-lock.json`; workflow cache config removed in commit `9933b1ae6e5d06076c9f60fffc63dc1220be8e26`. Awaiting rerun to verify Playwright and screenshots.
 \n- Commit `01202461f131283921418f75e673931887797636`: created this checklist.\n- Commit `e9a86f5b74a9568f486097325cbaab80f0e40418`: added UI workflow.\n- Commit `5b54ecdb070c297adcd1fe573f711ec5e40fd997`: added all-page Playwright spec.\n- Commit `fc5fcfc03a7df1d4294017894325005519c557cc`: added Render blueprint.\n- Commit `b4c3e93e24a37df1d199827732a0384d35f9548f`: corrected workflow dependency installation.\n
