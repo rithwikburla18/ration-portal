@@ -55,7 +55,7 @@ for (const pagePath of pages) {
       expect(registrations, "no service worker should remain registered").toEqual([]);
       const unversionedLocalRefs = await page.locator("link[href],script[src],img[src],source[src],video[poster]").evaluateAll((nodes) => nodes
         .map((node) => ({ tag: node.tagName, attribute: node.hasAttribute("href") ? "href" : node.hasAttribute("poster") ? "poster" : "src", value: node.getAttribute(node.hasAttribute("href") ? "href" : node.hasAttribute("poster") ? "poster" : "src") }))
-        .filter((item) => item.value && !/^(?:[a-z]+:|\\/\\/|data:|#)/i.test(item.value) && /\\.(?:css|js|png|jpe?g|svg|webp|gif|ico|woff2?)(?:[?#]|$)/i.test(item.value) && !/[?&]v=[^&]+/.test(item.value))
+        .filter((item) => item.value && !/^(?:[a-z]+:|\/\/|data:|#)/i.test(item.value) && /\.(?:css|js|png|jpe?g|svg|webp|gif|ico|woff2?)(?:[?#]|$)/i.test(item.value) && !/[?&]v=[^&]+/.test(item.value))
         .map((item) => item.tag + "[" + item.attribute + "] " + item.value));
       expect(unversionedLocalRefs, "every local CSS/JS/image reference needs ?v=").toEqual([]);
       const images = await page.locator("img").evaluateAll((nodes) => nodes.map((img) => ({
