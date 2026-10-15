@@ -22,12 +22,12 @@
 
     <link
         rel="stylesheet"
-        href="../css/style.css"
+        href="../css/style.css?v=20261016"
     >
 
     <link
         rel="stylesheet"
-        href="../css/redesign.css"
+        href="../css/redesign.css?v=20261016"
     >
 
     <link
@@ -45,8 +45,11 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-<script src="../js/i18n.js?v=20261004"></script>    <link rel="stylesheet" href="../css/final-theme.css?v=20261009">
+<script src="../js/i18n.js?v=20261016"></script>    <link rel="stylesheet" href="../css/final-theme.css?v=20261016">
     <meta name="theme-color" content="#0a2f57">
+<link rel="stylesheet" href="../css/ration-theme.css?v=20261016">
+<script defer src="../js/pwa.js?v=20261016"></script>
+<script defer src="../js/server-wake.js?v=20261016"></script>
 </head>
 
 <body>
@@ -441,9 +444,9 @@
 
 </footer>
 
-<script src="../config.js"></script>
-<script src="../js/app.js"></script>
-<script src="../js/script.js"></script>
+<script src="../config.js?v=20261016"></script>
+<script src="../js/app.js?v=20261016"></script>
+<script src="../js/script.js?v=20261016"></script>
 
 <script>
 
@@ -622,7 +625,7 @@ document.addEventListener(
 
                 event.preventDefault();
 
-                if (document.getElementById("registrationType") && document.getElementById("registrationType").value === "FPS_DEALER") { window.location.href = "fps-register.html"; return; }
+                if (document.getElementById("registrationType") && document.getElementById("registrationType").value === "FPS_DEALER") { window.location.href="fps-register.html"; return; }
 
                 hideAlert();
 
@@ -801,8 +804,7 @@ document.addEventListener(
                     );
 
 
-                    window.location.href =
-                        "register-password.html";
+                    window.location.href="register-password.html";
 
                 }
                 catch (error) {
