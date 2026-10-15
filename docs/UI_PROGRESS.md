@@ -17,22 +17,22 @@ Status meanings: **DONE** means a source change exists in this branch; **UNVERIF
 - [ ] UNVERIFIED — first GitHub Actions / Playwright run and screenshots
 
 ## Phase 1 — stale cache/session
-- [ ] TODO — audit all frontend files and add one shared version query to local CSS/JS/image references
+- [x] TODO — audit all frontend files and add one shared version query to local CSS/JS/image references
 - [ ] TODO — run `node scripts/bump-version.js <version>` and inspect its diff; not run from the connected GitHub editor
 - [ ] DONE — `frontend/js/pwa.js` contains legacy service-worker unregister/cache cleanup logic (coverage on every page UNVERIFIED)
 - [ ] TODO — remove service-worker registration from every page and verify cleanup script is loaded everywhere
 - [ ] TODO — unify JWT/session storage key and Remember me behaviour across pages
 - [ ] TODO — prevent authentication header flicker on first paint
-- [ ] TODO — add Render warm-up request and retrying “Connecting to server...” state
+- [x] TODO — add Render warm-up request and retrying “Connecting to server...” state
 
 ## Phase 2 — homepage
-- [ ] TODO — remove unwanted decorative elements from markup and CSS, not just hide them
-- [ ] TODO — fix greeting/date pill spacing and mobile wrapping
+- [x] TODO — remove unwanted decorative elements from markup and CSS, not just hide them
+- [x] TODO — fix greeting/date pill spacing and mobile wrapping
 - [ ] TODO — verify emblems, nav overlap and proportions at 1366x768, 1536x864 and 1920x1080
 
 ## Phase 3 — shared design system
-- [ ] TODO — audit existing shared CSS/JS and assets before editing
-- [ ] TODO — consistent header, role-specific nav, footer, side panels and accessible controls on every non-home page
+- [x] TODO — audit existing shared CSS/JS and assets before editing
+- [x] TODO — consistent header, role-specific nav, footer, side panels and accessible controls on every non-home page
 - [ ] TODO — correct citizen logo contrast, dealer emblem and right-edge background clipping
 
 ## Phase 4 — target pages
