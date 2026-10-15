@@ -52,11 +52,11 @@
 
 <link
     rel="stylesheet"
-    href="css/style.css"
+    href="css/style.css?v=20261015-ui1"
 >
 <link
     rel="stylesheet"
-    href="css/redesign.css"
+    href="css/redesign.css?v=20261015-ui1"
 >
 <link
     rel="manifest"
@@ -67,10 +67,10 @@
     type="image/png"
     href="./favicon.png"
 >
-<script src="./js/i18n.js?v=20261012"></script>
+<script src="./js/i18n.js?v=20261015-ui1"></script>
 <link
     rel="stylesheet"
-    href="css/final-theme.css?v=20261009"
+    href="css/final-theme.css?v=20261015-ui1"
 >
 
 <style id="india-image-theme">
@@ -3440,9 +3440,11 @@ body > main#main-content > section.rp-hero .rp-slogan-top .rp-slogan-line{displa
     data-i18n="nav.transparency"
 >Transparency</span></a>
         </div>
-        <div
-    class="rp-nav-right"
->
+        <div class="rp-nav-right">
+            <div class="rp-nav-greeting" aria-live="polite">
+                <span aria-hidden="true">☀</span>
+                <strong id="rpGreetingText">Good Morning</strong>
+            </div>
             <div
     class="rp-nav-date"
 >
@@ -4733,6 +4735,20 @@ body > main#main-content > section.rp-hero .rp-slogan-top .rp-slogan-line{displa
         const now = new Date();
         const dateElement = document.getElementById("rpCurrentDate");
         const timeElement = document.getElementById("rpCurrentTime");
+        const greetingElement = document.getElementById("rpGreetingText");
+        if (greetingElement) {
+            const hour = now.getHours();
+            const key = hour >= 5 && hour < 12 ? "goodMorning" :
+                hour >= 12 && hour < 17 ? "goodAfternoon" :
+                hour >= 17 && hour < 21 ? "goodEvening" : "goodNight";
+            const language = window.RationPortalI18n?.getLanguage?.() || "en";
+            const greetings = {
+                en: {goodMorning:"Good Morning",goodAfternoon:"Good Afternoon",goodEvening:"Good Evening",goodNight:"Good Night"},
+                hi: {goodMorning:"सुप्रभात",goodAfternoon:"शुभ दोपहर",goodEvening:"शुभ संध्या",goodNight:"शुभ रात्रि"},
+                te: {goodMorning:"శుభోదయం",goodAfternoon:"శుభ మధ్యాహ్నం",goodEvening:"శుభ సాయంత్రం",goodNight:"శుభ రాత్రి"}
+            };
+            greetingElement.textContent = (greetings[language] || greetings.en)[key];
+        }
         if (dateElement) {
             dateElement.textContent = now.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
         }
@@ -4768,8 +4784,28 @@ body > main#main-content > section.rp-hero .rp-slogan-top .rp-slogan-line{displa
 })();
 </script>
 
-<script src="./js/pwa.js"></script>
-<script defer src="./js/server-wake.js?v=20261014"></script>
+<script src="./js/pwa.js?v=20261015-ui1"></script>
+<script defer src="./js/server-wake.js?v=20261015-ui1"></script>
 </body>
+
+<style id="ui-final-fixes-v1">
+/* Final UI corrections: readable 100% zoom layout and a compact right-aligned clock pill. */
+.rp-nav-right{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:clamp(8px,1.2vw,18px)!important;flex:1 1 auto!important;min-width:0}
+.rp-nav-greeting,.rp-nav-date,.rp-nav-time{display:inline-flex!important;align-items:center!important;justify-content:center;gap:8px;white-space:nowrap}
+.rp-nav-greeting{padding:9px 12px;border:1px solid rgba(255,205,105,.55);border-radius:999px;background:rgba(255,255,255,.07);color:#ffe1a0;font-weight:800}
+.rp-nav-greeting>span{font-size:17px;color:#ffc45b}
+.rp-nav-date,.rp-nav-time{padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.055);color:#fff}
+.rp-nav-right{padding-inline:clamp(8px,1.4vw,22px)}
+.rp-hero{position:relative;isolation:isolate;min-height:clamp(430px,49vw,700px);aspect-ratio:16/7;overflow:hidden}
+.rp-hero-title,.rp-hero h1{font-size:clamp(46px,5.5vw,92px)!important;line-height:1.02}
+.rp-hero .rp-ribbon,.rp-hero .rp-fort-wall,.rp-hero .rp-fort-band,.rp-hero .rp-bottom-medallion,.rp-hero .rp-paddy-medallion,.rp-hero .rp-paddy-front,.rp-hero .rp-particles,.rp-hero .rp-ribbon-swoosh{display:none!important;animation:none!important}
+.rp-hero .rp-scene{overflow:hidden}
+.rp-hero .rp-scene svg.rp-ribbon{display:none!important}
+.rp-hero img{object-fit:cover;object-position:center 44%}
+.rp-nav-wrap{position:relative;z-index:100!important}
+@media(min-width:1200px){.rp-nav-inner{display:flex;align-items:center;gap:16px}.rp-nav-links{flex:1 1 auto;min-width:0}.rp-nav-right{flex:0 0 auto;gap:clamp(8px,1vw,16px)!important}.rp-hero{min-height:clamp(520px,43vw,760px)}}
+@media(max-width:900px){.rp-nav-right{width:100%;flex-wrap:wrap;justify-content:center!important;padding:8px!important}.rp-nav-greeting,.rp-nav-date,.rp-nav-time{font-size:12px;padding:6px 8px}.rp-hero{aspect-ratio:auto;min-height:420px}.rp-hero-title,.rp-hero h1{font-size:clamp(36px,8vw,60px)!important}}
+@media(max-width:480px){.rp-nav-right{gap:5px!important}.rp-nav-greeting,.rp-nav-date,.rp-nav-time{white-space:normal;max-width:100%;font-size:11px}.rp-hero{min-height:380px}.rp-hero-title,.rp-hero h1{font-size:clamp(32px,9vw,44px)!important}}
+</style>
 </html>
 <style id="fix-bottom-slogan-spacing">.rp-bottom-slogan strong{display:flex!important;flex-direction:column!important;align-items:center!important;gap:10px!important}.rp-bottom-slogan strong span{display:block!important;position:static!important;margin:0!important;white-space:normal!important}</style>
