@@ -72,6 +72,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/dashboard/**").hasAnyRole("CITIZEN", "ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/onorc/portability/*/status").hasRole("ADMIN")
                         .requestMatchers("/api/onorc/**").hasAnyRole("CITIZEN", "ADMIN")
+                        .requestMatchers("/api/citizen/**").hasRole("CITIZEN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(approvedCitizenAccessFilter, UsernamePasswordAuthenticationFilter.class);

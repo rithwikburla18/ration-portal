@@ -1,0 +1,188 @@
+/* Shared Indian PDS theme — CSS-only ornamentation; uses existing repository artwork. */
+:root{
+ --rp-navy:#0a192f;--rp-navy-2:#112240;--rp-navy-3:#19365e;
+ --rp-gold:#e5a93b;--rp-gold-2:#c78b2c;--rp-saffron:#e87518;--rp-green:#237b43;
+ --rp-amber:#ffd06b;--rp-cream:#f6d995;--rp-danger:#b9382f;--rp-teal:#0e807d;
+ --rp-panel:rgba(10,25,47,.94);--rp-line:rgba(229,169,59,.72);
+}
+html{scroll-behavior:smooth}
+body:has(#rationThemeReady),body.rp-indian-theme{
+ color:var(--rp-amber)!important;
+ background:
+   radial-gradient(ellipse at 50% 0%,rgba(229,169,59,.2),transparent 44%),
+   repeating-conic-gradient(from 7deg at 50% 8%,rgba(229,169,59,.035) 0deg 5deg,transparent 5deg 15deg),
+   linear-gradient(135deg,#071426,#102747 48%,#071426)!important;
+ background-attachment:fixed!important;
+}
+body.rp-indian-theme{position:relative;isolation:isolate;min-height:100vh;overflow-x:hidden}
+body.rp-indian-theme:before,body.rp-indian-theme:after{
+ content:"";position:fixed;z-index:-1;top:0;bottom:0;width:clamp(100px,14vw,245px);
+ background-image:linear-gradient(180deg,rgba(7,20,38,.2),rgba(7,20,38,.85)),url("../assets/images/patriotic-hero.png");
+ background-size:cover;background-position:center;opacity:.56;pointer-events:none;filter:saturate(.78) sepia(.24);
+}
+body.rp-indian-theme:before{left:0;border-right:1px solid rgba(229,169,59,.25)}
+body.rp-indian-theme:after{right:0;transform:scaleX(-1);border-left:1px solid rgba(229,169,59,.25)}
+.rp-tricolour-band,.tricolour,.tricolour-line,.tri{height:7px!important;background:linear-gradient(90deg,#ed7d16 0 33.333%,#e5c46b 33.333% 66.666%,#268047 66.666%)!important;box-shadow:0 2px 0 rgba(229,169,59,.35)}
+.rp-ornament-band{height:10px;background:repeating-linear-gradient(45deg,rgba(229,169,59,.85) 0 2px,transparent 2px 7px),linear-gradient(90deg,#b97519,#e5c46b,#b97519);border-block:1px solid #f2cc71}
+body.rp-indian-theme header,body.rp-indian-theme .site-header,body.rp-indian-theme .main-header,body.rp-indian-theme .header-main{
+ color:var(--rp-amber)!important;background:linear-gradient(135deg,rgba(10,25,47,.98),rgba(17,34,64,.96))!important;
+ border-bottom:1px solid var(--rp-line)!important;box-shadow:0 9px 28px rgba(0,0,0,.28)!important;
+}
+body.rp-indian-theme header a,body.rp-indian-theme .site-header a,body.rp-indian-theme .header-main a{color:var(--rp-amber)!important}
+body.rp-indian-theme header strong,body.rp-indian-theme header h1,body.rp-indian-theme header h2{color:var(--rp-gold)!important}
+.rp-emblem{display:inline-grid;place-items:center;flex:0 0 auto;width:62px;height:62px;border-radius:50%;border:4px double #e5a93b;outline:2px solid #237b43;outline-offset:2px;color:#f9d77d;background:radial-gradient(circle,#e5a93b 0 5%,#0a192f 6% 56%,#237b43 57% 67%,#e5a93b 68%);font-size:24px;text-shadow:0 1px 2px #071426}
+.rp-brand-lockup{display:flex;align-items:center;gap:13px;min-width:0}.rp-brand-copy{display:flex;flex-direction:column;gap:3px}.rp-brand-copy strong{font-size:clamp(16px,2vw,24px);letter-spacing:.02em}.rp-brand-copy small{color:#f2cc71;font-size:12px}
+body.rp-indian-theme nav,body.rp-indian-theme .main-nav,body.rp-indian-theme .navbar,body.rp-indian-theme .nav-bar{
+ color:var(--rp-amber)!important;background:linear-gradient(90deg,#071426,#112240,#071426)!important;border-block:1px solid rgba(229,169,59,.65)!important;
+}
+body.rp-indian-theme nav a,body.rp-indian-theme .main-nav a,body.rp-indian-theme .navbar a,body.rp-indian-theme .nav-bar a{
+ color:#f7d782!important;border-radius:6px;transition:background .16s ease,color .16s ease;
+}
+body.rp-indian-theme nav a:hover,body.rp-indian-theme nav a.active,body.rp-indian-theme .main-nav a.active,body.rp-indian-theme .navbar a.active{
+ color:#101c31!important;background:linear-gradient(135deg,#f2b640,#c78b2c)!important;
+}
+body.rp-indian-theme main,body.rp-indian-theme .container,body.rp-indian-theme .page-container,body.rp-indian-theme .content,body.rp-indian-theme .dashboard-container{
+ position:relative;z-index:0;color:var(--rp-amber)!important;
+}
+body.rp-indian-theme main{width:min(1180px,calc(100% - 36px))!important;margin-inline:auto!important}
+body.rp-indian-theme .hero,body.rp-indian-theme .hero-section,body.rp-indian-theme .dashboard-hero,body.rp-indian-theme .page-hero{
+ color:#f9d981!important;background:
+  radial-gradient(circle at 80% 20%,rgba(229,169,59,.2),transparent 28%),
+  repeating-conic-gradient(from 0deg at 82% 50%,rgba(10,25,47,.06) 0deg 8deg,transparent 8deg 18deg),
+  linear-gradient(120deg,#b97419,#e5a93b 52%,#c78b2c)!important;
+ border:1px solid #f3cd75!important;border-radius:16px!important;box-shadow:0 12px 28px rgba(0,0,0,.22)!important;
+}
+body.rp-indian-theme .hero h1,body.rp-indian-theme .hero-section h1,body.rp-indian-theme .dashboard-hero h1,body.rp-indian-theme .page-hero h1{color:#0a192f!important}
+body.rp-indian-theme h1,body.rp-indian-theme h2,body.rp-indian-theme h3,body.rp-indian-theme h4{color:#f1c45f!important}
+body.rp-indian-theme p,body.rp-indian-theme label,body.rp-indian-theme li,body.rp-indian-theme .muted,body.rp-indian-theme small{color:#f3d88e!important}
+body.rp-indian-theme .card,body.rp-indian-theme .panel,body.rp-indian-theme .service-card,body.rp-indian-theme .stat-card,body.rp-indian-theme .summary-card,body.rp-indian-theme .content-card,body.rp-indian-theme .form-card,body.rp-indian-theme section:not(.hero):not(.hero-section):not(.dashboard-hero):not(.page-hero){
+ color:#f5d88c!important;background:
+  repeating-radial-gradient(circle at 100% 0%,rgba(229,169,59,.055) 0 2px,transparent 2px 13px),
+  linear-gradient(135deg,rgba(17,34,64,.97),rgba(10,25,47,.97))!important;
+ border-color:rgba(229,169,59,.56)!important;box-shadow:0 8px 22px rgba(0,0,0,.2)!important;
+}
+body.rp-indian-theme input,body.rp-indian-theme select,body.rp-indian-theme textarea{
+ color:#ffe6a1!important;background:#08172d!important;border:1px solid #b8842c!important;border-radius:8px!important;
+}
+body.rp-indian-theme input::placeholder,body.rp-indian-theme textarea::placeholder{color:#d0b777!important;opacity:1}
+body.rp-indian-theme input:focus,body.rp-indian-theme select:focus,body.rp-indian-theme textarea:focus{outline:2px solid #e5a93b!important;outline-offset:2px}
+body.rp-indian-theme button,body.rp-indian-theme .button,body.rp-indian-theme a.button,body.rp-indian-theme input[type=submit]{
+ color:#0a192f!important;background:linear-gradient(135deg,#f4c85e,#c78b2c)!important;border:1px solid #f6d98d!important;border-radius:8px!important;font-weight:750!important;box-shadow:0 4px 10px rgba(0,0,0,.2)!important;
+}
+body.rp-indian-theme button.secondary,body.rp-indian-theme .secondary{color:#f8d77e!important;background:#112240!important}
+body.rp-indian-theme button:focus-visible,body.rp-indian-theme a:focus-visible{outline:3px solid #f5ce6c!important;outline-offset:3px}
+body.rp-indian-theme table{color:#f5d88c!important;border-color:rgba(229,169,59,.4)!important;background:rgba(7,20,38,.45)!important}
+body.rp-indian-theme th{color:#f6d47b!important;background:#112240!important}
+body.rp-indian-theme td{color:#f2dca0!important;border-color:rgba(229,169,59,.25)!important}
+body.rp-indian-theme .notice,body.rp-indian-theme .alert,body.rp-indian-theme [role=alert]{color:#ffe5a3!important;background:linear-gradient(120deg,#7d261e,#b84624)!important;border:1px solid #f2a06d!important;border-radius:10px!important}
+body.rp-indian-theme footer,body.rp-indian-theme .site-footer{color:#f4d27b!important;background:linear-gradient(90deg,#071426,#112240,#071426)!important;border-top:2px solid #c78b2c!important}
+body.rp-indian-theme .rp-account-avatar{position:relative;z-index:10020;width:42px;height:42px;display:inline-grid;place-items:center;border:2px solid #e5a93b!important;border-radius:50%!important;color:#f8d77e!important;background:#0a192f!important;font-size:17px;font-weight:800;cursor:pointer}
+.rp-account-popover{position:absolute;z-index:10030;top:calc(100% + 9px);right:0;width:min(290px,calc(100vw - 28px));padding:17px;border:1px solid #e5a93b;border-radius:12px;color:#f8d77e;background:linear-gradient(135deg,#112240,#071426);box-shadow:0 18px 38px rgba(0,0,0,.5)}
+.rp-account-popover[hidden],.rp-login-menu[hidden]{display:none!important}
+.rp-account-popover strong{display:block;color:#e5a93b;font-size:12px;letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px}
+.rp-account-popover p{color:#f8e1a1!important;overflow-wrap:anywhere;margin:0 0 14px}
+.rp-account-popover .rp-logout{width:100%;background:linear-gradient(135deg,#f4c85e,#c78b2c)!important;color:#0a192f!important}
+.rp-avatar-wrap{position:relative;display:inline-flex;align-items:center;margin-left:10px;z-index:10020}
+.rp-login-wrap{position:relative;display:inline-flex;align-items:center;z-index:10050}
+.rp-login-trigger{background:#e05a10!important;color:white!important;border:1px solid #ffad70!important;border-radius:9px!important;padding:10px 17px!important;display:inline-flex;gap:8px;align-items:center}
+.rp-login-menu{position:absolute;top:calc(100% + 7px);right:0;min-width:255px;background:#fff!important;color:#1a2a3a!important;border:1px solid #d4dce6!important;border-radius:9px;box-shadow:0 14px 28px rgba(0,0,0,.26);padding:6px;z-index:10080}
+.rp-login-menu a{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:6px;color:#1a2a3a!important;text-decoration:none;font-size:14px;font-weight:650;white-space:nowrap}
+.rp-login-menu a:hover,.rp-login-menu a:focus{background:#fff0e5!important;color:#a63d05!important;outline:0}
+.rp-login-menu a:focus-visible{outline:2px solid #e05a10!important}
+.rp-password-wrap{position:relative!important;display:block!important}
+.rp-password-wrap input{padding-right:54px!important}
+.rp-password-toggle{position:absolute!important;right:4px!important;top:50%!important;transform:translateY(-50%)!important;min-width:44px!important;min-height:44px!important;padding:8px!important;display:grid!important;place-items:center!important;color:#f2c45d!important;background:#112240!important;border:1px solid #c78b2c!important;box-shadow:none!important;font-size:22px!important;line-height:1!important}
+.rp-status-pending{color:#ffd06b!important;background:#684716!important}.rp-status-approved{color:#a9edb7!important;background:#174d31!important}.rp-status-rejected{color:#ffc0b5!important;background:#6d2626!important}
+.rp-loading{display:flex;align-items:center;gap:11px;color:#f3d88e;padding:18px;border:1px solid #c78b2c;border-radius:10px;background:#112240}
+.rp-spinner{width:22px;height:22px;border:3px solid rgba(229,169,59,.25);border-top-color:#e5a93b;border-radius:50%;animation:rp-spin .8s linear infinite}
+@keyframes rp-spin{to{transform:rotate(360deg)}}
+.rp-data-error{padding:15px;border:1px solid #d98262;border-radius:10px;color:#ffe0c6;background:#602b26}
+.rp-data-error button{margin-left:10px}
+.rp-data-empty{padding:15px;border:1px solid #c78b2c;border-radius:10px;color:#f6d98b;background:#112240}
+@media(max-width:900px){body.rp-indian-theme:before,body.rp-indian-theme:after{width:9vw;opacity:.23}body.rp-indian-theme main{width:calc(100% - 26px)!important}}
+@media(max-width:640px){body.rp-indian-theme:before,body.rp-indian-theme:after{display:none}body.rp-indian-theme main{width:calc(100% - 22px)!important}.rp-emblem{width:48px;height:48px;font-size:19px}.rp-brand-copy small{font-size:10px}.rp-login-menu{right:0;min-width:min(255px,calc(100vw - 24px))}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+.rp-login-wrap + a.rp-register-button,.rp-login-wrap + .rp-register-button{background:#168344!important;color:#fff!important;border-color:#168344!important}
+.rp-dealer-auth-options label,.rp-dealer-auth-options span{color:#f4d88e!important}
+.rp-dealer-auth-options a{color:#f6cf70!important;text-decoration:underline}
+
+/* Catch legacy inline white panels without changing page layout or behavior. */
+body.rp-indian-theme .login-card,body.rp-indian-theme .login-panel,body.rp-indian-theme .form-container,body.rp-indian-theme .form-wrapper,body.rp-indian-theme .dashboard-card,body.rp-indian-theme .dashboard-section,body.rp-indian-theme .table-container,body.rp-indian-theme .details-card,body.rp-indian-theme .profile-card,body.rp-indian-theme .application-card,body.rp-indian-theme .summary-grid>div,body.rp-indian-theme .stats-grid>div,body.rp-indian-theme .service-item,body.rp-indian-theme .family-box,body.rp-indian-theme .metric-card,body.rp-indian-theme .stat-box{
+ color:#f5d88c!important;background:repeating-radial-gradient(circle at 100% 0%,rgba(229,169,59,.055) 0 2px,transparent 2px 13px),linear-gradient(135deg,rgba(17,34,64,.98),rgba(10,25,47,.98))!important;border-color:rgba(229,169,59,.56)!important;
+}
+body.rp-indian-theme [style*="background:#fff"],body.rp-indian-theme [style*="background: #fff"],body.rp-indian-theme [style*="background:#ffffff"],body.rp-indian-theme [style*="background: #ffffff"],body.rp-indian-theme [style*="background: white"],body.rp-indian-theme [style*="background-color:#fff"],body.rp-indian-theme [style*="background-color: #fff"],body.rp-indian-theme [style*="background-color: white"]{
+ background:linear-gradient(135deg,#112240,#0a192f)!important;color:#f5d88c!important;border-color:rgba(229,169,59,.56)!important;
+}
+body.rp-indian-theme .text-gray-900,body.rp-indian-theme .text-gray-800,body.rp-indian-theme .text-gray-700,body.rp-indian-theme .text-slate-900,body.rp-indian-theme .text-slate-800,body.rp-indian-theme .text-slate-700{color:#f5d88c!important}
+body.rp-indian-theme #rationApprovalGate .gate-card{background:linear-gradient(135deg,#112240,#0a192f)!important;color:#f5d88c!important;border:1px solid #e5a93b!important}
+body.rp-indian-theme #rationApprovalGate h1,body.rp-indian-theme #rationApprovalGate p{color:#f5d88c!important}
+.rp-password-wrap{width:100%!important}
+
+body.rp-indian-theme .navigation,body.rp-indian-theme .nav-links,body.rp-indian-theme .nav-inner,body.rp-indian-theme .nav-date{color:#f5d88c!important;background:linear-gradient(90deg,#071426,#112240,#071426)!important}
+body.rp-indian-theme .nav-link{color:#f5d88c!important;border-radius:6px}
+body.rp-indian-theme .nav-link.active,body.rp-indian-theme .nav-link:hover{color:#0a192f!important;background:linear-gradient(135deg,#f4c85e,#c78b2c)!important}
+body.rp-indian-theme .stat,body.rp-indian-theme .stat-orange,body.rp-indian-theme .stat-green,body.rp-indian-theme .stat-blue,body.rp-indian-theme .stat-purple,body.rp-indian-theme .stats-grid>.stat,body.rp-indian-theme .service-grid>.service-card,body.rp-indian-theme .two-column>.panel{
+ color:#f5d88c!important;background:repeating-radial-gradient(circle at 100% 0%,rgba(229,169,59,.08) 0 2px,transparent 2px 12px),linear-gradient(135deg,#112240,#0a192f)!important;border:1px solid rgba(229,169,59,.62)!important;
+}
+body.rp-indian-theme .stat-orange{border-top:4px solid #e87518!important}body.rp-indian-theme .stat-green{border-top:4px solid #237b43!important}body.rp-indian-theme .stat-blue{border-top:4px solid #3479c6!important}body.rp-indian-theme .stat-purple{border-top:4px solid #9164d8!important}
+body.rp-indian-theme .service-card:hover,body.rp-indian-theme .primary-button:hover{transform:translateY(-2px)}
+body.rp-indian-theme .brand-header,body.rp-indian-theme .brand-inner,body.rp-indian-theme .header-inner,body.rp-indian-theme .gov-strip,body.rp-indian-theme .gov-strip-inner{background:linear-gradient(135deg,#0a192f,#112240)!important;color:#f5d88c!important;border-color:rgba(229,169,59,.55)!important}
+body.rp-indian-theme .rp-emblem{flex:0 0 auto}
+body.rp-indian-theme .rp-account-avatar{box-shadow:0 6px 18px rgba(0,0,0,.38)!important}
+
+body.rp-indian-theme .password-wrapper .password-toggle,body.rp-indian-theme .password-wrapper .toggle-password,body.rp-indian-theme .password-toggle,body.rp-indian-theme .toggle-password{
+ width:44px!important;min-width:44px!important;height:44px!important;min-height:44px!important;padding:9px!important;display:grid!important;place-items:center!important;color:#f2c45d!important;background:#112240!important;border:1px solid #c78b2c!important;border-radius:8px!important;font-size:22px!important;line-height:1!important;box-shadow:none!important;
+}
+body.rp-indian-theme .auth-card,body.rp-indian-theme .auth-header,body.rp-indian-theme .admin-login-card,body.rp-indian-theme .admin-panel,body.rp-indian-theme .admin-stat-card,body.rp-indian-theme .admin-table-wrapper,body.rp-indian-theme .table-card,body.rp-indian-theme .table-header,body.rp-indian-theme .info-card,body.rp-indian-theme .entitlement-card,body.rp-indian-theme .entitlement-box,body.rp-indian-theme .status-banner,body.rp-indian-theme .error-box,body.rp-indian-theme .empty-state{
+ color:#f5d88c!important;background:repeating-radial-gradient(circle at 100% 0%,rgba(229,169,59,.055) 0 2px,transparent 2px 13px),linear-gradient(135deg,#112240,#0a192f)!important;border-color:rgba(229,169,59,.56)!important;
+}
+body.rp-indian-theme .admin-stat-label,body.rp-indian-theme .admin-panel-title,body.rp-indian-theme .admin-page-title{color:#f1c45f!important}
+body.rp-indian-theme .admin-input,body.rp-indian-theme .form-control{color:#ffe6a1!important;background:#08172d!important;border-color:#b8842c!important}
+body.rp-indian-theme .admin-logout{background:linear-gradient(135deg,#f4c85e,#c78b2c)!important;color:#0a192f!important}
+
+body.rp-indian-theme #fpsDealerAdminPanel .rp-approve-button{background:#176b3b!important;color:#fff!important;border:1px solid #57a876!important}
+body.rp-indian-theme #fpsDealerAdminPanel .rp-reject-button{background:#a12a20!important;color:#fff!important;border:1px solid #d98278!important}
+body.rp-indian-theme #fpsDealerAdminPanel .rp-approve-button:hover{background:#21864c!important}
+body.rp-indian-theme #fpsDealerAdminPanel .rp-reject-button:hover{background:#c13b2d!important}
+
+body.rp-indian-theme .auth-page{background:transparent!important}
+body.rp-indian-theme .site-footer,body.rp-indian-theme .footer-grid,body.rp-indian-theme .footer-inner{color:#f5d88c!important;background:linear-gradient(90deg,#071426,#112240,#071426)!important;border-color:#c78b2c!important}
+body.rp-indian-theme .admin-top-line{background:linear-gradient(90deg,#ed7d16,#e5c46b,#268047)!important}
+body.rp-indian-theme .table-wrapper,body.rp-indian-theme .table-card,body.rp-indian-theme .cards-grid,body.rp-indian-theme .details-grid{background:transparent!important}
+
+body.rp-indian-theme .tricolour-top,body.rp-indian-theme .tricolour-line,body.rp-indian-theme .tri,body.rp-indian-theme .rp-tricolour-band{
+ background:repeating-linear-gradient(45deg,rgba(10,25,47,.12) 0 2px,transparent 2px 9px),linear-gradient(90deg,#ed7d16 0 33.333%,#e5c46b 33.333% 66.666%,#268047 66.666%)!important
+}
+body.rp-indian-theme .stat-orange{background:linear-gradient(135deg,#783b12,#b65d19)!important}
+body.rp-indian-theme .stat-green{background:linear-gradient(135deg,#10492f,#237b43)!important}
+body.rp-indian-theme .stat-blue{background:linear-gradient(135deg,#102f5d,#1e5796)!important}
+body.rp-indian-theme .stat-purple{background:linear-gradient(135deg,#39235f,#6842a2)!important}
+body.rp-indian-theme .service-grid>.service-card:nth-child(1),body.rp-indian-theme .service-grid>.service-card:nth-child(7){background:linear-gradient(135deg,#102f5d,#1e5796)!important}
+body.rp-indian-theme .service-grid>.service-card:nth-child(2){background:linear-gradient(135deg,#10492f,#237b43)!important}
+body.rp-indian-theme .service-grid>.service-card:nth-child(3),body.rp-indian-theme .service-grid>.service-card:nth-child(8){background:linear-gradient(135deg,#783b12,#b65d19)!important}
+body.rp-indian-theme .service-grid>.service-card:nth-child(4){background:linear-gradient(135deg,#39235f,#6842a2)!important}
+body.rp-indian-theme .service-grid>.service-card:nth-child(5){background:linear-gradient(135deg,#07535c,#0e807d)!important}
+body.rp-indian-theme .service-grid>.service-card:nth-child(6){background:linear-gradient(135deg,#702322,#b9382f)!important}
+body.rp-indian-theme .service-card,body.rp-indian-theme .service-card h3,body.rp-indian-theme .service-card p,body.rp-indian-theme .service-card span{color:#ffe5a3!important}
+body.rp-indian-theme .emblem,body.rp-indian-theme .brand-emblem{border-color:#e5a93b!important;box-shadow:0 0 0 3px rgba(35,123,67,.75),0 0 0 6px rgba(229,169,59,.4)!important}
+body.rp-indian-theme footer:after,body.rp-indian-theme .site-footer:after{content:"";display:block;height:7px;background:repeating-linear-gradient(45deg,#e5a93b 0 2px,transparent 2px 8px),linear-gradient(90deg,#c78b2c,#e5a93b,#c78b2c);border-top:1px solid #e5a93b}
+
+body.rp-indian-theme .announcement,body.rp-indian-theme .announcement-text,body.rp-indian-theme .rp-notice-alert{
+ color:#ffe7b0!important;background:linear-gradient(100deg,#7f2a1b,#b83e20,#d35a20)!important;border-color:#f0a06b!important;
+}
+body.rp-indian-theme .summary-grid>.summary-card{
+ color:#0a192f!important;background:repeating-radial-gradient(circle at 100% 0%,rgba(10,25,47,.06) 0 2px,transparent 2px 12px),linear-gradient(135deg,#f4d27b,#c78b2c)!important;border:1px solid #ffe4a0!important;
+}
+body.rp-indian-theme .summary-grid>.summary-card .summary-label,body.rp-indian-theme .summary-grid>.summary-card .summary-value{color:#0a192f!important}
+body.rp-indian-theme .admin-stat-card{
+ color:#0a192f!important;background:repeating-radial-gradient(circle at 100% 0%,rgba(10,25,47,.05) 0 2px,transparent 2px 12px),linear-gradient(135deg,#f4d27b,#c78b2c)!important;border:1px solid #ffe4a0!important;
+}
+body.rp-indian-theme .admin-stat-card .admin-stat-label,body.rp-indian-theme .admin-stat-card .admin-stat-value{color:#0a192f!important}
+
+body.rp-indian-theme header,body.rp-indian-theme nav,body.rp-indian-theme main,body.rp-indian-theme footer,body.rp-indian-theme .container,body.rp-indian-theme .page-container,body.rp-indian-theme .content,body.rp-indian-theme .dashboard-container{position:relative;z-index:1}
+.rp-side-ornament{position:fixed;z-index:0;bottom:4px;width:clamp(64px,9vw,142px);height:auto;pointer-events:none;opacity:.9;filter:drop-shadow(0 4px 7px rgba(0,0,0,.55))}
+.rp-side-ornament svg{display:block;width:100%;height:auto;overflow:visible}
+.rp-side-ornament-left{left:3px}
+.rp-side-ornament-right{right:3px;transform:scaleX(-1)}
+@media(max-width:900px){.rp-side-ornament{display:none}}

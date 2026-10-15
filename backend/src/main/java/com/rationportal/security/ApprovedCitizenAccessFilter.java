@@ -45,6 +45,7 @@ public class ApprovedCitizenAccessFilter extends OncePerRequestFilter {
         if (path.startsWith(contextPath + "/api/auth/")
                 || path.equals(contextPath + "/api/health")
                 || path.equals(contextPath + "/api/ration-cards/my")
+                || path.equals(contextPath + "/api/citizen/profile")
                 || path.startsWith(contextPath + "/api/ration-cards/verify/")
                 || path.equals(contextPath + "/api/fair-price-shops")
                 || path.startsWith(contextPath + "/api/fair-price-shops/")

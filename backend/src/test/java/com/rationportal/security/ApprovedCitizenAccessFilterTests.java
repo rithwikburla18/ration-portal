@@ -24,6 +24,11 @@ class ApprovedCitizenAccessFilterTests {
     }
 
     @Test
+    void citizenProfileCanReturnAnEmptyCardAndFamilyStateBeforeApproval() {
+        assertTrue(shouldNotFilter("GET", "/api/citizen/profile"));
+    }
+
+    @Test
     void protectedEndpointsRemainSubjectToApprovalFilter() {
         assertFalse(shouldNotFilter("GET", "/api/distribution-logs/ration-card/1"));
         assertFalse(shouldNotFilter("POST", "/api/fps-distribution/otp"));
